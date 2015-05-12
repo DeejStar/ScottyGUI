@@ -5,9 +5,9 @@
  */
 package ScottyGUI.CMDControl;
 
-import beam.chatty.scottygui.ControlPanel;
-import static beam.chatty.scottygui.Stores.CentralStore.AuthKey;
-import beam.chatty.scottygui.Utils.HTTP;
+import beam.scottygui.ControlPanel;
+import static beam.scottygui.Stores.CentralStore.AuthKey;
+import beam.scottygui.Utils.HTTP;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;

@@ -1,4 +1,4 @@
-package beam.chatty.scottygui;
+package beam.scottygui;
 
 public class MainApp {
 

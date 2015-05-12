@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beam.chatty.scottygui;
+package beam.scottygui;
 
 import ScottyGUI.CMDControl.AddEditCMD;
 import ScottyGUI.CMDControl.DeletePermAdjust;
 import ScottyGUI.CMDControl.RepeatList;
-import beam.chatty.scottygui.Stores.CentralStore;
-import static beam.chatty.scottygui.Stores.CentralStore.AuthKey;
-import static beam.chatty.scottygui.Stores.CentralStore.cp;
-import static beam.chatty.scottygui.Stores.CentralStore.newline;
-import beam.chatty.scottygui.Utils.HTTP;
+import beam.scottygui.Stores.CentralStore;
+import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.cp;
+import static beam.scottygui.Stores.CentralStore.newline;
+import beam.scottygui.Utils.HTTP;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;

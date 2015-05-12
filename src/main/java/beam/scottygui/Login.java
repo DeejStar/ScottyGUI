@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beam.chatty.scottygui;
+package beam.scottygui;
 
-import static beam.chatty.scottygui.Stores.CentralStore.AuthKey;
-import beam.chatty.scottygui.Utils.HTTP;
+import static beam.scottygui.Stores.CentralStore.AuthKey;
+import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;

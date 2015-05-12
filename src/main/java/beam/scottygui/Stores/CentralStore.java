@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beam.chatty.scottygui.Stores;
+package beam.scottygui.Stores;
 
-import beam.chatty.scottygui.ControlPanel;
+import beam.scottygui.ControlPanel;
 
 /**
  *
