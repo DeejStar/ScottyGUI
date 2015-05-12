@@ -5,14 +5,16 @@
  */
 package beam.scottygui;
 
-import beam.scottygui.cmdcontrol.AddEditCMD;
-import beam.scottygui.cmdcontrol.DeletePermAdjust;
-import beam.scottygui.cmdcontrol.RepeatList;
-import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.Utils.JSONUtil;
+import beam.scottygui.cmdcontrol.AddEditCMD;
+import beam.scottygui.cmdcontrol.DeletePermAdjust;
+import beam.scottygui.cmdcontrol.RepeatList;
+import beam.scottygui.quotecontrol.addquote;
+import beam.scottygui.quotecontrol.delquote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -25,9 +27,10 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public final class ControlPanel extends javax.swing.JFrame {
-    
+
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
+    JSONUtil json = new JSONUtil();
 
     /**
      * Creates new form ControlPanel
@@ -35,28 +38,74 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
         initComponents();
         cp = this;
-        PopCmdText();
-        new Thread("30Sec CMD Refresh") {
+        new Thread("PopCmdText") {
+            @Override
+            public void run() {
+                PopCmdText();
+            }
+        }.start();
+
+        new Thread("PopQuoteText") {
+            @Override
+            public void run() {
+                PopQuoteList();
+            }
+        }.start();
+        new Thread("5 Minutes CMD Refresh") {
             @Override
             public void run() {
                 while (true) {
+                    new Thread("PopCmdText") {
+                        @Override
+                        public void run() {
+                            PopCmdText();
+                        }
+                    }.start();
+
+                    new Thread("PopQuoteText") {
+                        @Override
+                        public void run() {
+                            PopQuoteList();
+                        }
+                    }.start();
                     try {
-                        CentralStore.cp.PopCmdText();
-                    } catch (Exception e) {
-                        
-                    }
-                    try {
-                        Thread.sleep(30 * 1000);
+                        Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
+
             }
         }.start();
-        
+
     }
-    
+
+    public void PopQuoteList() {
+        JSONObject QList = null;
+        try {
+            QList = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/quotes?authkey=" + AuthKey));
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String output = "";
+        int NumOfQuotes = 0;
+        for (Object t : QList.keySet()) {
+            if (!"failed".equals(t.toString())) {
+                NumOfQuotes++;
+            }
+            if ("".equals(output)) {
+
+                output = "ID: " + t.toString() + " - " + QList.get(t);
+            } else {
+
+                output = output + newline + newline + "ID: " + t.toString() + " - " + QList.get(t);
+            }
+
+        }
+        this.QuotePanel.setText(output);
+        this.NumOfQuotes.setText(String.valueOf(NumOfQuotes + " quotes."));
+    }
+
     public void PopCmdText() {
         JSONObject CmdOutput = null;
         try {
@@ -87,7 +136,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             out = out + newline + newline + obj.get("cmd") + " - Level: " + restrictlevel + " - " + obj.get("text") + " - Count: " + obj.get("cmdcount");
         }
-        
+
         this.CmdInfo.setText(out);
     }
 
@@ -113,6 +162,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         RepeatList = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        QuotePanel = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        addquotebutton = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        NumOfQuotes = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -158,7 +214,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Auto-Refreshes every 30 Seconds.");
+        jLabel2.setText("Auto-Refreshes every 5 minutes.");
 
         RepeatList.setText("Repeat List");
         RepeatList.addActionListener(new java.awt.event.ActionListener() {
@@ -181,7 +237,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(154, 154, 154)
                         .addComponent(RepeatList)))
@@ -206,24 +262,81 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Commands", jPanel1);
 
+        QuotePanel.setEditable(false);
+        QuotePanel.setColumns(20);
+        QuotePanel.setLineWrap(true);
+        QuotePanel.setRows(5);
+        QuotePanel.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(QuotePanel);
+
+        jLabel3.setText("Auto-Refreshes every 5 minutes.");
+
+        addquotebutton.setText("Add Quote");
+        addquotebutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addquotebuttonActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Delete Quotes");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Refresh");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        NumOfQuotes.setText("jLabel4");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 799, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(addquotebutton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addComponent(jButton3)
+                .addGap(68, 68, 68)
+                .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(34, 34, 34)
+                .addComponent(jButton4)
+                .addGap(54, 54, 54))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 489, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(addquotebutton)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4)
+                    .addComponent(NumOfQuotes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jTabbedPane2.addTab("tab2", jPanel2);
+        jTabbedPane2.addTab("Quotes", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,21 +352,37 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void RefreshCMDsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshCMDsActionPerformed
         this.PopCmdText();
     }//GEN-LAST:event_RefreshCMDsActionPerformed
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AddEditCMD cmd = new AddEditCMD();
         cmd.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DeletePermAdjust dpa = new DeletePermAdjust();
         dpa.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     private void RepeatListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatListActionPerformed
         RepeatList rl = new RepeatList();
         rl.setVisible(true);
     }//GEN-LAST:event_RepeatListActionPerformed
+
+    private void addquotebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addquotebuttonActionPerformed
+        addquote aq = new addquote();
+        aq.setVisible(true);
+    }//GEN-LAST:event_addquotebuttonActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        delquote dq = new delquote();
+        dq.setVisible(true);
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        this.PopQuoteList();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,17 +421,24 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea CmdInfo;
+    private javax.swing.JLabel NumOfQuotes;
+    private javax.swing.JTextArea QuotePanel;
     private javax.swing.JButton RefreshCMDs;
     private javax.swing.JButton RepeatList;
+    private javax.swing.JButton addquotebutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
 }

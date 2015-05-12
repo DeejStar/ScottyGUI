@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>beam.chatty.scottygui.MainApp</mainClass>
+        <mainClass>beam.scottygui.MainApp</mainClass>
     </properties>
 
     <organization>
