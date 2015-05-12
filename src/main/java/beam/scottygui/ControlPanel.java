@@ -5,9 +5,9 @@
  */
 package beam.scottygui;
 
-import ScottyGUI.CMDControl.AddEditCMD;
-import ScottyGUI.CMDControl.DeletePermAdjust;
-import ScottyGUI.CMDControl.RepeatList;
+import beam.scottygui.cmdcontrol.AddEditCMD;
+import beam.scottygui.cmdcontrol.DeletePermAdjust;
+import beam.scottygui.cmdcontrol.RepeatList;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.cp;
