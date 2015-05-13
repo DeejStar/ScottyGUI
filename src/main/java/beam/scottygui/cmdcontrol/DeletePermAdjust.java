@@ -6,7 +6,6 @@
 package beam.scottygui.cmdcontrol;
 
 import beam.scottygui.ControlPanel;
-import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.cp;
 import beam.scottygui.Utils.HTTP;
@@ -200,7 +199,19 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
             this.DelCmd();
             this.CMDList.removeAllItems();
             this.PopCmdText();
-            CentralStore.cp.PopCmdText();
+            while (true) {
+                try {
+                    cp.PopCmdText();
+                    break;
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex1) {
+                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+            }
         }
 
     }//GEN-LAST:event_DELCMDActionPerformed
@@ -232,7 +243,19 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DeletePermAdjust.class.getName()).log(Level.SEVERE, null, ex);
         }
-        CentralStore.cp.PopCmdText();
+        while (true) {
+            try {
+                cp.PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -245,7 +268,19 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DeletePermAdjust.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cp.PopCmdText();
+        while (true) {
+            try {
+                cp.PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void DelCmd() {

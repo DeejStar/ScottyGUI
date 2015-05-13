@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -112,12 +113,17 @@ public class addquote extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         HTTP http = new HTTP();
-        try {
-            http.get("https://api.scottybot.net/api/quotes/add?authkey=" + AuthKey + "&person=" + URLEncoder.encode(this.QPerson.getText(), "UTF-8") + "&quote=" + URLEncoder.encode(this.QuoteText.getText(), "UTF-8"));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(addquote.class.getName()).log(Level.SEVERE, null, ex);
+        while (true) {
+            try {
+                http.get("https://api.scottybot.net/api/quotes/add?authkey=" + AuthKey + "&person=" + URLEncoder.encode(this.QPerson.getText(), "UTF-8") + "&quote=" + URLEncoder.encode(this.QuoteText.getText(), "UTF-8"));
+                cp.PopQuoteList();
+                break;
+            } catch (UnsupportedEncodingException | ParseException ex) {
+                Logger.getLogger(addquote.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
-        cp.PopQuoteList();
+
         this.dispose();
 
     }//GEN-LAST:event_jButton1ActionPerformed

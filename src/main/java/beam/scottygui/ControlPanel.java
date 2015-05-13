@@ -5,7 +5,9 @@
  */
 package beam.scottygui;
 
+import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
@@ -15,8 +17,13 @@ import beam.scottygui.cmdcontrol.DeletePermAdjust;
 import beam.scottygui.cmdcontrol.RepeatList;
 import beam.scottygui.quotecontrol.addquote;
 import beam.scottygui.quotecontrol.delquote;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,19 +45,27 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
         initComponents();
         cp = this;
-        new Thread("PopCmdText") {
-            @Override
-            public void run() {
-                PopCmdText();
-            }
-        }.start();
+        try {
+            PopCmdText();
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        new Thread("PopQuoteText") {
-            @Override
-            public void run() {
-                PopQuoteList();
-            }
-        }.start();
+        try {
+            PopQuoteList();
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            CentralStore.RefreshSettings();
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        PopFilterSettings();
+        PopBadWords();
+
         new Thread("5 Minutes CMD Refresh") {
             @Override
             public void run() {
@@ -58,16 +73,56 @@ public final class ControlPanel extends javax.swing.JFrame {
                     new Thread("PopCmdText") {
                         @Override
                         public void run() {
-                            PopCmdText();
+                            while (true) {
+                                try {
+                                    PopCmdText();
+                                    break;
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException ex1) {
+                                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                                    }
+                                }
+                            }
                         }
                     }.start();
 
                     new Thread("PopQuoteText") {
                         @Override
                         public void run() {
-                            PopQuoteList();
+                            while (true) {
+                                try {
+                                    PopQuoteList();
+                                    break;
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException ex1) {
+                                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                                    }
+                                }
+                            }
                         }
                     }.start();
+                    new Thread("Populate Settings") {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                try {
+                                    CentralStore.RefreshSettings();
+                                    PopFilterSettings();
+                                    PopBadWords();
+                                    break;
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }
+                    }.start();
+
                     try {
                         Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException ex) {
@@ -80,13 +135,9 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     }
 
-    public void PopQuoteList() {
+    public void PopQuoteList() throws ParseException {
         JSONObject QList = null;
-        try {
-            QList = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/quotes?authkey=" + AuthKey));
-        } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        QList = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/quotes?authkey=" + AuthKey));
         String output = "";
         int NumOfQuotes = 0;
         for (Object t : QList.keySet()) {
@@ -106,13 +157,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.NumOfQuotes.setText(String.valueOf(NumOfQuotes + " quotes."));
     }
 
-    public void PopCmdText() {
+    public void PopCmdText() throws ParseException {
         JSONObject CmdOutput = null;
-        try {
-            CmdOutput = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/commands?authkey=" + AuthKey));
-        } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        CmdOutput = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/commands?authkey=" + AuthKey));
+
         System.out.println(CmdOutput.toString());
         JSONArray T = (JSONArray) CmdOutput.get("Commands");
         String out = "";
@@ -152,6 +200,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jFrame1 = new javax.swing.JFrame();
+        jLabel4 = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -169,6 +218,24 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         NumOfQuotes = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        FOnOff = new javax.swing.JToggleButton();
+        LinksOnOff = new javax.swing.JToggleButton();
+        RepeatOnOff = new javax.swing.JToggleButton();
+        CapsOnOff = new javax.swing.JToggleButton();
+        SymbolsOnOff = new javax.swing.JToggleButton();
+        SymPercent = new javax.swing.JSlider();
+        CapPercent = new javax.swing.JSlider();
+        jLabel5 = new javax.swing.JLabel();
+        CapsPercentDis = new javax.swing.JLabel();
+        SymPercentDis = new javax.swing.JLabel();
+        TimoutDuration = new javax.swing.JSlider();
+        TimeoutLabel = new javax.swing.JLabel();
+        RemoveBadWord = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        BadWordList = new javax.swing.JList();
+        addbadword = new javax.swing.JButton();
+        AddBadWord = new javax.swing.JTextField();
 
         jLabel1.setText("jLabel1");
 
@@ -182,6 +249,8 @@ public final class ControlPanel extends javax.swing.JFrame {
             jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
+
+        jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -237,7 +306,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(154, 154, 154)
                         .addComponent(RepeatList)))
@@ -256,7 +325,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addComponent(RepeatList)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -309,7 +378,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addGap(68, 68, 68)
                 .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(34, 34, 34)
                 .addComponent(jButton4)
@@ -325,18 +394,222 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4)
                     .addComponent(NumOfQuotes))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jTabbedPane2.addTab("Quotes", jPanel2);
 
+        FOnOff.setText("Filter Master Switch");
+        FOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FOnOffActionPerformed(evt);
+            }
+        });
+
+        LinksOnOff.setText("Links Switch");
+        LinksOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LinksOnOffActionPerformed(evt);
+            }
+        });
+
+        RepeatOnOff.setText("Repeat Switch");
+        RepeatOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RepeatOnOffActionPerformed(evt);
+            }
+        });
+
+        CapsOnOff.setText("Caps Switch");
+        CapsOnOff.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                CapsOnOffMouseReleased(evt);
+            }
+        });
+        CapsOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CapsOnOffActionPerformed(evt);
+            }
+        });
+
+        SymbolsOnOff.setText("Symbols Switch");
+        SymbolsOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SymbolsOnOffActionPerformed(evt);
+            }
+        });
+
+        SymPercent.setMinimum(30);
+        SymPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                SymPercentMouseDragged(evt);
+            }
+        });
+        SymPercent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                SymPercentMouseReleased(evt);
+            }
+        });
+        SymPercent.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                SymPercentPropertyChange(evt);
+            }
+        });
+
+        CapPercent.setMinimum(30);
+        CapPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                CapPercentMouseDragged(evt);
+            }
+        });
+        CapPercent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                CapPercentMouseReleased(evt);
+            }
+        });
+
+        jLabel5.setText("TimeOut Duration in Minutes");
+
+        CapsPercentDis.setText("jLabel6");
+
+        SymPercentDis.setText("jLabel7");
+
+        TimoutDuration.setMaximum(60);
+        TimoutDuration.setMinimum(1);
+        TimoutDuration.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                TimoutDurationMouseDragged(evt);
+            }
+        });
+        TimoutDuration.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                TimoutDurationMouseReleased(evt);
+            }
+        });
+        TimoutDuration.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                TimoutDurationPropertyChange(evt);
+            }
+        });
+
+        TimeoutLabel.setText("jLabel7");
+
+        RemoveBadWord.setText("Remove From List");
+        RemoveBadWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveBadWordActionPerformed(evt);
+            }
+        });
+
+        BadWordList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(BadWordList);
+
+        addbadword.setText("Add word to list");
+        addbadword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addbadwordActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(SymbolsOnOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(CapsOnOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RepeatOnOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LinksOnOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(AddBadWord)
+                                .addComponent(addbadword, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(SymPercentDis, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(CapsPercentDis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TimeoutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(RemoveBadWord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(95, 95, 95))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(RemoveBadWord)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(LinksOnOff)
+                                .addGap(21, 21, 21)
+                                .addComponent(RepeatOnOff))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(AddBadWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addbadword)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(CapsOnOff)
+                                .addGap(18, 18, 18)
+                                .addComponent(SymbolsOnOff))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(CapsPercentDis))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(SymPercentDis))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TimeoutLabel))))
+                .addContainerGap(117, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Filtering", jPanel3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane2)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,7 +623,19 @@ public final class ControlPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RefreshCMDsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshCMDsActionPerformed
-        this.PopCmdText();
+        while (true) {
+            try {
+                PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
     }//GEN-LAST:event_RefreshCMDsActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -381,8 +666,206 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        this.PopQuoteList();        // TODO add your handling code here:
+        while (true) {
+            try {
+                PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }    // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void CapPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseReleased
+        http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CapPercent&value=" + this.CapPercent.getValue());
+    }//GEN-LAST:event_CapPercentMouseReleased
+
+    private void CapPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseDragged
+        this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");        // TODO add your handling code here:
+    }//GEN-LAST:event_CapPercentMouseDragged
+
+    private void SymPercentPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_SymPercentPropertyChange
+
+    }//GEN-LAST:event_SymPercentPropertyChange
+
+    private void SymPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseReleased
+        http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=SymbolCount&value=" + this.SymPercent.getValue());        // TODO add your handling code here:
+    }//GEN-LAST:event_SymPercentMouseReleased
+
+    private void SymPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseDragged
+        this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");        // TODO add your handling code here:
+    }//GEN-LAST:event_SymPercentMouseDragged
+
+    private void RepeatOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatOnOffActionPerformed
+        if (this.RepeatOnOff.isSelected()) {
+            this.RepeatOnOff.setText("Repeat Enabled");
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=1");
+        } else {
+            this.RepeatOnOff.setText(("Repeat Disabled"));
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=0");
+        }
+    }//GEN-LAST:event_RepeatOnOffActionPerformed
+
+    private void LinksOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinksOnOffActionPerformed
+        if (this.LinksOnOff.isSelected()) {
+            this.LinksOnOff.setText("Links Enabled");
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=1");
+        } else {
+            this.LinksOnOff.setText(("Links Disabled"));
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=0");
+        }
+    }//GEN-LAST:event_LinksOnOffActionPerformed
+
+    private void FOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOnOffActionPerformed
+        if (this.FOnOff.isSelected()) {
+            this.FOnOff.setText("All Filtering Enabled");
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=1");
+        } else {
+            this.FOnOff.setText(("All Filtering Disabled"));
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=0");
+        }
+    }//GEN-LAST:event_FOnOffActionPerformed
+
+    private void SymbolsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SymbolsOnOffActionPerformed
+        if (this.SymbolsOnOff.isSelected()) {
+            this.SymbolsOnOff.setText("Symbols Enabled");
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=1");
+        } else {
+            this.SymbolsOnOff.setText(("Symbols Disabled"));
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=0");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_SymbolsOnOffActionPerformed
+
+    private void CapsOnOffMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapsOnOffMouseReleased
+
+    }//GEN-LAST:event_CapsOnOffMouseReleased
+
+    private void CapsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CapsOnOffActionPerformed
+        if (this.CapsOnOff.isSelected()) {
+            this.CapsOnOff.setText("Caps Enabled");
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=1");
+        } else {
+            this.CapsOnOff.setText(("Caps Disabled"));
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=0");
+        }
+
+    }//GEN-LAST:event_CapsOnOffActionPerformed
+
+    private void TimoutDurationMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseDragged
+        this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
+    }//GEN-LAST:event_TimoutDurationMouseDragged
+
+    private void TimoutDurationMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseReleased
+        http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=TimeOutLength&value=" + String.valueOf(this.TimoutDuration.getValue()));
+    }//GEN-LAST:event_TimoutDurationMouseReleased
+
+    private void TimoutDurationPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TimoutDurationPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TimoutDurationPropertyChange
+
+    private void RemoveBadWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveBadWordActionPerformed
+        List<String> ToRemove = new ArrayList();
+        ToRemove.addAll(this.BadWordList.getSelectedValuesList());
+        for (String t : ToRemove) {
+            try {
+                http.get("https://api.scottybot.net/api/badwords/delete?authkey=" + AuthKey + "&word=" + URLEncoder.encode(t, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        this.PopBadWords();
+    }//GEN-LAST:event_RemoveBadWordActionPerformed
+
+    private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
+
+        try {
+            String[] ToAdd = this.AddBadWord.getText().split(" ");
+            http.get("https://api.scottybot.net/api/badwords/add?authkey=" + AuthKey + "&word=" + URLEncoder.encode(ToAdd[0], "UTF-8"));
+            this.PopBadWords();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_addbadwordActionPerformed
+    DefaultListModel BadWordsList = new DefaultListModel();
+
+    public void PopBadWords() {
+        BadWordsList.clear();
+        this.BadWordList.setModel(BadWordsList);
+        JSONObject ToPopulate = null;
+        while (true) {
+            try {
+                ToPopulate = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/badwords?authkey=" + AuthKey));
+                break;
+            } catch (ParseException ex) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                }
+            }
+        }
+
+        for (Object t : ToPopulate.values()) {
+            BadWordsList.addElement(t.toString());
+        }
+
+    }
+
+    public void PopFilterSettings() {
+        JSONObject FSettings = GetSettings();
+        if ("1".equals(FSettings.get("UseFilter").toString())) {
+            this.FOnOff.setSelected(true);
+            this.FOnOff.setText("All Filtering Enabled");
+        } else {
+            this.FOnOff.setSelected(false);
+            this.FOnOff.setText(("All Filtering Disabled"));
+        }
+
+        if ("1".equals(FSettings.get("UseLinks").toString())) {
+            this.LinksOnOff.setSelected(true);
+            this.LinksOnOff.setText("Links Enabled");
+        } else {
+            this.LinksOnOff.setSelected(false);
+            this.LinksOnOff.setText(("Links Disabled"));
+        }
+
+        if ("1".equals(FSettings.get("UseRepeat"))) {
+            this.RepeatOnOff.setSelected(true);
+            this.RepeatOnOff.setText("Repeat Enabled");
+        } else {
+            this.RepeatOnOff.setText("Repeat Disabled");
+            this.RepeatOnOff.setSelected(false);
+        }
+
+        if ("1".equals(FSettings.get("UseCapitals"))) {
+            this.CapsOnOff.setSelected(true);
+            this.CapsOnOff.setText("Caps Enabled");
+        } else {
+            this.CapsOnOff.setText("Caps Disabled");
+            this.CapsOnOff.setSelected(false);
+        }
+
+        if ("1".equals(FSettings.get("UseSymbols"))) {
+            this.SymbolsOnOff.setSelected(true);
+            this.SymbolsOnOff.setText("Symbols Enabled");
+        } else {
+            this.SymbolsOnOff.setText("Symbols Disabled");
+            this.SymbolsOnOff.setSelected(false);
+        }
+
+        this.CapPercent.setValue(Integer.parseInt(FSettings.get("CapPercent").toString()));
+        this.SymPercent.setValue(Integer.parseInt(FSettings.get("SymbolCount").toString()));
+        this.TimoutDuration.setValue(Integer.parseInt(FSettings.get("TimeOutLength").toString()));
+
+        this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
+        this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");
+        this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");
+
+    }
 
     /**
      * @param args the command line arguments
@@ -420,11 +903,26 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField AddBadWord;
+    private javax.swing.JList BadWordList;
+    private javax.swing.JSlider CapPercent;
+    private javax.swing.JToggleButton CapsOnOff;
+    private javax.swing.JLabel CapsPercentDis;
     private javax.swing.JTextArea CmdInfo;
+    private javax.swing.JToggleButton FOnOff;
+    private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JLabel NumOfQuotes;
     private javax.swing.JTextArea QuotePanel;
     private javax.swing.JButton RefreshCMDs;
+    private javax.swing.JButton RemoveBadWord;
     private javax.swing.JButton RepeatList;
+    private javax.swing.JToggleButton RepeatOnOff;
+    private javax.swing.JSlider SymPercent;
+    private javax.swing.JLabel SymPercentDis;
+    private javax.swing.JToggleButton SymbolsOnOff;
+    private javax.swing.JLabel TimeoutLabel;
+    private javax.swing.JSlider TimoutDuration;
+    private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -434,11 +932,15 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
     // End of variables declaration//GEN-END:variables
 }

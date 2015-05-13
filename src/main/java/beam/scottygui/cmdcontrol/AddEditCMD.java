@@ -5,8 +5,9 @@
  */
 package beam.scottygui.cmdcontrol;
 
-import beam.scottygui.Stores.CentralStore;
+import beam.scottygui.ControlPanel;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +15,7 @@ import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -192,7 +194,19 @@ public class AddEditCMD extends javax.swing.JFrame {
         }
         http.get(Submit.trim());
         this.dispose();
-        CentralStore.cp.PopCmdText();
+        while (true) {
+            try {
+                cp.PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

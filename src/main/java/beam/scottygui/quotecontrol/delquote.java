@@ -5,8 +5,8 @@
  */
 package beam.scottygui.quotecontrol;
 
-import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.cp;
 import beam.scottygui.Utils.HTTP;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,8 +139,16 @@ public final class delquote extends javax.swing.JFrame {
     private void QDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QDelActionPerformed
         String todel = this.QToDelList.getSelectedValue().toString();
         String IDToDel = this.Reversed.get(todel);
-        http.get("https://api.scottybot.net/api/quotes/delete?authkey=" + AuthKey + "&id=" + IDToDel);
-        CentralStore.cp.PopQuoteList();
+        while (true) {
+            try {
+                http.get("https://api.scottybot.net/api/quotes/delete?authkey=" + AuthKey + "&id=" + IDToDel);
+                cp.PopQuoteList();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(delquote.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
         this.dispose();
     }//GEN-LAST:event_QDelActionPerformed
 

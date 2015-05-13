@@ -7,6 +7,7 @@ package beam.scottygui;
 
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import beam.scottygui.Utils.HTTP;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
@@ -75,6 +76,12 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        PassField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PassFieldKeyPressed(evt);
+            }
+        });
+
         jLabel1.setText("Username");
 
         jLabel2.setText("Password");
@@ -94,6 +101,12 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setText("Log in to Scottybot");
 
         jLabel4.setText("using your beam info.");
+
+        code.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                codeKeyPressed(evt);
+            }
+        });
 
         jLabel5.setText("2-Factor (optional)");
 
@@ -158,10 +171,26 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_LoginFieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        Login();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void codeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Login();
+        }
+    }//GEN-LAST:event_codeKeyPressed
+
+    private void PassFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PassFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Login();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_PassFieldKeyPressed
+
+    public void Login() {
         Username = this.LoginField.getText();
         Password = "";
         for (char t : this.PassField.getPassword()) {
@@ -205,7 +234,7 @@ public class Login extends javax.swing.JFrame {
         this.setVisible(false);
         cp.setVisible(true);
 
-    }//GEN-LAST:event_jButton1MouseClicked
+    }
 
     /**
      * @param args the command line arguments
