@@ -137,17 +137,31 @@ public final class delquote extends javax.swing.JFrame {
     }//GEN-LAST:event_QDelCancelActionPerformed
 
     private void QDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QDelActionPerformed
-        String todel = this.QToDelList.getSelectedValue().toString();
-        String IDToDel = this.Reversed.get(todel);
+        List<String> todel = this.QToDelList.getSelectedValuesList();
+
+        List<String> IDsToDel = new ArrayList();
+        for (String t : todel) {
+            IDsToDel.add(this.Reversed.get(t));
+        }
+
+        for (String t : IDsToDel) {
+            while (true) {
+                try {
+                    http.get("https://api.scottybot.net/api/quotes/delete?authkey=" + AuthKey + "&id=" + t);
+                    break;
+                } catch (Exception ex) {
+                    Logger.getLogger(delquote.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
         while (true) {
             try {
-                http.get("https://api.scottybot.net/api/quotes/delete?authkey=" + AuthKey + "&id=" + IDToDel);
                 cp.PopQuoteList();
                 break;
             } catch (ParseException ex) {
                 Logger.getLogger(delquote.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
         this.dispose();
     }//GEN-LAST:event_QDelActionPerformed

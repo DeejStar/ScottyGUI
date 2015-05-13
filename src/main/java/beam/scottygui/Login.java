@@ -231,9 +231,8 @@ public class Login extends javax.swing.JFrame {
         AuthKey = (String) AuthReturn.get("AuthKey");
         AuthKey = AuthKey.replace("\"", "");
         ControlPanel cp = new ControlPanel();
-        this.setVisible(false);
         cp.setVisible(true);
-
+        this.dispose();
     }
 
     /**

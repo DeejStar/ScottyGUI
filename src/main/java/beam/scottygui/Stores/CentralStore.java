@@ -31,7 +31,7 @@ public class CentralStore {
     }
 
     public static void RefreshSettings() throws ParseException {
-        if (ChanSettings.size() < 1) {
+        if (ChanSettings.size() > 0) {
             ChanSettings.clear();
         }
         ChanSettings.putAll((JSONObject) parser.parse(http.get("https://api.scottybot.net/api/settings?authkey=" + AuthKey)));
