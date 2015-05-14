@@ -192,7 +192,7 @@ public class AddEditCMD extends javax.swing.JFrame {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        http.get(Submit.trim());
+        http.GetScotty(Submit.trim());
         this.dispose();
         while (true) {
             try {

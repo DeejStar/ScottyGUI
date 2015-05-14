@@ -231,7 +231,7 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            AuthReturn = (JSONObject) parser.parse(http.get(URL));
+            AuthReturn = (JSONObject) parser.parse(http.GetScotty(URL));
         } catch (ParseException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

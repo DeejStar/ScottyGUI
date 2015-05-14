@@ -33,8 +33,8 @@ public class JSONUtil {
     //
     // JSONObject jsonObject = (JSONObject) obj;
     //
-    // JSONObject stream = (JSONObject)(jsonObject.get("stream"));
-    // Long viewers = (Long)stream.get("viewers");
+    // JSONObject stream = (JSONObject)(jsonObject.GetScotty("stream"));
+    // Long viewers = (Long)stream.GetScotty("viewers");
     // System.out.println("Viewers: " + viewers);
     // }
     public String ToReturn = null;
@@ -46,14 +46,14 @@ public class JSONUtil {
         boolean Got = false;
         while (!Got) {
             try {
-                result = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/users/" + ChanID));
+                result = (JSONObject) parser.parse(http.GetScotty("https://beam.pro/api/v1/users/" + ChanID));
                 Got = true;
             } catch (ParseException ex) {
                 sleep(1500);
             }
         }
         String ParseUserID = (String) result.get("username");
-        //String UserID = "" + ParseUserID.get("username");
+        //String UserID = "" + ParseUserID.GetScotty("username");
         return ParseUserID;
     }
 
@@ -65,7 +65,7 @@ public class JSONUtil {
         while (!Got) {
 
             try {
-                result = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + ChanID));
+                result = (JSONObject) parser.parse(http.GetScotty("https://beam.pro/api/v1/channels/" + ChanID));
                 Got = true;
             } catch (ParseException ex) {
                 sleep(1500);
@@ -82,7 +82,7 @@ public class JSONUtil {
         boolean Got = false;
         boolean Live = false;
         try {
-            result = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + ChanName));
+            result = (JSONObject) parser.parse(http.GetScotty("https://beam.pro/api/v1/channels/" + ChanName));
         } catch (ParseException ex) {
             Logger.getLogger(JSONUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,7 +99,7 @@ public class JSONUtil {
         boolean Live = false;
         while (!Got) {
             try {
-                result = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + ChanID));
+                result = (JSONObject) parser.parse(http.GetScotty("https://beam.pro/api/v1/channels/" + ChanID));
                 Got = true;
             } catch (ParseException ex) {
                 try {

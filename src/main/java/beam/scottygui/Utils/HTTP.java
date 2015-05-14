@@ -5,6 +5,8 @@
  */
 package beam.scottygui.Utils;
 
+import beam.scottygui.Login;
+import beam.scottygui.Stores.CentralStore;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
 import org.json.simple.parser.JSONParser;
@@ -93,6 +97,45 @@ public class HTTP {
 
     }
 
+    public String GetScotty(String urlString) {
+        String dataIn = "";
+        int TimesToTry = 0;
+        while (TimesToTry < 10) {
+            try {
+                urlString = urlString.trim();
+                System.out.println(urlString);
+                URL url = new URL(urlString);
+                // System.out.println("DEBUG: Getting data from " + url.toString());
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("User-Agent", "ScottyBot");
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream()))) {
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        dataIn += inputLine;
+                    }
+                }
+                break;
+            } catch (IOException | OutOfMemoryError ex) {
+                TimesToTry++;
+                System.out.println(ex.getMessage());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+        if (TimesToTry == 10) {
+            JOptionPane.showMessageDialog(null, "Error communicating with server, logging out to prevent corruption.");
+            CentralStore.cp.dispose();
+            CentralStore.cp = null;
+            Login login = new Login();
+            login.setVisible(true);
+        }
+        return dataIn;
+    }
+
     public String get(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
@@ -115,12 +158,17 @@ public class HTTP {
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;
                 System.out.println(ex.getMessage());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
         }
         if (TimesToTry == 10) {
-            JOptionPane.showMessageDialog(null, "Error communicating, try again later.");
+            JOptionPane.showMessageDialog(null, "Error communicating with server, try again later.");
+            return null;
         }
-
         return dataIn;
     }
 }

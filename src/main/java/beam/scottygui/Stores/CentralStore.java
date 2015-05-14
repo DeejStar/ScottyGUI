@@ -34,6 +34,6 @@ public class CentralStore {
         if (ChanSettings.size() > 0) {
             ChanSettings.clear();
         }
-        ChanSettings.putAll((JSONObject) parser.parse(http.get("https://api.scottybot.net/api/settings?authkey=" + AuthKey)));
+        ChanSettings.putAll((JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/api/settings?authkey=" + AuthKey)));
     }
 }

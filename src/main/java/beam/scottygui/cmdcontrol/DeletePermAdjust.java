@@ -35,7 +35,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         HTTP http = new HTTP();
         JSONObject CmdOutput = null;
         try {
-            CmdOutput = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/commands?authkey=" + AuthKey));
+            CmdOutput = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/api/commands?authkey=" + AuthKey));
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -239,7 +239,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         }
 
         try {
-            http.get("https://api.scottybot.net/api/commands/permlevel?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8") + "&permlevel=" + PermLevel);
+            http.GetScotty("https://api.scottybot.net/api/commands/permlevel?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8") + "&permlevel=" + PermLevel);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DeletePermAdjust.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -264,7 +264,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            http.get("https://api.scottybot.net/api/commands/reset?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8"));
+            http.GetScotty("https://api.scottybot.net/api/commands/reset?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8"));
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DeletePermAdjust.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -285,7 +285,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
 
     private void DelCmd() {
         try {
-            http.get("https://api.scottybot.net/api/commands/delete?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8"));
+            http.GetScotty("https://api.scottybot.net/api/commands/delete?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&cmd=" + URLEncoder.encode(this.CMDList.getSelectedItem().toString(), "UTF-8"));
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DeletePermAdjust.class.getName()).log(Level.SEVERE, null, ex);
         }
