@@ -1412,11 +1412,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             try {
                 http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode(CUsername, "UTF-8"));
                 http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode(CPassword, "UTF-8"));
+                JOptionPane.showMessageDialog(rootPane, "Success, now in your channel just type !rejoin");
             } catch (UnsupportedEncodingException ex) {
                 try {
                     http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
                     http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
-                    JOptionPane.showInputDialog("Had an issue setting name, atempted to put back to default");
+                    JOptionPane.showMessageDialog(this, "Had an issue setting name, atempted to put back to default");
                 } catch (UnsupportedEncodingException ex1) {
                     Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
                 }
@@ -1431,6 +1432,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         try {
             http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
             http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
+            JOptionPane.showMessageDialog(rootPane, "Done, now type !rejoin in your channel");
         } catch (Exception e) {
 
         }
