@@ -97,6 +97,59 @@ public class HTTP {
 
     }
 
+    public void CLogin(String Username, String Password) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
+        //CookieManager customCookieManager = new CookieManager();
+        //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        //CookieStore cookieStore = customCookieManager.getCookieStore();
+
+        String dataIn = "";
+        this.Username = Username;
+        this.Password = Password;
+        int attempt = 0;
+        while (attempt < 6) {
+            try {
+                CookieManager manager = new CookieManager();
+                manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+                CookieHandler.setDefault(manager);
+                URL url = new URL("https://beam.pro/api/v1/users/login");
+                Map<String, Object> LoginParams = new LinkedHashMap<>();
+                LoginParams.put("username", Username);
+                LoginParams.put("password", Password);
+                StringBuilder LoginPost = new StringBuilder();
+                for (Map.Entry<String, Object> param : LoginParams.entrySet()) {
+                    if (LoginPost.length() != 0) {
+                        LoginPost.append('&');
+                    }
+                    LoginPost.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    LoginPost.append('=');
+                    LoginPost.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                }
+                byte[] LoginBytes = LoginPost.toString().getBytes("UTF-8");
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(LoginBytes.length));
+                conn.setDoOutput(true);
+                conn.getOutputStream().write(LoginBytes);
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream()))) {
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        dataIn += inputLine;
+                    }
+                }
+                break;
+            } catch (Exception e) {
+                attempt++;
+                Thread.sleep(1000);
+            }
+        }
+        if ("".equalsIgnoreCase(dataIn)) {
+            throw new IOException();
+        }
+
+    }
+
     public String GetScotty(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
