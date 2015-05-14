@@ -8,6 +8,7 @@ package beam.scottygui;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.GetSettings;
+import static beam.scottygui.Stores.CentralStore.RefreshSettings;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
@@ -38,7 +39,7 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public final class ControlPanel extends javax.swing.JFrame {
-    
+
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
@@ -52,14 +53,14 @@ public final class ControlPanel extends javax.swing.JFrame {
         try {
             VerPrint = new PrintStream(new FileOutputStream("CurVer.json"));
         } catch (FileNotFoundException ex) {
-            
+
         }
         JSONObject curver = new JSONObject();
         curver.put("CurVer", CurVer.toString());
         VerPrint.print(curver.toString());
         VerPrint.close();
     }
-    
+
     public void CheckNewVer() {
         JSONObject VerCheck = null;
         while (true) {
@@ -74,9 +75,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         if (NewVer > CurVer) {
             JOptionPane.showMessageDialog(rootPane, "New version of ScottyGUI" + newline + "Download from Scottybot's Beam Channel");
         }
-        
+
     }
-    
+
     public ControlPanel() {
         initComponents();
         DumpCurVer();
@@ -87,22 +88,18 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         try {
             PopQuoteList();
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            CentralStore.RefreshSettings();
-        } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
+        RefreshAllSettings();
+
         PopFilterSettings();
         PopBadWords();
-        
+
         new Thread("5 Minutes CMD Refresh") {
             @Override
             public void run() {
@@ -125,7 +122,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                             }
                         }
                     }.start();
-                    
+
                     new Thread("PopQuoteText") {
                         @Override
                         public void run() {
@@ -150,7 +147,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                             while (true) {
                                 try {
                                     CentralStore.RefreshSettings();
-                                    PopFilterSettings();
+                                    RefreshAllSettings();
                                     PopBadWords();
                                     break;
                                 } catch (ParseException ex) {
@@ -159,19 +156,19 @@ public final class ControlPanel extends javax.swing.JFrame {
                             }
                         }
                     }.start();
-                    
+
                     try {
                         Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
+
             }
         }.start();
-        
+
     }
-    
+
     public void PopQuoteList() throws ParseException {
         JSONObject QList = null;
         QList = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/quotes?authkey=" + AuthKey));
@@ -182,22 +179,22 @@ public final class ControlPanel extends javax.swing.JFrame {
                 NumOfQuotes++;
             }
             if ("".equals(output)) {
-                
+
                 output = "ID: " + t.toString() + " - " + QList.get(t);
             } else {
-                
+
                 output = output + newline + newline + "ID: " + t.toString() + " - " + QList.get(t);
             }
-            
+
         }
         this.QuotePanel.setText(output);
         this.NumOfQuotes.setText(String.valueOf(NumOfQuotes + " quotes."));
     }
-    
+
     public void PopCmdText() throws ParseException {
         JSONObject CmdOutput = null;
         CmdOutput = (JSONObject) parser.parse(http.get("https://api.scottybot.net/api/commands?authkey=" + AuthKey));
-        
+
         System.out.println(CmdOutput.toString());
         JSONArray T = (JSONArray) CmdOutput.get("Commands");
         String out = "";
@@ -221,7 +218,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             out = out + newline + newline + obj.get("cmd") + " - Level: " + restrictlevel + " - " + obj.get("text") + " - Count: " + obj.get("cmdcount");
         }
-        
+
         this.CmdInfo.setText(out);
     }
 
@@ -238,7 +235,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jFrame1 = new javax.swing.JFrame();
         jLabel4 = new javax.swing.JLabel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        ControlTab = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         CmdInfo = new javax.swing.JTextArea();
@@ -275,6 +272,23 @@ public final class ControlPanel extends javax.swing.JFrame {
         AddBadWord = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
+        PointsName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        PRenBut = new javax.swing.JButton();
+        PEnabled = new javax.swing.JCheckBox();
+        EditPoints = new javax.swing.JButton();
+        PWhenIdle = new javax.swing.JTextField();
+        PStartPoints = new javax.swing.JTextField();
+        PWhenLive = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        RefreshAll = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -293,6 +307,12 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+
+        ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ControlTabMouseClicked(evt);
+            }
+        });
 
         CmdInfo.setEditable(false);
         CmdInfo.setColumns(20);
@@ -364,11 +384,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addComponent(RepeatList)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("Commands", jPanel1);
+        ControlTab.addTab("Commands", jPanel1);
 
         QuotePanel.setEditable(false);
         QuotePanel.setColumns(20);
@@ -417,7 +437,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addGap(68, 68, 68)
                 .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(34, 34, 34)
                 .addComponent(jButton4)
@@ -438,7 +458,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("Quotes", jPanel2);
+        ControlTab.addTab("Quotes", jPanel2);
 
         FOnOff.setText("Filter Master Switch");
         FOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -655,25 +675,177 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(addbadword)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(219, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
-        jTabbedPane2.addTab("Filtering", jPanel3);
+        ControlTab.addTab("Filtering", jPanel3);
+
+        PointsName.setEditable(false);
+        PointsName.setText("jTextField1");
+
+        jLabel8.setText("Points Name");
+
+        PRenBut.setText("Rename");
+        PRenBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PRenButActionPerformed(evt);
+            }
+        });
+
+        PEnabled.setText("Points Enabled");
+        PEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PEnabledActionPerformed(evt);
+            }
+        });
+
+        EditPoints.setText("Edit");
+        EditPoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditPointsActionPerformed(evt);
+            }
+        });
+
+        PWhenIdle.setEditable(false);
+        PWhenIdle.setText("jTextField2");
+        PWhenIdle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PWhenIdleActionPerformed(evt);
+            }
+        });
+
+        PStartPoints.setEditable(false);
+        PStartPoints.setText("jTextField3");
+
+        PWhenLive.setEditable(false);
+        PWhenLive.setText("jTextField2");
+
+        jLabel9.setText("Points When Live");
+
+        jLabel10.setText("Points When Not Live");
+
+        jLabel11.setText("Starting Points");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(365, 365, 365)
+                        .addComponent(PEnabled))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(197, 197, 197)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(EditPoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PRenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PointsName)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PWhenLive))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(PEnabled)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PRenBut))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(EditPoints)
+                    .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Points", jPanel5);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Settings", jPanel6);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Donator Stuff", jPanel7);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+
+        ControlTab.addTab("Settings", jPanel4);
+
+        RefreshAll.setText("Refresh All Settings");
+        RefreshAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefreshAllActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(RefreshAll)
                 .addContainerGap())
+            .addComponent(ControlTab)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2))
+                .addComponent(RefreshAll)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -695,34 +867,34 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_RefreshCMDsActionPerformed
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AddEditCMD cmd = new AddEditCMD();
         cmd.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DeletePermAdjust dpa = new DeletePermAdjust();
         dpa.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     private void RepeatListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatListActionPerformed
         RepeatList rl = new RepeatList();
         rl.setVisible(true);
     }//GEN-LAST:event_RepeatListActionPerformed
-    
+
     private void addquotebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addquotebuttonActionPerformed
         addquote aq = new addquote();
         aq.setVisible(true);
     }//GEN-LAST:event_addquotebuttonActionPerformed
-    
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+
         delquote dq = new delquote();
         dq.setVisible(true);
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-    
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         while (true) {
             try {
@@ -738,27 +910,27 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }    // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
-    
+
     private void CapPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseReleased
         http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CapPercent&value=" + this.CapPercent.getValue());
     }//GEN-LAST:event_CapPercentMouseReleased
-    
+
     private void CapPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseDragged
         this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");        // TODO add your handling code here:
     }//GEN-LAST:event_CapPercentMouseDragged
-    
+
     private void SymPercentPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_SymPercentPropertyChange
-        
+
     }//GEN-LAST:event_SymPercentPropertyChange
-    
+
     private void SymPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseReleased
         http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=SymbolCount&value=" + this.SymPercent.getValue());        // TODO add your handling code here:
     }//GEN-LAST:event_SymPercentMouseReleased
-    
+
     private void SymPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseDragged
         this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");        // TODO add your handling code here:
     }//GEN-LAST:event_SymPercentMouseDragged
-    
+
     private void RepeatOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatOnOffActionPerformed
         if (this.RepeatOnOff.isSelected()) {
             this.RepeatOnOff.setText("Repeat Enabled");
@@ -768,7 +940,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=0");
         }
     }//GEN-LAST:event_RepeatOnOffActionPerformed
-    
+
     private void LinksOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinksOnOffActionPerformed
         if (this.LinksOnOff.isSelected()) {
             this.LinksOnOff.setText("Links Enabled");
@@ -778,7 +950,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=0");
         }
     }//GEN-LAST:event_LinksOnOffActionPerformed
-    
+
     private void FOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOnOffActionPerformed
         if (this.FOnOff.isSelected()) {
             this.FOnOff.setText("All Filtering Enabled");
@@ -788,7 +960,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=0");
         }
     }//GEN-LAST:event_FOnOffActionPerformed
-    
+
     private void SymbolsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SymbolsOnOffActionPerformed
         if (this.SymbolsOnOff.isSelected()) {
             this.SymbolsOnOff.setText("Symbols Enabled");
@@ -798,11 +970,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=0");
         }        // TODO add your handling code here:
     }//GEN-LAST:event_SymbolsOnOffActionPerformed
-    
+
     private void CapsOnOffMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapsOnOffMouseReleased
-        
+
     }//GEN-LAST:event_CapsOnOffMouseReleased
-    
+
     private void CapsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CapsOnOffActionPerformed
         if (this.CapsOnOff.isSelected()) {
             this.CapsOnOff.setText("Caps Enabled");
@@ -811,21 +983,21 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.CapsOnOff.setText(("Caps Disabled"));
             http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=0");
         }
-        
+
     }//GEN-LAST:event_CapsOnOffActionPerformed
-    
+
     private void TimoutDurationMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseDragged
         this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
     }//GEN-LAST:event_TimoutDurationMouseDragged
-    
+
     private void TimoutDurationMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseReleased
         http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=TimeOutLength&value=" + String.valueOf(this.TimoutDuration.getValue()));
     }//GEN-LAST:event_TimoutDurationMouseReleased
-    
+
     private void TimoutDurationPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TimoutDurationPropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_TimoutDurationPropertyChange
-    
+
     private void RemoveBadWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveBadWordActionPerformed
         List<String> ToRemove = new ArrayList();
         ToRemove.addAll(this.BadWordList.getSelectedValuesList());
@@ -838,9 +1010,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         this.PopBadWords();
     }//GEN-LAST:event_RemoveBadWordActionPerformed
-    
+
     private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
-        
+
         try {
             String[] ToAdd = this.AddBadWord.getText().split(" ");
             http.get("https://api.scottybot.net/api/badwords/add?authkey=" + AuthKey + "&word=" + URLEncoder.encode(ToAdd[0], "UTF-8"));
@@ -850,8 +1022,118 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         this.AddBadWord.setText("");
     }//GEN-LAST:event_addbadwordActionPerformed
+
+    private void ControlTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ControlTabMouseClicked
+        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
+        switch (tab.toLowerCase()) {
+            case "commands": {
+                try {
+                    this.PopCmdText();
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            break;
+            case "quotes": {
+                try {
+                    this.PopQuoteList();
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            break;
+            case "filtering":
+                this.PopFilterSettings();
+                break;
+        }
+
+    }//GEN-LAST:event_ControlTabMouseClicked
+
+    private void RefreshAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllActionPerformed
+        RefreshAllSettings();
+    }//GEN-LAST:event_RefreshAllActionPerformed
+
+    private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PWhenIdleActionPerformed
+
+    private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
+        if (this.PEnabled.isSelected()) {
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
+        } else {
+            http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
+        }
+    }//GEN-LAST:event_PEnabledActionPerformed
+
+    private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
+        if (this.PointsName.isEditable()) {
+            this.PointsName.setEditable(false);
+            this.PRenBut.setText("Rename");
+            try {
+                String pname = this.PointsName.getText().replace("!", "");
+                http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PointsName&value=" + URLEncoder.encode(pname, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.PointsName.setEditable(true);
+            this.PRenBut.setText("Save");
+        }
+    }//GEN-LAST:event_PRenButActionPerformed
+
+    private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
+
+        if (this.PWhenLive.isEditable()) {
+            String idle = this.PWhenIdle.getText();
+            String notidle = this.PWhenLive.getText();
+            String StartPoints = this.PStartPoints.getText();
+            try {
+                Integer.parseInt(idle);
+                Integer.parseInt(notidle);
+                Integer.parseInt(StartPoints);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
+                return;
+            }
+
+            this.PWhenIdle.setEditable(false);
+            this.PWhenLive.setEditable(false);
+            this.PStartPoints.setEditable(false);
+            try {
+                http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
+                http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
+                http.get("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.EditPoints.setText("Edit");
+        } else {
+            this.EditPoints.setText("Save");
+            this.PWhenIdle.setEditable(true);
+            this.PWhenLive.setEditable(true);
+            this.PStartPoints.setEditable(true);
+        }
+    }//GEN-LAST:event_EditPointsActionPerformed
+
+    private void PopulateAllSettings() {
+        String PName = GetSettings().get("PointsName").toString();
+        if (!"!".equals(String.valueOf(PName.charAt(0)))) {
+            PName = "!" + PName;
+        }
+        this.PointsName.setText(PName);
+        if ("1".equals(GetSettings().get("Points"))) {
+            this.PEnabled.setSelected(true);
+        } else {
+            this.PEnabled.setSelected(false);
+        }
+        this.PWhenLive.setText(GetSettings().get("notidlepoints").toString());
+        this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
+        this.PStartPoints.setText(GetSettings().get("startpoints").toString());
+
+    }
+
     DefaultListModel BadWordsList = new DefaultListModel();
-    
+
     public void PopBadWords() {
         BadWordsList.clear();
         this.BadWordList.setModel(BadWordsList);
@@ -867,14 +1149,25 @@ public final class ControlPanel extends javax.swing.JFrame {
                 }
             }
         }
-        
+
         for (Object t : ToPopulate.values()) {
             BadWordsList.addElement(t.toString());
         }
-        
+
     }
-    
+
+    public void RefreshAllSettings() {
+        try {
+            RefreshSettings();
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PopFilterSettings();
+        PopulateAllSettings();
+    }
+
     public void PopFilterSettings() {
+
         JSONObject FSettings = GetSettings();
         if ("1".equals(FSettings.get("UseFilter").toString())) {
             this.FOnOff.setSelected(true);
@@ -883,7 +1176,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.FOnOff.setSelected(false);
             this.FOnOff.setText(("All Filtering Disabled"));
         }
-        
+
         if ("1".equals(FSettings.get("UseLinks").toString())) {
             this.LinksOnOff.setSelected(true);
             this.LinksOnOff.setText("Links Enabled");
@@ -891,7 +1184,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.LinksOnOff.setSelected(false);
             this.LinksOnOff.setText(("Links Disabled"));
         }
-        
+
         if ("1".equals(FSettings.get("UseRepeat"))) {
             this.RepeatOnOff.setSelected(true);
             this.RepeatOnOff.setText("Repeat Enabled");
@@ -899,7 +1192,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.RepeatOnOff.setText("Repeat Disabled");
             this.RepeatOnOff.setSelected(false);
         }
-        
+
         if ("1".equals(FSettings.get("UseCapitals"))) {
             this.CapsOnOff.setSelected(true);
             this.CapsOnOff.setText("Caps Enabled");
@@ -907,7 +1200,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.CapsOnOff.setText("Caps Disabled");
             this.CapsOnOff.setSelected(false);
         }
-        
+
         if ("1".equals(FSettings.get("UseSymbols"))) {
             this.SymbolsOnOff.setSelected(true);
             this.SymbolsOnOff.setText("Symbols Enabled");
@@ -915,15 +1208,15 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.SymbolsOnOff.setText("Symbols Disabled");
             this.SymbolsOnOff.setSelected(false);
         }
-        
+
         this.CapPercent.setValue(Integer.parseInt(FSettings.get("CapPercent").toString()));
         this.SymPercent.setValue(Integer.parseInt(FSettings.get("SymbolCount").toString()));
         this.TimoutDuration.setValue(Integer.parseInt(FSettings.get("TimeOutLength").toString()));
-        
+
         this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
         this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");
         this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");
-        
+
     }
 
     /**
@@ -968,10 +1261,19 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JToggleButton CapsOnOff;
     private javax.swing.JLabel CapsPercentDis;
     private javax.swing.JTextArea CmdInfo;
+    private javax.swing.JTabbedPane ControlTab;
+    private javax.swing.JButton EditPoints;
     private javax.swing.JToggleButton FOnOff;
     private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JLabel NumOfQuotes;
+    private javax.swing.JCheckBox PEnabled;
+    private javax.swing.JButton PRenBut;
+    private javax.swing.JTextField PStartPoints;
+    private javax.swing.JTextField PWhenIdle;
+    private javax.swing.JTextField PWhenLive;
+    private javax.swing.JTextField PointsName;
     private javax.swing.JTextArea QuotePanel;
+    private javax.swing.JButton RefreshAll;
     private javax.swing.JButton RefreshCMDs;
     private javax.swing.JButton RemoveBadWord;
     private javax.swing.JButton RepeatList;
@@ -989,19 +1291,27 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

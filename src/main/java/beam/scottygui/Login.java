@@ -9,7 +9,9 @@ import static beam.scottygui.Stores.CentralStore.AuthKey;
 import beam.scottygui.Utils.HTTP;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -222,7 +224,12 @@ public class Login extends javax.swing.JFrame {
             return;
         }
         JSONObject AuthReturn = null;
-        String URL = "https://api.scottybot.net/api/login?username=" + Username + "&password=" + Password + "&code=" + code;
+        String URL = null;
+        try {
+            URL = "https://api.scottybot.net/api/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + code;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             AuthReturn = (JSONObject) parser.parse(http.get(URL));
         } catch (ParseException ex) {

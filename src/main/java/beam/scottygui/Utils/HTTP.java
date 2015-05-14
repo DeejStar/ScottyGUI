@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
+import javax.swing.JOptionPane;
 import org.json.simple.parser.JSONParser;
 
 /**
@@ -95,7 +96,7 @@ public class HTTP {
     public String get(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
-        while (TimesToTry < 6) {
+        while (TimesToTry < 10) {
             try {
                 urlString = urlString.trim();
                 System.out.println(urlString);
@@ -115,6 +116,9 @@ public class HTTP {
                 TimesToTry++;
                 System.out.println(ex.getMessage());
             }
+        }
+        if (TimesToTry == 10) {
+            JOptionPane.showMessageDialog(null, "Error communicating, try again later.");
         }
 
         return dataIn;
