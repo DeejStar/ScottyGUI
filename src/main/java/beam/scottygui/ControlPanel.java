@@ -51,7 +51,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = 4;
+    Integer CurVer = 6;
     WebSocket socket = new WebSocket();
 
     /**
@@ -989,7 +989,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(MeOutput))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EFollowMsg)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(405, Short.MAX_VALUE))
         );
 
         JSettingsPane.addTab("Settings", jPanel6);
@@ -1509,7 +1509,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         while (true) {
             try {
-                PopCmdText();
+                this.PopQuoteList();
                 break;
             } catch (ParseException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
