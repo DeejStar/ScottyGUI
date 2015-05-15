@@ -13,6 +13,7 @@ import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
+import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.cmdcontrol.AddEditCMD;
 import beam.scottygui.cmdcontrol.DeletePermAdjust;
 import beam.scottygui.cmdcontrol.RepeatList;
@@ -20,10 +21,15 @@ import beam.scottygui.quotecontrol.addquote;
 import beam.scottygui.quotecontrol.delquote;
 import beam.scottygui.websocket.WebSocket;
 import java.awt.Component;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +51,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = 3;
+    Integer CurVer = 4;
     WebSocket socket = new WebSocket();
 
     /**
@@ -68,21 +74,69 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.CurViewers.setText(curnum + " viewers");
     }
 
-    public void CheckNewVer() {
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
+    public boolean CheckNewVer() {
         JSONObject VerCheck = null;
         while (true) {
             try {
-                VerCheck = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/files/CurVer.json"));
+                VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
                 break;
             } catch (ParseException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println(VerCheck.toString());
         int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
         if (NewVer > CurVer) {
-            JOptionPane.showMessageDialog(rootPane, "New version of ScottyGUI" + newline + "Download from Scottybot's Beam Channel");
-        }
+            int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
 
+            if (Yes == 0) {
+                int Attempts = 0;
+                while (Attempts < 5) {
+                    URL ToDownload = null;
+                    try {
+                        ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    String FileName = "./ScottyGUI.jar";
+                    downloadFromUrl download = new downloadFromUrl();
+                    try {
+                        download.downloadFromUrl(ToDownload, FileName);
+                        break;
+                    } catch (IOException ex) {
+                        Attempts++;
+                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (Attempts == 5) {
+                    JOptionPane.showMessageDialog(rootPane, "Unable to download, try again later");
+                } else {
+                    //Restart the program
+                    JOptionPane.showMessageDialog(rootPane, "Downloaded, Restarting ScottyGUI!");
+
+                    StringBuilder cmd = new StringBuilder();
+                    cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
+                    for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+                        cmd.append(jvmArg + " ");
+                    }
+                    cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+
+                    try {
+                        System.out.println(cmd.toString());
+                        Runtime.getRuntime().exec(cmd.toString());
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    System.exit(0);
+                    System.exit(0);
+                }
+
+            }
+            return true;
+        }
+        return false;
     }
 
     public ControlPanel() {
@@ -315,6 +369,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         CurViewers = new javax.swing.JLabel();
         TopViewers = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -1058,6 +1113,13 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         TopViewers.setText("0 Top Viewers");
 
+        jButton5.setText("Check Updates");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1070,6 +1132,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RefreshAll)
                 .addContainerGap())
             .addComponent(ControlTab)
@@ -1082,7 +1146,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(RefreshAll)
                     .addComponent(jLabel12)
                     .addComponent(CurViewers)
-                    .addComponent(TopViewers))
+                    .addComponent(TopViewers)
+                    .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1500,6 +1565,12 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RefreshCMDsActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if (!this.CheckNewVer()) {
+            JOptionPane.showMessageDialog(rootPane, "No new updates.");
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -1774,6 +1845,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JFrame jFrame1;
