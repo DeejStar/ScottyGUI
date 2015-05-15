@@ -40,6 +40,8 @@ public class CentralStore {
     public static Long UserID = null;
     public static List<String> UniqueChatters = new ArrayList();
     public static Long TopViewers = null;
+    public static Integer Joined = 0;
+    public static Integer Left = 0;
 
     public static JSONObject GetSettings() {
         return ChanSettings;

@@ -365,6 +365,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         ResetScottyName = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
+        PercentRetainedViewers = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         RefreshAll = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         CurViewers = new javax.swing.JLabel();
@@ -1080,21 +1082,33 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         UChatters.setText("0 Unique Chatters This Session.");
 
+        PercentRetainedViewers.setText("Not enough info yet for Retained Viewer Stats");
+
+        jLabel13.setText("<<< EXPERIMENTAL");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(UChatters, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(577, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(UChatters, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(PercentRetainedViewers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel13)
+                .addContainerGap(470, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addComponent(UChatters)
-                .addContainerGap(431, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PercentRetainedViewers)
+                    .addComponent(jLabel13))
+                .addContainerGap(406, Short.MAX_VALUE))
         );
 
         ControlTab.addTab("Statistics", jPanel7);
@@ -1821,6 +1835,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextField PStartPoints;
     private javax.swing.JTextField PWhenIdle;
     private javax.swing.JTextField PWhenLive;
+    public javax.swing.JLabel PercentRetainedViewers;
     private javax.swing.JTextField PointsName;
     private javax.swing.JCheckBox QEnabled;
     private javax.swing.JTextArea QuotePanel;
@@ -1853,6 +1868,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

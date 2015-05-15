@@ -7,6 +7,8 @@ package beam.scottygui.websocket;
 
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
+import static beam.scottygui.Stores.CentralStore.Joined;
+import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class EndPoint extends Endpoint {
     JSONParser parser = new JSONParser();
     String cusername = null;
     String channame = null;
+    Integer LastCount = null;
 
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
@@ -56,18 +59,41 @@ public class EndPoint extends Endpoint {
                 switch (EventType.toUpperCase()) {
                     case "STATS":
                         data = (JSONObject) msg.get("data");
-                        Long viewers = null;
+                        Integer viewers = 0;
                         try {
-                            viewers = Long.parseLong(data.get("viewers").toString());
+                            viewers = Integer.parseInt(data.get("viewers").toString());
+                            if (LastCount == null) {
+                                LastCount = viewers;
+                            } else {
+                                if (viewers < LastCount) {
+                                    int totick = LastCount - viewers;
+                                    while (totick > 0) {
+                                        CentralStore.Left++;
+                                        totick--;
+                                    }
+                                }
+                                if (viewers > LastCount) {
+                                    int totick = viewers - LastCount;
+                                    while (totick > 0) {
+                                        CentralStore.Joined++;
+                                        totick--;
+                                    }
+                                }
+
+                                Float Retained = (float) ((float) Joined / (float) (Left + Joined)) * 100;
+                                if (!"NaN".toLowerCase().equals(Retained.toString().toLowerCase())) {
+                                    cp.PercentRetainedViewers.setText(Retained.toString() + "% Retained Viewership");
+                                }
+                            }
+
                         } catch (Exception e) {
                         }
-                        System.out.println("VIEWERS >> " + viewers);
                         if (viewers == null) {
                             cp.CurViewers.setText("Offline");
                         } else {
                             cp.CurViewers.setText(viewers.toString() + " viewers");
                             if (CentralStore.TopViewers < viewers) {
-                                CentralStore.TopViewers = viewers;
+                                CentralStore.TopViewers = Long.parseLong(viewers.toString());
                                 cp.TopViewers.setText("Top Viewer Count: " + CentralStore.TopViewers.toString());
                                 System.out.println(CentralStore.TopViewers.toString());
                             }
