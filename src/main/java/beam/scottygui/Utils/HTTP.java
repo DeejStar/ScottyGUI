@@ -14,6 +14,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -86,6 +88,12 @@ public class HTTP {
                         dataIn += inputLine;
                     }
                 }
+                CookieStore cookieStore = manager.getCookieStore();
+                List<HttpCookie> cookieList = cookieStore.getCookies();
+                for (HttpCookie t : cookieList) {
+                    CentralStore.Cookie = t.getValue();
+                    break;
+                }
                 break;
             } catch (Exception e) {
                 attempt++;
@@ -108,9 +116,6 @@ public class HTTP {
         int attempt = 0;
         while (attempt < 6) {
             try {
-                CookieManager manager = new CookieManager();
-                manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-                CookieHandler.setDefault(manager);
                 URL url = new URL("https://beam.pro/api/v1/users/login");
                 Map<String, Object> LoginParams = new LinkedHashMap<>();
                 LoginParams.put("username", Username);
@@ -185,6 +190,43 @@ public class HTTP {
             CentralStore.cp = null;
             Login login = new Login();
             login.setVisible(true);
+        }
+        return dataIn;
+    }
+
+    public String BeamGet(String urlString) {
+        String dataIn = "";
+        int TimesToTry = 0;
+        while (TimesToTry < 10) {
+            try {
+                urlString = urlString.trim();
+                System.out.println(urlString);
+                URL url = new URL(urlString);
+                // System.out.println("DEBUG: Getting data from " + url.toString());
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("Cookie", "sails.sid=" + CentralStore.Cookie);
+                conn.setRequestProperty("User-Agent", "ScottyBot");
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream()))) {
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        dataIn += inputLine;
+                    }
+                }
+                break;
+            } catch (IOException | OutOfMemoryError ex) {
+                TimesToTry++;
+                System.out.println(ex.getMessage());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+        if (TimesToTry == 10) {
+            JOptionPane.showMessageDialog(null, "Error communicating with server, try again later.");
+            return null;
         }
         return dataIn;
     }

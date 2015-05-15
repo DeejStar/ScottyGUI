@@ -5,8 +5,8 @@
  */
 package beam.scottygui;
 
-import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.RefreshSettings;
 import static beam.scottygui.Stores.CentralStore.cp;
@@ -18,6 +18,7 @@ import beam.scottygui.cmdcontrol.DeletePermAdjust;
 import beam.scottygui.cmdcontrol.RepeatList;
 import beam.scottygui.quotecontrol.addquote;
 import beam.scottygui.quotecontrol.delquote;
+import beam.scottygui.websocket.WebSocket;
 import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,7 +45,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = 2;
+    Integer CurVer = 3;
+    WebSocket socket = new WebSocket();
 
     /**
      * Creates new form ControlPanel
@@ -60,6 +62,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         curver.put("CurVer", CurVer.toString());
         VerPrint.print(curver.toString());
         VerPrint.close();
+    }
+
+    public void SetCurViewers(String curnum) {
+        this.CurViewers.setText(curnum + " viewers");
     }
 
     public void CheckNewVer() {
@@ -147,11 +153,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                         public void run() {
                             while (true) {
                                 try {
-                                    CentralStore.RefreshSettings();
                                     RefreshAllSettings();
                                     PopBadWords();
                                     break;
-                                } catch (ParseException ex) {
+                                } catch (Exception ex) {
                                     Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
@@ -167,7 +172,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
-
+        this.socket.connect(ChanID);
     }
 
     public void PopQuoteList() throws ParseException {
@@ -236,6 +241,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jFrame1 = new javax.swing.JFrame();
         jLabel4 = new javax.swing.JLabel();
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
         ControlTab = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -302,8 +309,12 @@ public final class ControlPanel extends javax.swing.JFrame {
         YodaEnabled = new javax.swing.JCheckBox();
         CUsernamePassword = new javax.swing.JButton();
         ResetScottyName = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        UChatters = new javax.swing.JLabel();
         RefreshAll = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
+        CurViewers = new javax.swing.JLabel();
+        TopViewers = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -320,7 +331,30 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel4.setText("jLabel4");
 
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Scottybot GUI");
         setResizable(false);
 
         ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -989,6 +1023,27 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ControlTab.addTab("Settings", jPanel4);
 
+        UChatters.setText("0 Unique Chatters This Session.");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(UChatters, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(577, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(UChatters)
+                .addContainerGap(431, Short.MAX_VALUE))
+        );
+
+        ControlTab.addTab("Statistics", jPanel7);
+
         RefreshAll.setText("Refresh All Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -998,12 +1053,21 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel12.setText("Hover over commands, some have explanations");
 
+        CurViewers.setText("Offline");
+        CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        TopViewers.setText("0 Top Viewers");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(316, 316, 316)
+                .addGap(63, 63, 63)
+                .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(RefreshAll)
@@ -1016,7 +1080,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(RefreshAll)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(CurViewers)
+                    .addComponent(TopViewers))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1025,371 +1091,44 @@ public final class ControlPanel extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void RefreshCMDsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshCMDsActionPerformed
-        while (true) {
-            try {
-                PopCmdText();
-                break;
-            } catch (ParseException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-    }//GEN-LAST:event_RefreshCMDsActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AddEditCMD cmd = new AddEditCMD();
-        cmd.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        DeletePermAdjust dpa = new DeletePermAdjust();
-        dpa.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void RepeatListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatListActionPerformed
-        RepeatList rl = new RepeatList();
-        rl.setVisible(true);
-    }//GEN-LAST:event_RepeatListActionPerformed
-
-    private void addquotebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addquotebuttonActionPerformed
-        addquote aq = new addquote();
-        aq.setVisible(true);
-    }//GEN-LAST:event_addquotebuttonActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
-        delquote dq = new delquote();
-        dq.setVisible(true);
-// TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        while (true) {
-            try {
-                PopCmdText();
-                break;
-            } catch (ParseException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }    // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void CapPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseReleased
-        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CapPercent&value=" + this.CapPercent.getValue());
-    }//GEN-LAST:event_CapPercentMouseReleased
-
-    private void CapPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseDragged
-        this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");        // TODO add your handling code here:
-    }//GEN-LAST:event_CapPercentMouseDragged
-
-    private void SymPercentPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_SymPercentPropertyChange
-
-    }//GEN-LAST:event_SymPercentPropertyChange
-
-    private void SymPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseReleased
-        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=SymbolCount&value=" + this.SymPercent.getValue());        // TODO add your handling code here:
-    }//GEN-LAST:event_SymPercentMouseReleased
-
-    private void SymPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseDragged
-        this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");        // TODO add your handling code here:
-    }//GEN-LAST:event_SymPercentMouseDragged
-
-    private void RepeatOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatOnOffActionPerformed
-        if (this.RepeatOnOff.isSelected()) {
-            this.RepeatOnOff.setText("Repeat Enabled");
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=1");
-        } else {
-            this.RepeatOnOff.setText(("Repeat Disabled"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=0");
-        }
-    }//GEN-LAST:event_RepeatOnOffActionPerformed
-
-    private void LinksOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinksOnOffActionPerformed
-        if (this.LinksOnOff.isSelected()) {
-            this.LinksOnOff.setText("Links Enabled");
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=1");
-        } else {
-            this.LinksOnOff.setText(("Links Disabled"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=0");
-        }
-    }//GEN-LAST:event_LinksOnOffActionPerformed
-
-    private void FOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOnOffActionPerformed
-        if (this.FOnOff.isSelected()) {
-            this.FOnOff.setText("All Filtering Enabled");
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=1");
-        } else {
-            this.FOnOff.setText(("All Filtering Disabled"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=0");
-        }
-    }//GEN-LAST:event_FOnOffActionPerformed
-
-    private void SymbolsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SymbolsOnOffActionPerformed
-        if (this.SymbolsOnOff.isSelected()) {
-            this.SymbolsOnOff.setText("Symbols Enabled");
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=1");
-        } else {
-            this.SymbolsOnOff.setText(("Symbols Disabled"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=0");
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_SymbolsOnOffActionPerformed
-
-    private void CapsOnOffMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapsOnOffMouseReleased
-
-    }//GEN-LAST:event_CapsOnOffMouseReleased
-
-    private void CapsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CapsOnOffActionPerformed
-        if (this.CapsOnOff.isSelected()) {
-            this.CapsOnOff.setText("Caps Enabled");
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=1");
-        } else {
-            this.CapsOnOff.setText(("Caps Disabled"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=0");
-        }
-
-    }//GEN-LAST:event_CapsOnOffActionPerformed
-
-    private void TimoutDurationMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseDragged
-        this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
-    }//GEN-LAST:event_TimoutDurationMouseDragged
-
-    private void TimoutDurationMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseReleased
-        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=TimeOutLength&value=" + String.valueOf(this.TimoutDuration.getValue()));
-    }//GEN-LAST:event_TimoutDurationMouseReleased
-
-    private void TimoutDurationPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TimoutDurationPropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TimoutDurationPropertyChange
-
-    private void RemoveBadWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveBadWordActionPerformed
-        List<String> ToRemove = new ArrayList();
-        ToRemove.addAll(this.BadWordList.getSelectedValuesList());
-        for (String t : ToRemove) {
-            try {
-                http.GetScotty("https://api.scottybot.net/api/badwords/delete?authkey=" + AuthKey + "&word=" + URLEncoder.encode(t, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        this.PopBadWords();
-    }//GEN-LAST:event_RemoveBadWordActionPerformed
-
-    private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
-
-        try {
-            String[] ToAdd = this.AddBadWord.getText().split(" ");
-            http.GetScotty("https://api.scottybot.net/api/badwords/add?authkey=" + AuthKey + "&word=" + URLEncoder.encode(ToAdd[0], "UTF-8"));
-            this.PopBadWords();
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.AddBadWord.setText("");
-    }//GEN-LAST:event_addbadwordActionPerformed
-
-    private void ControlTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ControlTabMouseClicked
-//        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
-//        switch (tab.toLowerCase()) {
-//            case "commands": {
-//                try {
-//                    this.PopCmdText();
-//                } catch (ParseException ex) {
-//                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            break;
-//            case "quotes": {
-//                try {
-//                    this.PopQuoteList();
-//                } catch (ParseException ex) {
-//                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            break;
-//            case "filtering":
-//                this.PopFilterSettings();
-//                break;
-//        }
-
-    }//GEN-LAST:event_ControlTabMouseClicked
-
     private void RefreshAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllActionPerformed
         RefreshAllSettings();
     }//GEN-LAST:event_RefreshAllActionPerformed
 
-    private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PWhenIdleActionPerformed
+    private void ControlTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ControlTabMouseClicked
+        //        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
+        //        switch (tab.toLowerCase()) {
+        //            case "commands": {
+        //                try {
+        //                    this.PopCmdText();
+        //                } catch (ParseException ex) {
+        //                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        //                }
+        //            }
+        //            break;
+        //            case "quotes": {
+        //                try {
+        //                    this.PopQuoteList();
+        //                } catch (ParseException ex) {
+        //                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        //                }
+        //            }
+        //            break;
+        //            case "filtering":
+        //                this.PopFilterSettings();
+        //                break;
+        //        }
+    }//GEN-LAST:event_ControlTabMouseClicked
 
-    private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
-        if (this.PEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
-        }
-    }//GEN-LAST:event_PEnabledActionPerformed
-
-    private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
-        if (this.PointsName.isEditable()) {
-            this.PointsName.setEditable(false);
-            this.PRenBut.setText("Rename");
-            try {
-                String pname = this.PointsName.getText().replace("!", "");
-                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PointsName&value=" + URLEncoder.encode(pname, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            this.PointsName.setEditable(true);
-            this.PRenBut.setText("Save");
-        }
-    }//GEN-LAST:event_PRenButActionPerformed
-
-    private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
-
-        if (this.PWhenLive.isEditable()) {
-            String idle = this.PWhenIdle.getText();
-            String notidle = this.PWhenLive.getText();
-            String StartPoints = this.PStartPoints.getText();
-            try {
-                Integer.parseInt(idle);
-                Integer.parseInt(notidle);
-                Integer.parseInt(StartPoints);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
-                return;
-            }
-
-            this.PWhenIdle.setEditable(false);
-            this.PWhenLive.setEditable(false);
-            this.PStartPoints.setEditable(false);
-            try {
-                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
-                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
-                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            this.EditPoints.setText("Edit");
-        } else {
-            this.EditPoints.setText("Save");
-            this.PWhenIdle.setEditable(true);
-            this.PWhenLive.setEditable(true);
-            this.PStartPoints.setEditable(true);
-        }
-    }//GEN-LAST:event_EditPointsActionPerformed
-
-    private void BHEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BHEnabledActionPerformed
-        if (this.BHEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=0");
-        }
-    }//GEN-LAST:event_BHEnabledActionPerformed
-
-    private void REnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REnabledActionPerformed
-        if (this.REnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=0");
-        }
-    }//GEN-LAST:event_REnabledActionPerformed
-
-    private void QEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QEnabledActionPerformed
-        if (this.QEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=0");
-        }
-    }//GEN-LAST:event_QEnabledActionPerformed
-
-    private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
-        if (this.FollowEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
-        }
-
-    }//GEN-LAST:event_FollowEnabledActionPerformed
-
-    private void EFollowMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EFollowMsgActionPerformed
-        String OldFollowMSG = GetSettings().get("FollowMSG").toString();
-        String NewFollowMSG = JOptionPane.showInputDialog(rootPane, "Set your follower message. use (_follower_) as a placeholder for the follower.", OldFollowMSG);
+    private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
         try {
-            if (!NewFollowMSG.equals(OldFollowMSG)) {
-                try {
-                    http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=FollowMSG&value=" + URLEncoder.encode(NewFollowMSG, "UTF-8"));
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
+            JOptionPane.showMessageDialog(rootPane, "Done, now type !rejoin in your channel");
         } catch (Exception e) {
-            //cop out
-        }
-        try {
-            RefreshSettings();
-            this.PopulateAllSettings();
-        } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_EFollowMsgActionPerformed
 
-    private void OnlyWhenLiveEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OnlyWhenLiveEnabledActionPerformed
-        if (this.OnlyWhenLiveEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=0");
         }
-    }//GEN-LAST:event_OnlyWhenLiveEnabledActionPerformed
-
-    private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
-        if (this.ClearCmdsEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=0");
-        }
-    }//GEN-LAST:event_ClearCmdsEnabledActionPerformed
-
-    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
-        if (this.MeOutput.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
-        }
-    }//GEN-LAST:event_MeOutputActionPerformed
-
-    private void ChuckEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChuckEnabledActionPerformed
-        if (this.ChuckEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=0");
-        }
-    }//GEN-LAST:event_ChuckEnabledActionPerformed
-
-    private void ChatEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatEnabledActionPerformed
-        if (this.ChatEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=0");
-        }
-    }//GEN-LAST:event_ChatEnabledActionPerformed
-
-    private void YodaEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YodaEnabledActionPerformed
-        if (this.YodaEnabled.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=1");
-        } else {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=0");
-        }
-    }//GEN-LAST:event_YodaEnabledActionPerformed
+    }//GEN-LAST:event_ResetScottyNameActionPerformed
 
     private void CUsernamePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CUsernamePasswordActionPerformed
         String CUsername = null;
@@ -1425,18 +1164,341 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
 
         }
-
     }//GEN-LAST:event_CUsernamePasswordActionPerformed
 
-    private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
-        try {
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
-            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
-            JOptionPane.showMessageDialog(rootPane, "Done, now type !rejoin in your channel");
-        } catch (Exception e) {
-
+    private void YodaEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YodaEnabledActionPerformed
+        if (this.YodaEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=0");
         }
-    }//GEN-LAST:event_ResetScottyNameActionPerformed
+    }//GEN-LAST:event_YodaEnabledActionPerformed
+
+    private void ChatEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatEnabledActionPerformed
+        if (this.ChatEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=0");
+        }
+    }//GEN-LAST:event_ChatEnabledActionPerformed
+
+    private void ChuckEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChuckEnabledActionPerformed
+        if (this.ChuckEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=0");
+        }
+    }//GEN-LAST:event_ChuckEnabledActionPerformed
+
+    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
+        if (this.MeOutput.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
+        }
+    }//GEN-LAST:event_MeOutputActionPerformed
+
+    private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
+        if (this.ClearCmdsEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=0");
+        }
+    }//GEN-LAST:event_ClearCmdsEnabledActionPerformed
+
+    private void OnlyWhenLiveEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OnlyWhenLiveEnabledActionPerformed
+        if (this.OnlyWhenLiveEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=0");
+        }
+    }//GEN-LAST:event_OnlyWhenLiveEnabledActionPerformed
+
+    private void EFollowMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EFollowMsgActionPerformed
+        String OldFollowMSG = GetSettings().get("FollowMSG").toString();
+        String NewFollowMSG = JOptionPane.showInputDialog(rootPane, "Set your follower message. use (_follower_) as a placeholder for the follower.", OldFollowMSG);
+        try {
+            if (!NewFollowMSG.equals(OldFollowMSG)) {
+                try {
+                    http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=FollowMSG&value=" + URLEncoder.encode(NewFollowMSG, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (Exception e) {
+            //cop out
+        }
+        try {
+            RefreshAllSettings();
+            this.PopulateAllSettings();
+        } catch (Exception ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_EFollowMsgActionPerformed
+
+    private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
+        if (this.FollowEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
+        }
+    }//GEN-LAST:event_FollowEnabledActionPerformed
+
+    private void REnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REnabledActionPerformed
+        if (this.REnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=0");
+        }
+    }//GEN-LAST:event_REnabledActionPerformed
+
+    private void BHEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BHEnabledActionPerformed
+        if (this.BHEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=0");
+        }
+    }//GEN-LAST:event_BHEnabledActionPerformed
+
+    private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PWhenIdleActionPerformed
+
+    private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
+
+        if (this.PWhenLive.isEditable()) {
+            String idle = this.PWhenIdle.getText();
+            String notidle = this.PWhenLive.getText();
+            String StartPoints = this.PStartPoints.getText();
+            try {
+                Integer.parseInt(idle);
+                Integer.parseInt(notidle);
+                Integer.parseInt(StartPoints);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
+                return;
+            }
+
+            this.PWhenIdle.setEditable(false);
+            this.PWhenLive.setEditable(false);
+            this.PStartPoints.setEditable(false);
+            try {
+                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
+                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
+                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.EditPoints.setText("Edit");
+        } else {
+            this.EditPoints.setText("Save");
+            this.PWhenIdle.setEditable(true);
+            this.PWhenLive.setEditable(true);
+            this.PStartPoints.setEditable(true);
+        }
+    }//GEN-LAST:event_EditPointsActionPerformed
+
+    private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
+        if (this.PEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
+        }
+    }//GEN-LAST:event_PEnabledActionPerformed
+
+    private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
+        if (this.PointsName.isEditable()) {
+            this.PointsName.setEditable(false);
+            this.PRenBut.setText("Rename");
+            try {
+                String pname = this.PointsName.getText().replace("!", "");
+                http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=PointsName&value=" + URLEncoder.encode(pname, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.PointsName.setEditable(true);
+            this.PRenBut.setText("Save");
+        }
+    }//GEN-LAST:event_PRenButActionPerformed
+
+    private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
+
+        try {
+            String[] ToAdd = this.AddBadWord.getText().split(" ");
+            http.GetScotty("https://api.scottybot.net/api/badwords/add?authkey=" + AuthKey + "&word=" + URLEncoder.encode(ToAdd[0], "UTF-8"));
+            this.PopBadWords();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.AddBadWord.setText("");
+    }//GEN-LAST:event_addbadwordActionPerformed
+
+    private void RemoveBadWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveBadWordActionPerformed
+        List<String> ToRemove = new ArrayList();
+        ToRemove.addAll(this.BadWordList.getSelectedValuesList());
+        for (String t : ToRemove) {
+            try {
+                http.GetScotty("https://api.scottybot.net/api/badwords/delete?authkey=" + AuthKey + "&word=" + URLEncoder.encode(t, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        this.PopBadWords();
+    }//GEN-LAST:event_RemoveBadWordActionPerformed
+
+    private void TimoutDurationPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TimoutDurationPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TimoutDurationPropertyChange
+
+    private void TimoutDurationMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseReleased
+        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=TimeOutLength&value=" + String.valueOf(this.TimoutDuration.getValue()));
+    }//GEN-LAST:event_TimoutDurationMouseReleased
+
+    private void TimoutDurationMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseDragged
+        this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
+    }//GEN-LAST:event_TimoutDurationMouseDragged
+
+    private void CapPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseReleased
+        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=CapPercent&value=" + this.CapPercent.getValue());
+    }//GEN-LAST:event_CapPercentMouseReleased
+
+    private void CapPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseDragged
+        this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");        // TODO add your handling code here:
+    }//GEN-LAST:event_CapPercentMouseDragged
+
+    private void SymPercentPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_SymPercentPropertyChange
+
+    }//GEN-LAST:event_SymPercentPropertyChange
+
+    private void SymPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseReleased
+        http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=SymbolCount&value=" + this.SymPercent.getValue());        // TODO add your handling code here:
+    }//GEN-LAST:event_SymPercentMouseReleased
+
+    private void SymPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseDragged
+        this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");        // TODO add your handling code here:
+    }//GEN-LAST:event_SymPercentMouseDragged
+
+    private void SymbolsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SymbolsOnOffActionPerformed
+        if (this.SymbolsOnOff.isSelected()) {
+            this.SymbolsOnOff.setText("Symbols Enabled");
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=1");
+        } else {
+            this.SymbolsOnOff.setText(("Symbols Disabled"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=0");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_SymbolsOnOffActionPerformed
+
+    private void CapsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CapsOnOffActionPerformed
+        if (this.CapsOnOff.isSelected()) {
+            this.CapsOnOff.setText("Caps Enabled");
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=1");
+        } else {
+            this.CapsOnOff.setText(("Caps Disabled"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=0");
+        }
+    }//GEN-LAST:event_CapsOnOffActionPerformed
+
+    private void CapsOnOffMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapsOnOffMouseReleased
+
+    }//GEN-LAST:event_CapsOnOffMouseReleased
+
+    private void RepeatOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatOnOffActionPerformed
+        if (this.RepeatOnOff.isSelected()) {
+            this.RepeatOnOff.setText("Repeat Enabled");
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=1");
+        } else {
+            this.RepeatOnOff.setText(("Repeat Disabled"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=0");
+        }
+    }//GEN-LAST:event_RepeatOnOffActionPerformed
+
+    private void LinksOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinksOnOffActionPerformed
+        if (this.LinksOnOff.isSelected()) {
+            this.LinksOnOff.setText("Links Enabled");
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=1");
+        } else {
+            this.LinksOnOff.setText(("Links Disabled"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=0");
+        }
+    }//GEN-LAST:event_LinksOnOffActionPerformed
+
+    private void FOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOnOffActionPerformed
+        if (this.FOnOff.isSelected()) {
+            this.FOnOff.setText("All Filtering Enabled");
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=1");
+        } else {
+            this.FOnOff.setText(("All Filtering Disabled"));
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=0");
+        }
+    }//GEN-LAST:event_FOnOffActionPerformed
+
+    private void QEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QEnabledActionPerformed
+        if (this.QEnabled.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/api/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=0");
+        }
+    }//GEN-LAST:event_QEnabledActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        while (true) {
+            try {
+                PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }    // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        delquote dq = new delquote();
+        dq.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void addquotebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addquotebuttonActionPerformed
+        addquote aq = new addquote();
+        aq.setVisible(true);
+    }//GEN-LAST:event_addquotebuttonActionPerformed
+
+    private void RepeatListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatListActionPerformed
+        RepeatList rl = new RepeatList();
+        rl.setVisible(true);
+    }//GEN-LAST:event_RepeatListActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DeletePermAdjust dpa = new DeletePermAdjust();
+        dpa.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        AddEditCMD cmd = new AddEditCMD();
+        cmd.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void RefreshCMDsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshCMDsActionPerformed
+        while (true) {
+            try {
+                PopCmdText();
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+    }//GEN-LAST:event_RefreshCMDsActionPerformed
 
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
@@ -1568,6 +1630,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public void PopFilterSettings() {
 
         JSONObject FSettings = GetSettings();
+
         if ("1".equals(FSettings.get("UseFilter").toString())) {
             this.FOnOff.setSelected(true);
             this.FOnOff.setText("All Filtering Enabled");
@@ -1671,6 +1734,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox ClearCmdsEnabled;
     private javax.swing.JTextArea CmdInfo;
     private javax.swing.JTabbedPane ControlTab;
+    public javax.swing.JLabel CurViewers;
     private javax.swing.JPanel DonatorPanel;
     private javax.swing.JButton EFollowMsg;
     private javax.swing.JButton EditPoints;
@@ -1701,6 +1765,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JToggleButton SymbolsOnOff;
     private javax.swing.JLabel TimeoutLabel;
     private javax.swing.JSlider TimoutDuration;
+    public javax.swing.JLabel TopViewers;
+    public javax.swing.JLabel UChatters;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
@@ -1708,6 +1774,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1727,6 +1795,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

@@ -6,7 +6,11 @@
 package beam.scottygui;
 
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.UserID;
+import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.Utils.JSONUtil;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,6 +33,7 @@ public class Login extends javax.swing.JFrame {
     public String Username = "";
     public String Password = "";
     HTTP http = new HTTP();
+    JSONUtil json = new JSONUtil();
 
     /**
      * Creates new form Login
@@ -218,9 +223,13 @@ public class Login extends javax.swing.JFrame {
         JSONObject obj = null;
         try {
             obj = (JSONObject) parser.parse(ToParse);
+            UserID = Long.parseLong(obj.get("id").toString());
+            JSONObject ChanObj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + Username));
+            ChanID = Long.parseLong(ChanObj.get("id").toString());
+
         } catch (ParseException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(rootPane, "Login failed");
+            JOptionPane.showMessageDialog(rootPane, "Login failed or Scottybot not in channel.");
             return;
         }
         JSONObject AuthReturn = null;
@@ -232,11 +241,17 @@ public class Login extends javax.swing.JFrame {
         }
         try {
             AuthReturn = (JSONObject) parser.parse(http.GetScotty(URL));
+
         } catch (ParseException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (AuthReturn.containsValue("Scottybot is not in your channel")) {
+            JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
+            return;
+        }
         AuthKey = (String) AuthReturn.get("AuthKey");
         AuthKey = AuthKey.replace("\"", "");
+
         ControlPanel cp = new ControlPanel();
         cp.setVisible(true);
         this.dispose();
