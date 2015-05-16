@@ -5,14 +5,22 @@
  */
 package beam.scottygui;
 
+import beam.scottygui.Alerts.AlertFrame;
+import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.GUILoadSettings;
+import static beam.scottygui.Stores.CentralStore.GUISaveSettings;
+import static beam.scottygui.Stores.CentralStore.GUISettings;
 import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.RefreshSettings;
+import static beam.scottygui.Stores.CentralStore.SendMSG;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
+import static beam.scottygui.Stores.CentralStore.session;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
+import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.cmdcontrol.AddEditCMD;
 import beam.scottygui.cmdcontrol.DeletePermAdjust;
@@ -21,6 +29,7 @@ import beam.scottygui.quotecontrol.addquote;
 import beam.scottygui.quotecontrol.delquote;
 import beam.scottygui.websocket.WebSocket;
 import java.awt.Component;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,7 +45,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultCaret;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,8 +63,9 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = 6;
+    Integer CurVer = 9;
     WebSocket socket = new WebSocket();
+    public SortedListModel ChatUserList = new SortedListModel();
 
     /**
      * Creates new form ControlPanel
@@ -139,10 +152,37 @@ public final class ControlPanel extends javax.swing.JFrame {
         return false;
     }
 
+    public void InitChatUserList() {
+        this.Viewers.setModel(this.ChatUserList);
+
+        JSONArray InitUserList = null;
+        while (true) {
+            try {
+                InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        for (Object t : InitUserList) {
+            JSONObject obj = (JSONObject) t;
+            this.ChatUserList.add(obj.get("user_name").toString());
+        }
+
+    }
+
     public ControlPanel() {
+        this.setTitle("ScottyGUI Ver. " + this.CurVer);
+        GUILoadSettings();
         initComponents();
         DumpCurVer();
         CheckNewVer();
+
+        //Set chat window to auto-scroll
+        DefaultCaret caret = (DefaultCaret) this.Chat.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
         cp = this;
         try {
             PopCmdText();
@@ -226,6 +266,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
+        this.InitChatUserList();
         this.socket.connect(ChanID);
     }
 
@@ -357,6 +398,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
         ClearCmdsEnabled = new javax.swing.JCheckBox();
         MeOutput = new javax.swing.JCheckBox();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        FollowSoundSet = new javax.swing.JButton();
+        FollowIMGSet = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        SetFollowAlertMsg = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         ChuckEnabled = new javax.swing.JCheckBox();
         ChatEnabled = new javax.swing.JCheckBox();
@@ -367,11 +413,19 @@ public final class ControlPanel extends javax.swing.JFrame {
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        Chat = new javax.swing.JTextArea();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        Viewers = new javax.swing.JList();
+        ChatSend = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
         RefreshAll = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         CurViewers = new javax.swing.JLabel();
         TopViewers = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
+        AlertPaneOpen = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -411,7 +465,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Scottybot GUI");
+        setTitle("ScottyGUI Ver. " + this.CurVer);
         setResizable(false);
 
         ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -552,7 +606,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addComponent(QEnabled)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(34, 34, 34)
                 .addComponent(jButton4)
@@ -933,7 +987,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        EFollowMsg.setText("Edit Follower Message");
+        EFollowMsg.setText("Edit Chat Follower Message");
         EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EFollowMsgActionPerformed(evt);
@@ -963,22 +1017,87 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        jLayeredPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        FollowSoundSet.setText("Set Follower Sound");
+        FollowSoundSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowSoundSetActionPerformed(evt);
+            }
+        });
+
+        FollowIMGSet.setText("Set Follower Image");
+        FollowIMGSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowIMGSetActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Alert Pane Settings");
+
+        SetFollowAlertMsg.setText("Set Follower Message");
+        SetFollowAlertMsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SetFollowAlertMsgActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(30, 30, 30))
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(SetFollowAlertMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FollowIMGSet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FollowSoundSet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(FollowSoundSet)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(FollowIMGSet)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SetFollowAlertMsg)
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        jLayeredPane1.setLayer(FollowSoundSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(FollowIMGSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel15, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(SetFollowAlertMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(EFollowMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(FollowEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(OnlyWhenLiveEnabled)
-                .addGap(18, 18, 18)
-                .addComponent(ClearCmdsEnabled)
-                .addGap(18, 18, 18)
-                .addComponent(MeOutput)
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(EFollowMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FollowEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(OnlyWhenLiveEnabled)
+                        .addGap(18, 18, 18)
+                        .addComponent(ClearCmdsEnabled)
+                        .addGap(18, 18, 18)
+                        .addComponent(MeOutput))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -991,7 +1110,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(MeOutput))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EFollowMsg)
-                .addContainerGap(405, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         JSettingsPane.addTab("Settings", jPanel6);
@@ -1045,7 +1166,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(ChatEnabled)
                 .addGap(18, 18, 18)
                 .addComponent(YodaEnabled)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
                 .addGroup(DonatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1097,7 +1218,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(PercentRetainedViewers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel13)
-                .addContainerGap(470, Short.MAX_VALUE))
+                .addContainerGap(519, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1112,6 +1233,84 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
 
         ControlTab.addTab("Statistics", jPanel7);
+
+        Chat.setEditable(false);
+        Chat.setBackground(new java.awt.Color(0, 0, 0));
+        Chat.setColumns(20);
+        Chat.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        Chat.setForeground(new java.awt.Color(255, 255, 255));
+        Chat.setLineWrap(true);
+        Chat.setRows(5);
+        Chat.setWrapStyleWord(true);
+        Chat.setDoubleBuffered(true);
+        jScrollPane5.setViewportView(Chat);
+
+        Viewers.setBackground(new java.awt.Color(0, 0, 0));
+        Viewers.setForeground(new java.awt.Color(255, 255, 255));
+        Viewers.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        Viewers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        Viewers.setAutoscrolls(false);
+        Viewers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ViewersMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(Viewers);
+
+        ChatSend.setBackground(new java.awt.Color(0, 0, 0));
+        ChatSend.setForeground(new java.awt.Color(255, 255, 255));
+        ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
+        ChatSend.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        ChatSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChatSendActionPerformed(evt);
+            }
+        });
+        ChatSend.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ChatSendKeyPressed(evt);
+            }
+        });
+
+        jLabel14.setText("Double click name to purge");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ChatSend))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(jLabel14))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel14)))
+                .addContainerGap())
+        );
+
+        ControlTab.addTab("Chat", jPanel8);
 
         RefreshAll.setText("Refresh All Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1134,6 +1333,13 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        AlertPaneOpen.setText("Alert Pane");
+        AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AlertPaneOpenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1143,11 +1349,13 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(AlertPaneOpen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton5)
+                .addGap(18, 18, 18)
                 .addComponent(RefreshAll)
                 .addContainerGap())
             .addComponent(ControlTab)
@@ -1161,9 +1369,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(jLabel12)
                     .addComponent(CurViewers)
                     .addComponent(TopViewers)
-                    .addComponent(jButton5))
+                    .addComponent(jButton5)
+                    .addComponent(AlertPaneOpen))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ControlTab))
         );
 
         pack();
@@ -1585,6 +1794,98 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                CentralStore.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                ChatSend.setText("");
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ChatSendKeyPressed
+
+    private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ChatSendActionPerformed
+
+    private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
+        if (evt.getClickCount() == 2) {
+            try {
+                session.getBasicRemote().sendText(CentralStore.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ViewersMouseClicked
+
+    private void AlertPaneOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlertPaneOpenActionPerformed
+        if (!GUISettings.containsKey("FollowSound")) {
+            JOptionPane.showMessageDialog(rootPane, "No Audio File Set");
+            return;
+        }
+        if (!GUISettings.containsKey("FollowIMG")) {
+            JOptionPane.showMessageDialog(rootPane, "No Image File Set");
+            return;
+        }
+        if (!GUISettings.containsKey("FollowerMSG")) {
+            JOptionPane.showMessageDialog(rootPane, "No Follower Message Set");
+            return;
+        }
+        AlertFrame af = new AlertFrame();
+        af.setVisible(true);
+    }//GEN-LAST:event_AlertPaneOpenActionPerformed
+
+    private void FollowSoundSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowSoundSetActionPerformed
+        FileNameExtensionFilter SoundFilter = new FileNameExtensionFilter("MP3 Files", "mp3");
+        JFileChooser Open = new JFileChooser();
+        String FileLoc = null;
+        Open.setAcceptAllFileFilterUsed(false);
+        Open.addChoosableFileFilter(SoundFilter);
+        if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            FileLoc = Open.getSelectedFile().getAbsolutePath();
+            CentralStore.GUISaveSettings("FollowSound", FileLoc);
+        }
+//        final String Audio = FileLoc;
+//        new Thread("Alert!") {
+//            @Override
+//            public void run() {
+//                FileInputStream fis = null;
+//                try {
+//                    fis = new FileInputStream(Audio);
+//                } catch (FileNotFoundException ex) {
+//                    Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                try {
+//                    Player playMP3 = new Player(fis);
+//                    playMP3.play();
+//                } catch (JavaLayerException ex) {
+//                    Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }.start();
+    }//GEN-LAST:event_FollowSoundSetActionPerformed
+
+    private void FollowIMGSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowIMGSetActionPerformed
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image Files", "jpg", "gif", "png", "bmp");
+        JFileChooser Open = new JFileChooser();
+        String FileLoc = null;
+        Open.setAcceptAllFileFilterUsed(false);
+        Open.addChoosableFileFilter(imageFilter);
+        if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            FileLoc = Open.getSelectedFile().getAbsolutePath();
+            CentralStore.GUISaveSettings("FollowIMG", FileLoc);
+        }
+    }//GEN-LAST:event_FollowIMGSetActionPerformed
+
+    private void SetFollowAlertMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SetFollowAlertMsgActionPerformed
+        String msg = null;
+        msg = JOptionPane.showInputDialog("Set Follower Message, use (_follower_) where the follower will be.");
+        if (msg != null) {
+            GUISaveSettings("FollowerMSG", msg);
+        }
+    }//GEN-LAST:event_SetFollowAlertMsgActionPerformed
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -1808,13 +2109,16 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddBadWord;
+    private javax.swing.JButton AlertPaneOpen;
     private javax.swing.JCheckBox BHEnabled;
     private javax.swing.JList BadWordList;
     private javax.swing.JButton CUsernamePassword;
     private javax.swing.JSlider CapPercent;
     private javax.swing.JToggleButton CapsOnOff;
     private javax.swing.JLabel CapsPercentDis;
+    public javax.swing.JTextArea Chat;
     private javax.swing.JCheckBox ChatEnabled;
+    private javax.swing.JTextField ChatSend;
     private javax.swing.JCheckBox ChuckEnabled;
     private javax.swing.JCheckBox ClearCmdsEnabled;
     private javax.swing.JTextArea CmdInfo;
@@ -1825,6 +2129,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton EditPoints;
     private javax.swing.JToggleButton FOnOff;
     private javax.swing.JCheckBox FollowEnabled;
+    private javax.swing.JButton FollowIMGSet;
+    private javax.swing.JButton FollowSoundSet;
     private javax.swing.JTabbedPane JSettingsPane;
     private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JCheckBox MeOutput;
@@ -1846,6 +2152,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton RepeatList;
     private javax.swing.JToggleButton RepeatOnOff;
     private javax.swing.JButton ResetScottyName;
+    private javax.swing.JButton SetFollowAlertMsg;
     private javax.swing.JSlider SymPercent;
     private javax.swing.JLabel SymPercentDis;
     private javax.swing.JToggleButton SymbolsOnOff;
@@ -1853,6 +2160,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JSlider TimoutDuration;
     public javax.swing.JLabel TopViewers;
     public javax.swing.JLabel UChatters;
+    public javax.swing.JList Viewers;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
@@ -1869,6 +2177,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1877,6 +2187,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1884,9 +2195,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     // End of variables declaration//GEN-END:variables
 }

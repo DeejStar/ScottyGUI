@@ -11,6 +11,7 @@ import static beam.scottygui.Stores.CentralStore.Joined;
 import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
+import static beam.scottygui.Stores.CentralStore.newline;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -31,13 +33,13 @@ public class EndPoint extends Endpoint {
     JSONParser parser = new JSONParser();
     String cusername = null;
     String channame = null;
-    Integer LastCount = null;
 
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
         while (true) {
             try {
                 session.getBasicRemote().sendText(CentralStore.Auth(BeamAuthKey).toString());
+                CentralStore.session = session;
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -47,6 +49,17 @@ public class EndPoint extends Endpoint {
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
+                try {
+                    int Total = Joined + Left;
+                    int Diff = Joined - Left;
+                    float Retained = ((float) Diff / (float) Total) * (float) 100;
+                    if (!"NaN".toLowerCase().equalsIgnoreCase(String.valueOf(Retained).toLowerCase())) {
+                        cp.PercentRetainedViewers.setText(Math.round(Retained) + "% retained viewership");
+                    }
+                } catch (Exception e) {
+                    System.err.println(e);
+                }
+
                 System.out.println(message);
                 JSONObject msg = null;
                 try {
@@ -62,30 +75,6 @@ public class EndPoint extends Endpoint {
                         Integer viewers = 0;
                         try {
                             viewers = Integer.parseInt(data.get("viewers").toString());
-                            if (LastCount == null) {
-                                LastCount = viewers;
-                            } else {
-                                if (viewers < LastCount) {
-                                    int totick = LastCount - viewers;
-                                    while (totick > 0) {
-                                        CentralStore.Left++;
-                                        totick--;
-                                    }
-                                }
-                                if (viewers > LastCount) {
-                                    int totick = viewers - LastCount;
-                                    while (totick > 0) {
-                                        CentralStore.Joined++;
-                                        totick--;
-                                    }
-                                }
-
-                                Float Retained = (float) ((float) Joined / (float) (Left + Joined)) * 100;
-                                if (!"NaN".toLowerCase().equals(Retained.toString().toLowerCase())) {
-                                    cp.PercentRetainedViewers.setText(Retained.toString() + "% Retained Viewership");
-                                }
-                            }
-
                         } catch (Exception e) {
                         }
                         if (viewers == null) {
@@ -102,11 +91,50 @@ public class EndPoint extends Endpoint {
                     case "CHATMESSAGE":
                         data = (JSONObject) msg.get("data");
                         String userid = data.get("user_id").toString();
+                        String username = data.get("user_name").toString();
+                        JSONArray msgdata = (JSONArray) data.get("message");
+
+                        if (!cp.ChatUserList.contains(username)) {
+                            cp.ChatUserList.add(username);
+
+                        }
+
+                        String MSG = username + ": ";
+                        for (Object t : msgdata) {
+                            JSONObject obj = (JSONObject) t;
+                            System.out.println(obj.toString());
+                            String type = obj.get("type").toString();
+                            if ("TEXT".equals(type.toUpperCase())) {
+                                MSG = MSG + " " + obj.get("data").toString();
+                            } else {
+                                MSG = MSG + " " + obj.get("text");
+                            }
+                        }
+                        cp.Chat.setText(cp.Chat.getText() + newline + MSG);
+
                         if (!UniqueChatters.contains(userid)) {
                             UniqueChatters.add(userid);
                             cp.UChatters.setText(UniqueChatters.size() + " Unique Chatters This Session.");
                             break;
                         }
+                    case "USERJOIN":
+                        Joined++;
+                        data = (JSONObject) msg.get("data");
+                        username = data.get("username").toString();
+                        if (!cp.ChatUserList.contains(username)) {
+                            cp.ChatUserList.add(username);
+
+                        }
+                        break;
+                    case "USERLEAVE":
+                        Left++;
+                        data = (JSONObject) msg.get("data");
+                        username = data.get("username").toString();
+                        if (cp.ChatUserList.contains(username)) {
+                            cp.ChatUserList.removeElement(username);
+
+                        }
+                        break;
                 }
 
             }
