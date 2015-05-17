@@ -10,6 +10,7 @@ import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.WritePropertiesFile;
 import beam.scottygui.websocket.EndPoint;
 import beam.scottygui.websocket.WebSocket;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,6 +54,8 @@ public class CentralStore {
     public static Session session = null;
     public static JSONObject GUISettings = new JSONObject();
     public static Properties prop = new Properties();
+    public static Integer MsgCounter = 0;
+    public static Font testfont = null;
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();

@@ -8,6 +8,8 @@ package beam.scottygui.Alerts;
 import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.GUISettings;
 import beam.scottygui.Utils.HTTP;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,6 +23,10 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.json.simple.JSONArray;
@@ -45,6 +51,7 @@ public final class AlertFrame extends javax.swing.JFrame {
      */
     public AlertFrame() {
         initComponents();
+        ImageViewer.setBackground(Color.GREEN);
         StartFollowerWatcher();
     }
 
@@ -59,7 +66,6 @@ public final class AlertFrame extends javax.swing.JFrame {
 
         AlertBG = new javax.swing.JPanel();
         ImageViewer = new javax.swing.JLabel();
-        AlertMSG = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -68,31 +74,20 @@ public final class AlertFrame extends javax.swing.JFrame {
 
         AlertBG.setBackground(new java.awt.Color(51, 255, 51));
 
-        AlertMSG.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        AlertMSG.setForeground(new java.awt.Color(255, 51, 51));
-        AlertMSG.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        AlertMSG.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        AlertMSG.setDoubleBuffered(true);
-        AlertMSG.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
         javax.swing.GroupLayout AlertBGLayout = new javax.swing.GroupLayout(AlertBG);
         AlertBG.setLayout(AlertBGLayout);
         AlertBGLayout.setHorizontalGroup(
             AlertBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AlertBGLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(AlertBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(AlertMSG, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
-                    .addComponent(ImageViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(ImageViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 644, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         AlertBGLayout.setVerticalGroup(
             AlertBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AlertBGLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ImageViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(AlertMSG, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                .addComponent(ImageViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -114,7 +109,7 @@ public final class AlertFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(133, 133, 133)
                 .addComponent(jButton1)
-                .addContainerGap(450, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,6 +126,7 @@ public final class AlertFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void StartFollowerWatcher() {
+
         new Thread("Follow Watcher") {
             @Override
             public void run() {
@@ -209,42 +205,78 @@ public final class AlertFrame extends javax.swing.JFrame {
 
     public void StartImage(final String Follower) {
         ShowingImg = true;
+        String FollowMessage = GUISettings.get("FollowerMSG").toString().replace("(_follower_)", Follower);
+        final JTextPane textPane = new JTextPane();
+        textPane.setText(FollowMessage);
+        textPane.setEditable(false);
+        textPane.setOpaque(false);
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        StyledDocument doc = textPane.getStyledDocument();
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+        textPane.setBounds(ImageViewer.getBounds());
+        String FontName = GUISettings.get("FFontName").toString();
+        int FontSize = Integer.parseInt(GUISettings.get("FFontSize").toString());
+        int FontStyle = Integer.parseInt(GUISettings.get("FFontStyle").toString());
+        System.out.println(FontName + ":" + FontSize);
+        textPane.setFont(new Font(FontName, FontStyle, FontSize));
+        textPane.setForeground(Color.decode(GUISettings.get("FFontColor").toString()));
         new Thread("Visual Alert!") {
             @Override
             public void run() {
                 String image = GUISettings.get("FollowIMG").toString();
-                BufferedImage img = null;
-                try {
-                    img = ImageIO.read(new File(image));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                if (image.toLowerCase().contains(".gif")) {
+                    ImageIcon imageIcon = new ImageIcon(image);
+                    ImageViewer.setHorizontalAlignment(JLabel.CENTER);
+                    ImageViewer.setVerticalAlignment(JLabel.CENTER);
+                    ImageViewer.setIcon(imageIcon);
+                    ImageViewer.add(textPane);
+                    try {
+                        //AlertMSG.setText(FollowMessage);
 
-                Image dimg = null;
-                if (img.getHeight() > img.getWidth()) {
-                    dimg = img.getScaledInstance(-1, ImageViewer.getHeight(), Image.SCALE_SMOOTH);
-                } else if (img.getWidth() > img.getHeight()) {
-                    dimg = img.getScaledInstance(ImageViewer.getWidth(), -1, Image.SCALE_SMOOTH);
+                        Thread.sleep(10000);
+                        //AlertMSG.setText("");
+                        textPane.setText("");
+                        ShowingImg = false;
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    ImageViewer.setIcon(null);
                 } else {
-                    dimg = img;
+                    BufferedImage img = null;
+                    try {
+                        img = ImageIO.read(new File(image));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Image dimg = null;
+                    if (img.getHeight() > img.getWidth()) {
+                        dimg = img.getScaledInstance(-1, ImageViewer.getHeight(), Image.SCALE_SMOOTH);
+                    } else if (img.getWidth() > img.getHeight()) {
+                        dimg = img.getScaledInstance(ImageViewer.getWidth(), -1, Image.SCALE_SMOOTH);
+                    } else {
+                        dimg = img;
+                    }
+
+                    ImageIcon imageIcon = new ImageIcon(dimg);
+                    ImageViewer.setHorizontalAlignment(JLabel.CENTER);
+                    ImageViewer.setVerticalAlignment(JLabel.CENTER);
+                    ImageViewer.setIcon(imageIcon);
+                    ImageViewer.add(textPane);
+
+                    try {
+                        //AlertMSG.setText(FollowMessage);
+
+                        Thread.sleep(10000);
+                        //AlertMSG.setText("");
+                        textPane.setText("");
+                        ShowingImg = false;
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    ImageViewer.setIcon(null);
                 }
-
-                ImageIcon imageIcon = new ImageIcon(dimg);
-                ImageViewer.setHorizontalAlignment(JLabel.CENTER);
-                ImageViewer.setVerticalAlignment(JLabel.CENTER);
-                ImageViewer.setIcon(imageIcon);
-                String FollowMessage = GUISettings.get("FollowerMSG").toString().replace("(_follower_)", Follower);
-
-                try {
-                    AlertMSG.setText(FollowMessage);
-
-                    Thread.sleep(10000);
-                    AlertMSG.setText("");
-                    ShowingImg = false;
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                ImageViewer.setIcon(null);
             }
         }.start();
     }
@@ -294,7 +326,6 @@ public final class AlertFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AlertBG;
-    private javax.swing.JLabel AlertMSG;
     private javax.swing.JLabel ImageViewer;
     private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables

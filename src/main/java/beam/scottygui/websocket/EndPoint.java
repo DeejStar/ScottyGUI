@@ -9,6 +9,7 @@ import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
 import static beam.scottygui.Stores.CentralStore.Joined;
 import static beam.scottygui.Stores.CentralStore.Left;
+import static beam.scottygui.Stores.CentralStore.MsgCounter;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.newline;
@@ -89,6 +90,8 @@ public class EndPoint extends Endpoint {
                         }
                         break;
                     case "CHATMESSAGE":
+                        MsgCounter++;
+                        cp.SessionMsgCount.setText(MsgCounter.toString() + " messages this session.");
                         data = (JSONObject) msg.get("data");
                         String userid = data.get("user_id").toString();
                         String username = data.get("user_name").toString();
