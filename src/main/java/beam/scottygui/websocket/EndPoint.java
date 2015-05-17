@@ -5,6 +5,7 @@
  */
 package beam.scottygui.websocket;
 
+import beam.scottygui.ChatHandler.ChatFormatter;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
 import static beam.scottygui.Stores.CentralStore.Joined;
@@ -12,7 +13,6 @@ import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.MsgCounter;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
-import static beam.scottygui.Stores.CentralStore.newline;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,11 +30,11 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public class EndPoint extends Endpoint {
-
+    
     JSONParser parser = new JSONParser();
     String cusername = null;
     String channame = null;
-
+    
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
         while (true) {
@@ -46,7 +46,7 @@ public class EndPoint extends Endpoint {
             }
             break;
         }
-
+        
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
@@ -60,7 +60,7 @@ public class EndPoint extends Endpoint {
                 } catch (Exception e) {
                     System.err.println(e);
                 }
-
+                
                 System.out.println(message);
                 JSONObject msg = null;
                 try {
@@ -96,37 +96,25 @@ public class EndPoint extends Endpoint {
                         String userid = data.get("user_id").toString();
                         String username = data.get("user_name").toString();
                         JSONArray msgdata = (JSONArray) data.get("message");
-
+                        
                         if (!cp.ChatUserList.contains(username)) {
                             cp.ChatUserList.add(username);
-
+                            
                         }
-
-                        String MSG = username + ": ";
-                        for (Object t : msgdata) {
-                            JSONObject obj = (JSONObject) t;
-                            System.out.println(obj.toString());
-                            String type = obj.get("type").toString();
-                            if ("TEXT".equals(type.toUpperCase())) {
-                                MSG = MSG + " " + obj.get("data").toString();
-                            } else {
-                                MSG = MSG + " " + obj.get("text");
-                            }
-                        }
-                        cp.Chat.setText(cp.Chat.getText() + newline + MSG);
-
                         if (!UniqueChatters.contains(userid)) {
                             UniqueChatters.add(userid);
                             cp.UChatters.setText(UniqueChatters.size() + " Unique Chatters This Session.");
-                            break;
                         }
+                        
+                        ChatFormatter.FormatChat(data);
+                        break;
                     case "USERJOIN":
                         Joined++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
                         if (!cp.ChatUserList.contains(username)) {
                             cp.ChatUserList.add(username);
-
+                            
                         }
                         break;
                     case "USERLEAVE":
@@ -135,14 +123,14 @@ public class EndPoint extends Endpoint {
                         username = data.get("username").toString();
                         if (cp.ChatUserList.contains(username)) {
                             cp.ChatUserList.removeElement(username);
-
+                            
                         }
                         break;
                 }
-
+                
             }
         }
         );
     }
-
+    
 }

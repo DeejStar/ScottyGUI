@@ -56,6 +56,7 @@ public class CentralStore {
     public static Properties prop = new Properties();
     public static Integer MsgCounter = 0;
     public static Font testfont = null;
+    public static String ChatCache = "";
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();

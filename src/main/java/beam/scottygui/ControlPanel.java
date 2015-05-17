@@ -181,9 +181,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         initComponents();
         DumpCurVer();
         CheckNewVer();
-
         //Set chat window to auto-scroll
-        DefaultCaret caret = (DefaultCaret) this.Chat.getCaret();
+        DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         cp = this;
@@ -420,12 +419,12 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         SessionMsgCount = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        Chat = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         Viewers = new javax.swing.JList();
         ChatSend = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ChatOutput = new javax.swing.JEditorPane();
         RefreshAll = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         CurViewers = new javax.swing.JLabel();
@@ -550,7 +549,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addComponent(RepeatList)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -851,7 +850,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(addbadword)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         ControlTab.addTab("Filtering", jPanel3);
@@ -1137,7 +1136,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(MeOutput))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EFollowMsg)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1210,7 +1209,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(CUsernamePassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ResetScottyName)
-                .addContainerGap(385, Short.MAX_VALUE))
+                .addContainerGap(392, Short.MAX_VALUE))
         );
 
         JSettingsPane.addTab("Donator Stuff", DonatorPanel);
@@ -1261,21 +1260,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SessionMsgCount)
-                .addContainerGap(386, Short.MAX_VALUE))
+                .addContainerGap(393, Short.MAX_VALUE))
         );
 
         ControlTab.addTab("Statistics", jPanel7);
-
-        Chat.setEditable(false);
-        Chat.setBackground(new java.awt.Color(0, 0, 0));
-        Chat.setColumns(20);
-        Chat.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
-        Chat.setForeground(new java.awt.Color(255, 255, 255));
-        Chat.setLineWrap(true);
-        Chat.setRows(5);
-        Chat.setWrapStyleWord(true);
-        Chat.setDoubleBuffered(true);
-        jScrollPane5.setViewportView(Chat);
 
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
@@ -1310,17 +1298,26 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel14.setText("Double click name to purge");
 
+        ChatOutput.setEditable(false);
+        ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
+        ChatOutput.setBorder(new javax.swing.border.MatteBorder(null));
+        ChatOutput.setContentType("text/html"); // NOI18N
+        ChatOutput.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        ChatOutput.setText("");
+        ChatOutput.setToolTipText("");
+        ChatOutput.setDoubleBuffered(true);
+        jScrollPane5.setViewportView(ChatOutput);
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(ChatSend))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jLabel14))
@@ -1331,15 +1328,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel14)))
-                .addContainerGap())
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11))
         );
 
         ControlTab.addTab("Chat", jPanel8);
@@ -2166,8 +2160,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JSlider CapPercent;
     private javax.swing.JToggleButton CapsOnOff;
     private javax.swing.JLabel CapsPercentDis;
-    public javax.swing.JTextArea Chat;
     private javax.swing.JCheckBox ChatEnabled;
+    public javax.swing.JEditorPane ChatOutput;
     private javax.swing.JTextField ChatSend;
     private javax.swing.JCheckBox ChuckEnabled;
     private javax.swing.JCheckBox ClearCmdsEnabled;
