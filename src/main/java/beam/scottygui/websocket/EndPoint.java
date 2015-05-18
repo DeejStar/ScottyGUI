@@ -10,6 +10,7 @@ import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
 import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.Joined;
+import static beam.scottygui.Stores.CentralStore.LastCount;
 import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.MsgCounter;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
@@ -79,6 +80,24 @@ public class EndPoint extends Endpoint {
                             viewers = Integer.parseInt(data.get("viewers").toString());
                         } catch (Exception e) {
                         }
+                        if (LastCount == null) {
+                            LastCount = viewers;
+                        } else {
+                            if (viewers < LastCount) {
+                                int totick = LastCount - viewers;
+                                while (totick > 0) {
+                                    CentralStore.Left++;
+                                    totick--;
+                                }
+                            }
+                            if (viewers > LastCount) {
+                                int totick = viewers - LastCount;
+                                while (totick > 0) {
+                                    CentralStore.Joined++;
+                                    totick--;
+                                }
+                            }
+                        }
                         if (viewers == null) {
                             cp.CurViewers.setText("Offline");
                         } else {
@@ -89,7 +108,9 @@ public class EndPoint extends Endpoint {
                                 System.out.println(CentralStore.TopViewers.toString());
                             }
                         }
+
                         break;
+
                     case "CHATMESSAGE":
                         MsgCounter++;
                         cp.SessionMsgCount.setText(MsgCounter.toString() + " messages this session.");
@@ -110,22 +131,21 @@ public class EndPoint extends Endpoint {
                         ChatFormatter.FormatChat(data);
                         break;
                     case "USERJOIN":
-                        Joined++;
+                        //Joined++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
                         if (!ChatUserList.contains(username)) {
                             ChatUserList.add(username);
-
                         }
                         break;
                     case "USERLEAVE":
-                        Left++;
+                        //Left++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
-                        if (ChatUserList.contains(username)) {
-                            ChatUserList.removeElement(username);
-
-                        }
+//                        if (ChatUserList.contains(username)) {
+//                            ChatUserList.removeElement(username);
+//
+//                        }
                         break;
                 }
 

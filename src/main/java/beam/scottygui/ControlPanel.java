@@ -156,23 +156,36 @@ public final class ControlPanel extends javax.swing.JFrame {
         return false;
     }
 
-    public void InitChatUserList() {
+    public void PopChatList() {
         this.Viewers.setModel(ChatUserList);
+        new Thread("Update Viewer List") {
+            @Override
+            public void run() {
+                while (true) {
+                    System.out.println("Populating Viewer List");
+                    JSONArray InitUserList = null;
 
-        JSONArray InitUserList = null;
-        while (true) {
-            try {
-                InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
-                break;
-            } catch (ParseException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    while (true) {
+                        try {
+                            InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
+                            break;
+                        } catch (ParseException ex) {
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    ChatUserList.clear();
+                    for (Object t : InitUserList) {
+                        JSONObject obj = (JSONObject) t;
+                        ChatUserList.add(obj.get("user_name").toString());
+                    }
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-        }
-
-        for (Object t : InitUserList) {
-            JSONObject obj = (JSONObject) t;
-            ChatUserList.add(obj.get("user_name").toString());
-        }
+        }.start();
 
     }
 
@@ -270,7 +283,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
-        this.InitChatUserList();
+        this.PopChatList();
         this.socket.connect(ChanID);
     }
 
