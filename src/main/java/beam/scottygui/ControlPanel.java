@@ -285,6 +285,12 @@ public final class ControlPanel extends javax.swing.JFrame {
         }.start();
         this.PopChatList();
         this.socket.connect(ChanID);
+//        LiveLoadHandler llh = new LiveLoadHandler();
+//        try {
+//            llh.attach();
+//        } catch (Exception ex) {
+//            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void PopQuoteList() throws ParseException {
@@ -441,7 +447,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         ChatOutput = new javax.swing.JEditorPane();
         RefreshAll = new javax.swing.JButton();
-        jLabel12 = new javax.swing.JLabel();
         CurViewers = new javax.swing.JLabel();
         TopViewers = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
@@ -1365,8 +1370,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setText("Hover over commands, some have explanations");
-
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
@@ -1402,16 +1405,15 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(188, 188, 188)
                 .addComponent(jButton6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(AlertPaneOpen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(RefreshAll))
+                .addComponent(RefreshAll)
+                .addGap(52, 52, 52))
             .addComponent(ControlTab)
         );
         layout.setVerticalGroup(
@@ -1420,7 +1422,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(RefreshAll)
-                    .addComponent(jLabel12)
                     .addComponent(CurViewers)
                     .addComponent(TopViewers)
                     .addComponent(jButton5)
@@ -2255,7 +2256,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;

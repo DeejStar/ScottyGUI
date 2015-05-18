@@ -124,6 +124,7 @@ public final class AlertFrame extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+Player playMP3 = null;
 
     public void StartFollowerWatcher() {
 
@@ -195,7 +196,7 @@ public final class AlertFrame extends javax.swing.JFrame {
                     Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
-                    Player playMP3 = new Player(fis);
+                    playMP3 = new Player(fis);
                     playMP3.play();
                     PlayingAudio = false;
                 } catch (JavaLayerException ex) {
@@ -240,6 +241,7 @@ public final class AlertFrame extends javax.swing.JFrame {
                         //AlertMSG.setText("");
                         textPane.setText("");
                         ShowingImg = false;
+                        playMP3.close();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
