@@ -63,7 +63,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 13;
+    public static Integer CurVer = 14;
     public static Integer LastCount = null;
 
     public static String GUIGetSetting(String Setting) {

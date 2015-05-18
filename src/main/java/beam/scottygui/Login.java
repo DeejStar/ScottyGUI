@@ -199,11 +199,13 @@ public class Login extends javax.swing.JFrame {
 
     public void Login() {
         Username = this.LoginField.getText();
-        Password = "";
-        for (char t : this.PassField.getPassword()) {
-            Password = Password + t;
-        }
-        Password = Password.replace(", ", "");
+        Password = new String(this.PassField.getPassword());
+//        if (!"".equalsIgnoreCase(Username));
+//
+//        for (char t : this.PassField.getPassword()) {
+//            Password = Password + t;
+//        }
+//        Password = Password.replace(", ", "");
         System.out.println(Username + ":" + Password);
         JSONParser parser = new JSONParser();
         String ToParse = "";
