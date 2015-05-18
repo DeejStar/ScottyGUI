@@ -209,15 +209,15 @@ public class Login extends javax.swing.JFrame {
         System.out.println(Username + ":" + Password);
         JSONParser parser = new JSONParser();
         String ToParse = "";
-        String code = "";
+        String Code = "";
         try {
-            code = this.code.getText();
-            System.out.println(code);
+            Code = this.code.getText();
+            System.out.println(Code);
         } catch (Exception e) {
 
         }
         try {
-            ToParse = http.Login(Username, Password, code);
+            ToParse = http.Login(Username, Password, Code);
 // TODO add your handling code here:
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
