@@ -241,7 +241,9 @@ Player playMP3 = null;
                         //AlertMSG.setText("");
                         textPane.setText("");
                         ShowingImg = false;
-                        playMP3.close();
+                        if (!playMP3.isComplete()) {
+                            playMP3.close();
+                        }
                     } catch (InterruptedException ex) {
                         Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
