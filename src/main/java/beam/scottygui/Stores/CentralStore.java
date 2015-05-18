@@ -5,8 +5,10 @@
  */
 package beam.scottygui.Stores;
 
+import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
 import beam.scottygui.websocket.EndPoint;
 import beam.scottygui.websocket.WebSocket;
@@ -22,6 +24,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.websocket.Endpoint;
 import javax.websocket.Session;
 import org.json.simple.JSONArray;
@@ -57,6 +60,10 @@ public class CentralStore {
     public static Integer MsgCounter = 0;
     public static Font testfont = null;
     public static String ChatCache = "";
+    public static ChatPopOut extchat = null;
+    public static DefaultListModel BadWordsList = new DefaultListModel();
+    public static SortedListModel ChatUserList = new SortedListModel();
+    public static Integer CurVer = 13;
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();

@@ -6,9 +6,12 @@
 package beam.scottygui;
 
 import beam.scottygui.Alerts.AlertFrame;
+import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
+import static beam.scottygui.Stores.CentralStore.BadWordsList;
 import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.GUILoadSettings;
 import static beam.scottygui.Stores.CentralStore.GUISaveSettings;
 import static beam.scottygui.Stores.CentralStore.GUISettings;
@@ -16,12 +19,12 @@ import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.RefreshSettings;
 import static beam.scottygui.Stores.CentralStore.SendMSG;
 import static beam.scottygui.Stores.CentralStore.cp;
+import static beam.scottygui.Stores.CentralStore.extchat;
 import static beam.scottygui.Stores.CentralStore.newline;
 import static beam.scottygui.Stores.CentralStore.session;
 import beam.scottygui.Utils.FontChooser;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
-import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.cmdcontrol.AddEditCMD;
 import beam.scottygui.cmdcontrol.DeletePermAdjust;
@@ -46,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -66,9 +68,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = 11;
+    Integer CurVer = CentralStore.CurVer;
     WebSocket socket = new WebSocket();
-    public SortedListModel ChatUserList = new SortedListModel();
 
     /**
      * Creates new form ControlPanel
@@ -156,7 +157,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     public void InitChatUserList() {
-        this.Viewers.setModel(this.ChatUserList);
+        this.Viewers.setModel(ChatUserList);
 
         JSONArray InitUserList = null;
         while (true) {
@@ -170,7 +171,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         for (Object t : InitUserList) {
             JSONObject obj = (JSONObject) t;
-            this.ChatUserList.add(obj.get("user_name").toString());
+            ChatUserList.add(obj.get("user_name").toString());
         }
 
     }
@@ -181,6 +182,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         initComponents();
         DumpCurVer();
         CheckNewVer();
+        CentralStore.extchat = new ChatPopOut();
         //Set chat window to auto-scroll
         DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -431,6 +433,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         TopViewers = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         AlertPaneOpen = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -1109,20 +1112,21 @@ public final class ControlPanel extends javax.swing.JFrame {
         SettingsPanelLayout.setHorizontalGroup(
             SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SettingsPanelLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(EFollowMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(FollowEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(OnlyWhenLiveEnabled)
-                .addGap(18, 18, 18)
-                .addComponent(ClearCmdsEnabled)
-                .addGap(18, 18, 18)
-                .addComponent(MeOutput)
-                .addContainerGap(221, Short.MAX_VALUE))
-            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(EFollowMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FollowEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(OnlyWhenLiveEnabled)
+                        .addGap(18, 18, 18)
+                        .addComponent(ClearCmdsEnabled)
+                        .addGap(18, 18, 18)
+                        .addComponent(MeOutput))
+                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         SettingsPanelLayout.setVerticalGroup(
@@ -1320,7 +1324,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                    .addComponent(jLabel14))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel14)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -1366,24 +1373,32 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setText("Pop Out Chat");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(2, 2, 2)
                 .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(AlertPaneOpen)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
-                .addGap(18, 18, 18)
-                .addComponent(RefreshAll)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(RefreshAll))
             .addComponent(ControlTab)
         );
         layout.setVerticalGroup(
@@ -1396,7 +1411,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(CurViewers)
                     .addComponent(TopViewers)
                     .addComponent(jButton5)
-                    .addComponent(AlertPaneOpen))
+                    .addComponent(AlertPaneOpen)
+                    .addComponent(jButton6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ControlTab))
         );
@@ -1930,6 +1946,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         GUISaveSettings("FFontColor", String.valueOf(RGB));
     }//GEN-LAST:event_SetFontColorActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        extchat.setVisible(true);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -2020,8 +2040,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
 
     }
-
-    DefaultListModel BadWordsList = new DefaultListModel();
 
     public void PopBadWords() {
         BadWordsList.clear();
@@ -2217,6 +2235,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JFrame jFrame1;

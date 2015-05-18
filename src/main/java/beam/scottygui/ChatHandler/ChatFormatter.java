@@ -68,5 +68,7 @@ public class ChatFormatter {
         String newline = "<br>";
         ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
+        CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+
     }
 }

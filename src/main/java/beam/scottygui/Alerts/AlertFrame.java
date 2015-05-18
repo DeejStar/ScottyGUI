@@ -177,8 +177,10 @@ public final class AlertFrame extends javax.swing.JFrame {
     }
 
     public void BeginAlert(String Follower) {
-        this.StartAudio();
-        this.StartImage(Follower);
+        if (this.isVisible()) {
+            this.StartAudio();
+            this.StartImage(Follower);
+        }
     }
 
     public void StartAudio() {

@@ -8,6 +8,7 @@ package beam.scottygui.websocket;
 import beam.scottygui.ChatHandler.ChatFormatter;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
+import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.Joined;
 import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.MsgCounter;
@@ -30,11 +31,11 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public class EndPoint extends Endpoint {
-    
+
     JSONParser parser = new JSONParser();
     String cusername = null;
     String channame = null;
-    
+
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
         while (true) {
@@ -46,7 +47,7 @@ public class EndPoint extends Endpoint {
             }
             break;
         }
-        
+
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
@@ -60,7 +61,7 @@ public class EndPoint extends Endpoint {
                 } catch (Exception e) {
                     System.err.println(e);
                 }
-                
+
                 System.out.println(message);
                 JSONObject msg = null;
                 try {
@@ -96,41 +97,41 @@ public class EndPoint extends Endpoint {
                         String userid = data.get("user_id").toString();
                         String username = data.get("user_name").toString();
                         JSONArray msgdata = (JSONArray) data.get("message");
-                        
-                        if (!cp.ChatUserList.contains(username)) {
-                            cp.ChatUserList.add(username);
-                            
+
+                        if (!ChatUserList.contains(username)) {
+                            ChatUserList.add(username);
+
                         }
                         if (!UniqueChatters.contains(userid)) {
                             UniqueChatters.add(userid);
                             cp.UChatters.setText(UniqueChatters.size() + " Unique Chatters This Session.");
                         }
-                        
+
                         ChatFormatter.FormatChat(data);
                         break;
                     case "USERJOIN":
                         Joined++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
-                        if (!cp.ChatUserList.contains(username)) {
-                            cp.ChatUserList.add(username);
-                            
+                        if (!ChatUserList.contains(username)) {
+                            ChatUserList.add(username);
+
                         }
                         break;
                     case "USERLEAVE":
                         Left++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
-                        if (cp.ChatUserList.contains(username)) {
-                            cp.ChatUserList.removeElement(username);
-                            
+                        if (ChatUserList.contains(username)) {
+                            ChatUserList.removeElement(username);
+
                         }
                         break;
                 }
-                
+
             }
         }
         );
     }
-    
+
 }
