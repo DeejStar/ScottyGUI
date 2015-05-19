@@ -120,6 +120,8 @@ public class ChatFormatter {
         }
         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
         CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+        CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
+        CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
 
     }
 }

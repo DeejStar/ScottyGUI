@@ -58,6 +58,7 @@ public class ChatPopOut extends javax.swing.JFrame {
         jScrollPane5.setViewportView(ChatOutput);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         ExtChatOutput.setEditable(false);
         ExtChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -68,6 +69,8 @@ public class ChatPopOut extends javax.swing.JFrame {
         ExtChatOutput.setToolTipText("");
         ExtChatOutput.setDoubleBuffered(true);
         jScrollPane6.setViewportView(ExtChatOutput);
+
+        getContentPane().add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 837, 540));
 
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
@@ -85,6 +88,8 @@ public class ChatPopOut extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(Viewers);
 
+        getContentPane().add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(843, 0, 184, 540));
+
         ChatSend.setBackground(new java.awt.Color(0, 0, 0));
         ChatSend.setForeground(new java.awt.Color(255, 255, 255));
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
@@ -99,36 +104,10 @@ public class ChatPopOut extends javax.swing.JFrame {
                 ChatSendKeyPressed(evt);
             }
         });
+        getContentPane().add(ChatSend, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 546, 837, -1));
 
         jLabel14.setText("Double click name to purge");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addGap(29, 29, 29))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addContainerGap())
-        );
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 549, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -142,11 +121,11 @@ public class ChatPopOut extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ViewersMouseClicked
-    
+
     private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ChatSendActionPerformed
-    
+
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
