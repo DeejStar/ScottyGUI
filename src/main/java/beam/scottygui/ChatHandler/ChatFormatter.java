@@ -88,7 +88,7 @@ public class ChatFormatter {
         String[] SplitMSG = MSG.split(" ");
         boolean WooshMe = false;
         for (String t : SplitMSG) {
-            if (t.toUpperCase().contains(UserName.toUpperCase())) {
+            if (t.toUpperCase().contains("@" + UserName.toUpperCase())) {
                 WooshMe = true;
             }
         }
