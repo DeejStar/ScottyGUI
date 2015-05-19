@@ -29,20 +29,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author tjhasty
  */
 public class HTTP {
-
+    
     JSONParser jsonParser = new JSONParser();
     List<String> EndPoints = new ArrayList();
     Long ChanID;
     String Username = "";
     String Password = "";
-
+    
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
         //CookieManager customCookieManager = new CookieManager();
         //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -54,7 +56,7 @@ public class HTTP {
         int attempt = 0;
         while (attempt < 6) {
             try {
-
+                
                 CookieManager manager = new CookieManager();
                 manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
                 CookieHandler.setDefault(manager);
@@ -100,11 +102,11 @@ public class HTTP {
                 Thread.sleep(1000);
             }
         }
-
+        
         return dataIn;
-
+        
     }
-
+    
     public void CLogin(String Username, String Password) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
         //CookieManager customCookieManager = new CookieManager();
         //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -152,9 +154,10 @@ public class HTTP {
         if ("".equalsIgnoreCase(dataIn)) {
             throw new IOException();
         }
-
+        
     }
-
+    JSONParser parser = new JSONParser();
+    
     public String GetScotty(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
@@ -191,9 +194,21 @@ public class HTTP {
             Login login = new Login();
             login.setVisible(true);
         }
+        
+        JSONObject CheckForFailed = null;
+        try {
+            CheckForFailed = (JSONObject) parser.parse(dataIn);
+        } catch (ParseException ex) {
+            Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (CheckForFailed.containsValue("Not Authed")) {
+            System.out.println(CheckForFailed.toString());
+            JOptionPane.showMessageDialog(null, "Issue talking with server. Did you log in elsewhere with this username? Closing program.");
+            System.exit(0);
+        }
         return dataIn;
     }
-
+    
     public String BeamGet(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
@@ -230,7 +245,7 @@ public class HTTP {
         }
         return dataIn;
     }
-
+    
     public String get(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
