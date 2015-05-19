@@ -242,7 +242,7 @@ public class Login extends javax.swing.JFrame {
         JSONObject AuthReturn = null;
         String URL = null;
         try {
-            URL = "https://api.scottybot.net/api/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
+            URL = "https://api.scottybot.net/apiv2/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

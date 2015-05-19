@@ -187,7 +187,7 @@ public class AddEditCMD extends javax.swing.JFrame {
         }
         String Submit = null;
         try {
-            Submit = "https://api.scottybot.net/api/commands/add?authkey=" + AuthKey.trim() + "&cmd=" + URLEncoder.encode(this.cmd.getText().trim(), "UTF-8") + "&text=" + URLEncoder.encode(this.output.getText().trim(), "UTF-8") + "&permlevel=" + PermLevel;
+            Submit = "https://api.scottybot.net/apiv2/commands/add?authkey=" + AuthKey.trim() + "&cmd=" + URLEncoder.encode(this.cmd.getText().trim(), "UTF-8") + "&text=" + URLEncoder.encode(this.output.getText().trim(), "UTF-8") + "&permlevel=" + PermLevel;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
         }
