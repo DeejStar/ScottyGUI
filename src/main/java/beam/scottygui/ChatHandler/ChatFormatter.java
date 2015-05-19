@@ -59,8 +59,15 @@ public class ChatFormatter {
             String type = obj.get("type").toString();
             if ("TEXT".equals(type.toUpperCase())) {
                 MSG = MSG + " " + obj.get("data").toString();
+            } else if ("EMOTICON".equalsIgnoreCase(type)) {
+                String imglink = "https://beam.pro/emoticons/" + obj.get("path") + ".png";
+                String ShowEmote = "<IMG SRC=\"" + imglink + "\" width=\"20\" height=\"20\" >";
+                System.out.println(ShowEmote);
+                MSG = MSG + ShowEmote;
             } else {
-                MSG = MSG + " " + obj.get("text");
+                String url = obj.get("text").toString();
+                String URLLink = "<a href=\"" + url + "\">" + url + "</a>";
+                MSG = MSG + " " + URLLink;
             }
         }
         String html1 = "<html>";
