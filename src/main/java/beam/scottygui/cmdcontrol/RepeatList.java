@@ -42,7 +42,7 @@ public final class RepeatList extends javax.swing.JFrame {
     public void PopLists() {
         JSONObject CmdOutput = null;
         try {
-            CmdOutput = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/apiv2/commands?authkey=" + AuthKey));
+            CmdOutput = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/commands?authkey=" + AuthKey));
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -57,7 +57,7 @@ public final class RepeatList extends javax.swing.JFrame {
 
         JSONObject Repeats = null;
         try {
-            Repeats = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/apiv2/repeats?authkey=" + AuthKey));
+            Repeats = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/repeats?authkey=" + AuthKey));
         } catch (ParseException ex) {
             Logger.getLogger(RepeatList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -190,7 +190,7 @@ public final class RepeatList extends javax.swing.JFrame {
             if (!replist.contains(t)) {
 
                 try {
-                    http.GetScotty("https://api.scottybot.net/apiv2/repeats/add?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(t, "UTF-8"));
+                    http.GetScotty("https://api.scottybot.net/repeats/add?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(t, "UTF-8"));
                     replist.addElement(t);
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(RepeatList.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,7 +203,7 @@ public final class RepeatList extends javax.swing.JFrame {
         List<String> ToRem = this.Repeating.getSelectedValuesList();
         for (String t : ToRem) {
             try {
-                http.GetScotty("https://api.scottybot.net/apiv2/repeats/delete?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(t, "UTF-8"));
+                http.GetScotty("https://api.scottybot.net/repeats/delete?authkey=" + AuthKey + "&cmd=" + URLEncoder.encode(t, "UTF-8"));
                 replist.removeElement(t);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(RepeatList.class.getName()).log(Level.SEVERE, null, ex);
@@ -217,7 +217,7 @@ public final class RepeatList extends javax.swing.JFrame {
         Delay = JOptionPane.showInputDialog(rootPane, "Enter new repeat delay in minutes.");
         if (Delay != null) {
             Long LDelay = Long.parseLong(Delay) * 60;
-            http.GetScotty("https://api.scottybot.net/apiv2/settings/change?authkey=" + AuthKey + "&setting=RepeatTimes&value=" + LDelay);
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=RepeatTimes&value=" + LDelay);
         }
     }//GEN-LAST:event_jButton6ActionPerformed
 

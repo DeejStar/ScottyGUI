@@ -115,7 +115,7 @@ public class addquote extends javax.swing.JFrame {
         HTTP http = new HTTP();
         while (true) {
             try {
-                http.GetScotty("https://api.scottybot.net/apiv2/quotes/add?authkey=" + AuthKey + "&person=" + URLEncoder.encode(this.QPerson.getText(), "UTF-8") + "&quote=" + URLEncoder.encode(this.QuoteText.getText(), "UTF-8"));
+                http.GetScotty("https://api.scottybot.net/quotes/add?authkey=" + AuthKey + "&person=" + URLEncoder.encode(this.QPerson.getText(), "UTF-8") + "&quote=" + URLEncoder.encode(this.QuoteText.getText(), "UTF-8"));
                 cp.PopQuoteList();
                 break;
             } catch (UnsupportedEncodingException | ParseException ex) {
