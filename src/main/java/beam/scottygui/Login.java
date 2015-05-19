@@ -5,6 +5,7 @@
  */
 package beam.scottygui;
 
+import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.UserID;
@@ -211,6 +212,7 @@ public class Login extends javax.swing.JFrame {
 
     public void Login() {
         Username = this.LoginField.getText();
+        CentralStore.UserName = Username;
         Password = new String(this.PassField.getPassword());
 //        if (!"".equalsIgnoreCase(Username));
 //

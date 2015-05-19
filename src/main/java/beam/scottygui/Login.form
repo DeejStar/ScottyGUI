@@ -48,10 +48,8 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="LoginField" pref="110" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="CodeField" alignment="0" max="32767" attributes="0"/>
-                              <Component id="PassField" pref="110" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="CodeField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="PassField" alignment="1" pref="110" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
