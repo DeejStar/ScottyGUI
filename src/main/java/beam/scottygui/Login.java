@@ -199,23 +199,25 @@ public class Login extends javax.swing.JFrame {
 
     public void Login() {
         Username = this.LoginField.getText();
-        Password = "";
-        for (char t : this.PassField.getPassword()) {
-            Password = Password + t;
-        }
-        Password = Password.replace(", ", "");
+        Password = new String(this.PassField.getPassword());
+//        if (!"".equalsIgnoreCase(Username));
+//
+//        for (char t : this.PassField.getPassword()) {
+//            Password = Password + t;
+//        }
+//        Password = Password.replace(", ", "");
         System.out.println(Username + ":" + Password);
         JSONParser parser = new JSONParser();
         String ToParse = "";
-        String code = "";
+        String Code = "";
         try {
-            code = this.code.getText();
-            System.out.println(code);
+            Code = this.code.getText();
+            System.out.println(Code);
         } catch (Exception e) {
 
         }
         try {
-            ToParse = http.Login(Username, Password, code);
+            ToParse = http.Login(Username, Password, Code);
 // TODO add your handling code here:
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
