@@ -92,7 +92,7 @@ public class ChatFormatter {
                 WooshMe = true;
             }
         }
-
+        String TestChat = "";
         if (WooshMe) {
             if (cp.WooshMeEnabled.isSelected()) {
                 new Thread("Sound Alert!") {
@@ -113,15 +113,18 @@ public class ChatFormatter {
                     }
                 }.start();
             }
+
+            TestChat = "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
             ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
 
         } else {
+            TestChat = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
             ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
         }
         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
         CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+
         CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
         CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
-
     }
 }

@@ -38,13 +38,13 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public class HTTP {
-    
+
     JSONParser jsonParser = new JSONParser();
     List<String> EndPoints = new ArrayList();
     Long ChanID;
     String Username = "";
     String Password = "";
-    
+
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
         //CookieManager customCookieManager = new CookieManager();
         //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -56,7 +56,7 @@ public class HTTP {
         int attempt = 0;
         while (attempt < 6) {
             try {
-                
+
                 CookieManager manager = new CookieManager();
                 manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
                 CookieHandler.setDefault(manager);
@@ -102,11 +102,11 @@ public class HTTP {
                 Thread.sleep(1000);
             }
         }
-        
+        System.out.println(dataIn);
         return dataIn;
-        
+
     }
-    
+
     public void CLogin(String Username, String Password) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
         //CookieManager customCookieManager = new CookieManager();
         //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -154,10 +154,10 @@ public class HTTP {
         if ("".equalsIgnoreCase(dataIn)) {
             throw new IOException();
         }
-        
+
     }
     JSONParser parser = new JSONParser();
-    
+
     public String GetScotty(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
@@ -187,6 +187,7 @@ public class HTTP {
                 }
             }
         }
+        System.out.println(dataIn);
         if (TimesToTry == 10) {
             JOptionPane.showMessageDialog(null, "Error communicating with server, logging out to prevent corruption.");
             CentralStore.cp.dispose();
@@ -194,7 +195,7 @@ public class HTTP {
             Login login = new Login();
             login.setVisible(true);
         }
-        
+
         JSONObject CheckForFailed = null;
         try {
             CheckForFailed = (JSONObject) parser.parse(dataIn);
@@ -208,7 +209,7 @@ public class HTTP {
         }
         return dataIn;
     }
-    
+
     public String BeamGet(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;
@@ -245,7 +246,7 @@ public class HTTP {
         }
         return dataIn;
     }
-    
+
     public String get(String urlString) {
         String dataIn = "";
         int TimesToTry = 0;

@@ -8,7 +8,9 @@ package beam.scottygui;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.Password;
 import static beam.scottygui.Stores.CentralStore.UserID;
+import static beam.scottygui.Stores.CentralStore.Username;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
@@ -33,8 +35,6 @@ import org.json.simple.parser.ParseException;
  */
 public class Login extends javax.swing.JFrame {
 
-    public String Username = "";
-    public String Password = "";
     HTTP http = new HTTP();
     JSONUtil json = new JSONUtil();
 
@@ -266,8 +266,13 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
             return;
         }
-        AuthKey = (String) AuthReturn.get("AuthKey");
-        AuthKey = AuthKey.replace("\"", "");
+        AuthKey = (String) AuthReturn.get("AuthKeyv2");
+        //AuthKey = AuthKey.replace("\"", "");
+        try {
+            AuthKey = URLEncoder.encode(AuthKey, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         ControlPanel cp = new ControlPanel();
         cp.setVisible(true);

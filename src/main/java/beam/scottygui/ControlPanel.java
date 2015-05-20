@@ -1420,8 +1420,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         } else {
             this.WooshMeEnabled.setSelected(false);
         }
-        this.ChatOutput.setMaximumSize(this.ChatOutput.getPreferredSize());
-        extchat.ExtChatOutput.setMaximumSize(extchat.ExtChatOutput.getPreferredSize());
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
         try {
