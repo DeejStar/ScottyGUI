@@ -64,7 +64,7 @@ import org.json.simple.parser.ParseException;
  * @author tjhasty
  */
 public final class ControlPanel extends javax.swing.JFrame {
-    
+
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
@@ -79,18 +79,18 @@ public final class ControlPanel extends javax.swing.JFrame {
         try {
             VerPrint = new PrintStream(new FileOutputStream("CurVer.json"));
         } catch (FileNotFoundException ex) {
-            
+
         }
         JSONObject curver = new JSONObject();
         curver.put("CurVer", CurVer.toString());
         VerPrint.print(curver.toString());
         VerPrint.close();
     }
-    
+
     public void SetCurViewers(String curnum) {
         this.CurViewers.setText(curnum + " viewers");
     }
-    
+
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public boolean CheckNewVer() {
         JSONObject VerCheck = null;
@@ -106,7 +106,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
         if (NewVer > CurVer) {
             int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
-            
+
             if (Yes == 0) {
                 int Attempts = 0;
                 while (Attempts < 5) {
@@ -131,14 +131,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 } else {
                     //Restart the program
                     JOptionPane.showMessageDialog(rootPane, "Downloaded, Restarting ScottyGUI!");
-                    
+
                     StringBuilder cmd = new StringBuilder();
                     cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
                     for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
                         cmd.append(jvmArg + " ");
                     }
                     cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-                    
+
                     try {
                         System.out.println(cmd.toString());
                         Runtime.getRuntime().exec(cmd.toString());
@@ -149,13 +149,13 @@ public final class ControlPanel extends javax.swing.JFrame {
                     System.exit(0);
                     System.exit(0);
                 }
-                
+
             }
             return true;
         }
         return false;
     }
-    
+
     public void PopChatList() {
         this.Viewers.setModel(ChatUserList);
         new Thread("Update Viewer List") {
@@ -164,7 +164,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 while (true) {
                     System.out.println("Populating Viewer List");
                     JSONArray InitUserList = null;
-                    
+
                     while (true) {
                         try {
                             InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
@@ -186,9 +186,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 }
             }
         }.start();
-        
+
     }
-    
+
     public ControlPanel() {
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         GUILoadSettings();
@@ -199,25 +199,25 @@ public final class ControlPanel extends javax.swing.JFrame {
         //Set chat window to auto-scroll
         DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        
+
         cp = this;
         try {
             PopCmdText();
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         try {
             PopQuoteList();
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         RefreshAllSettings();
-        
+
         PopFilterSettings();
         PopBadWords();
-        
+
         new Thread("5 Minutes CMD Refresh") {
             @Override
             public void run() {
@@ -240,7 +240,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                             }
                         }
                     }.start();
-                    
+
                     new Thread("PopQuoteText") {
                         @Override
                         public void run() {
@@ -268,17 +268,17 @@ public final class ControlPanel extends javax.swing.JFrame {
                             } catch (Exception ex) {
                                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
+
                         }
                     }.start();
-                    
+
                     try {
                         Thread.sleep(5 * 60 * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
+
             }
         }.start();
         this.PopChatList();
@@ -291,7 +291,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 //            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
 //        }
     }
-    
+
     public void PopQuoteList() throws ParseException {
         JSONObject QList = null;
         QList = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/quotes?authkey=" + AuthKey));
@@ -302,22 +302,22 @@ public final class ControlPanel extends javax.swing.JFrame {
                 NumOfQuotes++;
             }
             if ("".equals(output)) {
-                
+
                 output = "ID: " + t.toString() + " - " + QList.get(t);
             } else {
-                
+
                 output = output + newline + newline + "ID: " + t.toString() + " - " + QList.get(t);
             }
-            
+
         }
         this.QuotePanel.setText(output);
         this.NumOfQuotes.setText(String.valueOf(NumOfQuotes + " quotes."));
     }
-    
+
     public void PopCmdText() throws ParseException {
         JSONObject CmdOutput = null;
         CmdOutput = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/commands?authkey=" + AuthKey));
-        
+
         System.out.println(CmdOutput.toString());
         JSONArray T = (JSONArray) CmdOutput.get("Commands");
         String out = "";
@@ -341,7 +341,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             out = out + newline + newline + obj.get("cmd") + " - Level: " + restrictlevel + " - " + obj.get("text") + " - Count: " + obj.get("cmdcount");
         }
-        
+
         this.CmdInfo.setText(out);
     }
 
@@ -360,6 +360,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jDialog1 = new javax.swing.JDialog();
         jDialog2 = new javax.swing.JDialog();
+        jButton6 = new javax.swing.JButton();
+        CurViewers = new javax.swing.JLabel();
+        TopViewers = new javax.swing.JLabel();
         ControlTab = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -448,12 +451,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         ChatOutput = new javax.swing.JEditorPane();
-        CurViewers = new javax.swing.JLabel();
-        TopViewers = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
-        AlertPaneOpen = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jPanel9 = new javax.swing.JPanel();
+        AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
@@ -496,15 +496,24 @@ public final class ControlPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ScottyGUI Ver. " + this.CurVer);
         setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton6.setText("Chat");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        CurViewers.setText("Offline");
+        CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
+        TopViewers.setText("0 Top Viewers");
 
         ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ControlTabMouseClicked(evt);
             }
         });
-
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         CmdInfo.setEditable(false);
         CmdInfo.setColumns(20);
@@ -513,15 +522,12 @@ public final class ControlPanel extends javax.swing.JFrame {
         CmdInfo.setWrapStyleWord(true);
         jScrollPane1.setViewportView(CmdInfo);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 838, 452));
-
         RefreshCMDs.setText("Refresh");
         RefreshCMDs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RefreshCMDsActionPerformed(evt);
             }
         });
-        jPanel1.add(RefreshCMDs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
 
         jButton1.setText("Add/Edit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -529,7 +535,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 11, -1, -1));
 
         jButton2.setText("Reset/Permlevel/Delete CMD");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -537,10 +542,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 11, -1, -1));
 
         jLabel2.setText("Auto-Refreshes every 5 minutes.");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(447, 15, -1, -1));
 
         RepeatList.setText("Repeat List");
         RepeatList.addActionListener(new java.awt.event.ActionListener() {
@@ -548,11 +551,43 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RepeatListActionPerformed(evt);
             }
         });
-        jPanel1.add(RepeatList, new org.netbeans.lib.awtextra.AbsoluteConstraints(761, 11, -1, -1));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(RefreshCMDs)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addGap(86, 86, 86)
+                        .addComponent(jLabel2)
+                        .addGap(154, 154, 154)
+                        .addComponent(RepeatList))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RefreshCMDs)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel2))
+                    .addComponent(RepeatList))
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         ControlTab.addTab("Commands", jPanel1);
-
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         QuotePanel.setEditable(false);
         QuotePanel.setColumns(20);
@@ -561,10 +596,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         QuotePanel.setWrapStyleWord(true);
         jScrollPane2.setViewportView(QuotePanel);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 68, 838, 429));
-
         jLabel3.setText("Auto-Refreshes every 5 minutes.");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(539, 15, -1, -1));
 
         addquotebutton.setText("Add Quote");
         addquotebutton.addActionListener(new java.awt.event.ActionListener() {
@@ -572,7 +604,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 addquotebuttonActionPerformed(evt);
             }
         });
-        jPanel2.add(addquotebutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 11, 105, -1));
 
         jButton3.setText("Delete Quotes");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -580,7 +611,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 11, -1, -1));
 
         jButton4.setText("Refresh");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -588,10 +618,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(733, 11, -1, -1));
 
         NumOfQuotes.setText("jLabel4");
-        jPanel2.add(NumOfQuotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(252, 15, 71, -1));
 
         QEnabled.setText("Quotes Enabled");
         QEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -599,11 +627,47 @@ public final class ControlPanel extends javax.swing.JFrame {
                 QEnabledActionPerformed(evt);
             }
         });
-        jPanel2.add(QEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(371, 11, -1, -1));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(addquotebutton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(QEnabled)
+                .addGap(67, 67, 67)
+                .addComponent(jLabel3)
+                .addGap(34, 34, 34)
+                .addComponent(jButton4))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addquotebutton)
+                    .addComponent(jButton3)
+                    .addComponent(QEnabled)
+                    .addComponent(jButton4)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(NumOfQuotes)
+                            .addComponent(jLabel3))))
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         ControlTab.addTab("Quotes", jPanel2);
-
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         FOnOff.setText("Filter Master Switch");
         FOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -611,7 +675,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 FOnOffActionPerformed(evt);
             }
         });
-        jPanel3.add(FOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 11, 183, 63));
 
         LinksOnOff.setText("Links Switch");
         LinksOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -619,7 +682,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 LinksOnOffActionPerformed(evt);
             }
         });
-        jPanel3.add(LinksOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 105, 105, -1));
 
         RepeatOnOff.setText("Repeat Switch");
         RepeatOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -627,7 +689,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RepeatOnOffActionPerformed(evt);
             }
         });
-        jPanel3.add(RepeatOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 149, 105, -1));
 
         CapsOnOff.setText("Caps Switch");
         CapsOnOff.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -640,7 +701,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 CapsOnOffActionPerformed(evt);
             }
         });
-        jPanel3.add(CapsOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 190, 105, -1));
 
         SymbolsOnOff.setText("Symbols Switch");
         SymbolsOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -648,7 +708,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SymbolsOnOffActionPerformed(evt);
             }
         });
-        jPanel3.add(SymbolsOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 231, -1, -1));
 
         SymPercent.setMinimum(30);
         SymPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -666,7 +725,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SymPercentPropertyChange(evt);
             }
         });
-        jPanel3.add(SymPercent, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 228, 292, -1));
 
         CapPercent.setMinimum(30);
         CapPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -679,16 +737,12 @@ public final class ControlPanel extends javax.swing.JFrame {
                 CapPercentMouseReleased(evt);
             }
         });
-        jPanel3.add(CapPercent, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 190, 292, -1));
 
         jLabel5.setText("TimeOut Duration in Minutes");
-        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(56, 272, -1, -1));
 
         CapsPercentDis.setText("jLabel6");
-        jPanel3.add(CapsPercentDis, new org.netbeans.lib.awtextra.AbsoluteConstraints(503, 190, 94, -1));
 
         SymPercentDis.setText("jLabel7");
-        jPanel3.add(SymPercentDis, new org.netbeans.lib.awtextra.AbsoluteConstraints(503, 228, 94, -1));
 
         TimoutDuration.setMaximum(60);
         TimoutDuration.setMinimum(1);
@@ -707,10 +761,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                 TimoutDurationPropertyChange(evt);
             }
         });
-        jPanel3.add(TimoutDuration, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 272, 292, -1));
 
         TimeoutLabel.setText("jLabel7");
-        jPanel3.add(TimeoutLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(503, 272, 94, -1));
 
         RemoveBadWord.setText("Remove From List");
         RemoveBadWord.addActionListener(new java.awt.event.ActionListener() {
@@ -718,7 +770,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RemoveBadWordActionPerformed(evt);
             }
         });
-        jPanel3.add(RemoveBadWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 83, -1, -1));
 
         BadWordList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -727,35 +778,120 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(BadWordList);
 
-        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(603, 117, 117, 181));
-
         addbadword.setText("Add word to list");
         addbadword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addbadwordActionPerformed(evt);
             }
         });
-        jPanel3.add(addbadword, new org.netbeans.lib.awtextra.AbsoluteConstraints(474, 117, 123, -1));
-        jPanel3.add(AddBadWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(474, 84, 123, -1));
 
         jLabel6.setText("New Bad Word");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(491, 63, 85, -1));
 
         jLabel7.setText("Bad Words Filter");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(622, 63, -1, -1));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(201, 201, 201)
+                .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(jLabel7))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LinksOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(RepeatOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CapsOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SymbolsOnOff))))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(CapsPercentDis, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(SymPercentDis, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(TimeoutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(273, 273, 273)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(AddBadWord, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addbadword, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(RemoveBadWord))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(LinksOnOff)
+                        .addGap(21, 21, 21)
+                        .addComponent(RepeatOnOff)
+                        .addGap(18, 18, 18)
+                        .addComponent(CapsOnOff)
+                        .addGap(18, 18, 18)
+                        .addComponent(SymbolsOnOff)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(AddBadWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(addbadword)
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CapsPercentDis))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SymPercentDis))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TimeoutLabel)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(RemoveBadWord)
+                        .addGap(11, 11, 11)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
 
         ControlTab.addTab("Filtering", jPanel3);
 
         JSettingsPane.setToolTipText("");
 
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         PointsName.setEditable(false);
         PointsName.setText("jTextField1");
-        jPanel5.add(PointsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(326, 96, 82, -1));
 
         jLabel8.setText("Points Name");
-        jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(326, 75, 82, -1));
 
         PRenBut.setText("Rename");
         PRenBut.addActionListener(new java.awt.event.ActionListener() {
@@ -763,7 +899,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PRenButActionPerformed(evt);
             }
         });
-        jPanel5.add(PRenBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(227, 95, 83, -1));
 
         PEnabled.setText("Points Enabled");
         PEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -771,7 +906,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PEnabledActionPerformed(evt);
             }
         });
-        jPanel5.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(365, 26, -1, -1));
 
         EditPoints.setText("Edit");
         EditPoints.addActionListener(new java.awt.event.ActionListener() {
@@ -779,7 +913,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EditPointsActionPerformed(evt);
             }
         });
-        jPanel5.add(EditPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(227, 142, 83, -1));
 
         PWhenIdle.setEditable(false);
         PWhenIdle.setText("jTextField2");
@@ -788,24 +921,18 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PWhenIdleActionPerformed(evt);
             }
         });
-        jPanel5.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(437, 143, 102, -1));
 
         PStartPoints.setEditable(false);
         PStartPoints.setText("jTextField3");
-        jPanel5.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(557, 143, 70, -1));
 
         PWhenLive.setEditable(false);
         PWhenLive.setText("jTextField2");
-        jPanel5.add(PWhenLive, new org.netbeans.lib.awtextra.AbsoluteConstraints(326, 143, 82, -1));
 
         jLabel9.setText("Points When Live");
-        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(326, 122, -1, -1));
 
         jLabel10.setText("Points When Not Live");
-        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(437, 122, -1, -1));
 
         jLabel11.setText("Starting Points");
-        jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(557, 122, -1, -1));
 
         BHEnabled.setText("BankHeist Enabled");
         BHEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -813,7 +940,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 BHEnabledActionPerformed(evt);
             }
         });
-        jPanel5.add(BHEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(197, 205, -1, -1));
 
         REnabled.setText("Raffle Enabled");
         REnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -821,7 +947,76 @@ public final class ControlPanel extends javax.swing.JFrame {
                 REnabledActionPerformed(evt);
             }
         });
-        jPanel5.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(337, 205, -1, -1));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(365, 365, 365)
+                .addComponent(PEnabled))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(326, 326, 326)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(227, 227, 227)
+                .addComponent(PRenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(326, 326, 326)
+                .addComponent(jLabel9)
+                .addGap(29, 29, 29)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(227, 227, 227)
+                .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(197, 197, 197)
+                .addComponent(BHEnabled)
+                .addGap(27, 27, 27)
+                .addComponent(REnabled))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(PEnabled)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel8)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PRenBut)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(EditPoints)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BHEnabled)
+                    .addComponent(REnabled)))
+        );
 
         JSettingsPane.addTab("Points", jPanel5);
 
@@ -999,23 +1194,42 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ControlTab.addTab("Settings", jPanel4);
 
-        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         UChatters.setText("0 Unique Chatters This Session.");
-        jPanel7.add(UChatters, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 48, 238, -1));
 
         PercentRetainedViewers.setText("Not enough info yet for Retained Viewer Stats");
-        jPanel7.add(PercentRetainedViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 68, 238, -1));
 
         jLabel13.setText("<<< EXPERIMENTAL");
-        jPanel7.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(268, 68, -1, -1));
 
         SessionMsgCount.setText("0 Messages This Session");
-        jPanel7.add(SessionMsgCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 88, 238, -1));
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(UChatters, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(PercentRetainedViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel13))
+                    .addComponent(SessionMsgCount, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(UChatters)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PercentRetainedViewers)
+                    .addComponent(jLabel13))
+                .addGap(6, 6, 6)
+                .addComponent(SessionMsgCount))
+        );
 
         ControlTab.addTab("Statistics", jPanel7);
-
-        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
@@ -1033,8 +1247,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(Viewers);
 
-        jPanel8.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(698, 0, 160, 477));
-
         ChatSend.setBackground(new java.awt.Color(0, 0, 0));
         ChatSend.setForeground(new java.awt.Color(255, 255, 255));
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
@@ -1049,10 +1261,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ChatSendKeyPressed(evt);
             }
         });
-        jPanel8.add(ChatSend, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 488, 678, -1));
 
         jLabel14.setText("Double click name to purge");
-        jPanel8.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(708, 491, -1, -1));
 
         ChatOutput.setEditable(false);
         ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -1067,36 +1277,35 @@ public final class ControlPanel extends javax.swing.JFrame {
         ChatOutput.setMinimumSize(getPreferredSize());
         jScrollPane5.setViewportView(ChatOutput);
 
-        jPanel8.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 678, 477));
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel14))))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)))
+        );
 
         ControlTab.addTab("Chat", jPanel8);
-
-        getContentPane().add(ControlTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 52, -1, -1));
-
-        CurViewers.setText("Offline");
-        CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 11, 91, -1));
-
-        TopViewers.setText("0 Top Viewers");
-        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 11, 118, -1));
-
-        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton6.setText("Pop Out Chat");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-        jPanel9.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
-
-        AlertPaneOpen.setText("Alert Pane");
-        AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AlertPaneOpenActionPerformed(evt);
-            }
-        });
-        jPanel9.add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 0, -1, -1));
 
         jButton5.setText("Check Updates");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -1104,17 +1313,70 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel9.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(258, 0, -1, -1));
 
-        RefreshAll.setText("Refresh All Settings");
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        AlertPaneOpen.setText("Alert Pane");
+        AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AlertPaneOpenActionPerformed(evt);
+            }
+        });
+
+        RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RefreshAllActionPerformed(evt);
             }
         });
-        jPanel9.add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(369, 0, -1, -1));
 
-        getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 11, -1, 30));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70)
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(101, 101, 101)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton5)
+                        .addComponent(RefreshAll)
+                        .addComponent(AlertPaneOpen)
+                        .addComponent(jButton6))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(TopViewers)
+                            .addComponent(CurViewers))
+                        .addGap(18, 18, 18)
+                        .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(3, 3, 3))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -1123,7 +1385,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void RefreshAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllActionPerformed
         RefreshAllSettings();
     }//GEN-LAST:event_RefreshAllActionPerformed
-    
+
     private void ControlTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ControlTabMouseClicked
         //        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
         //        switch (tab.toLowerCase()) {
@@ -1148,7 +1410,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         //                break;
         //        }
     }//GEN-LAST:event_ControlTabMouseClicked
-    
+
     public void PopGuiSettings() {
         if (!CentralStore.GUISettings.containsKey("WooshME")) {
             CentralStore.GUISaveSettings("WooshME", "false");
@@ -1167,10 +1429,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
             JOptionPane.showMessageDialog(rootPane, "Done, now type !rejoin in your channel");
         } catch (Exception e) {
-            
+
         }
     }//GEN-LAST:event_ResetScottyNameActionPerformed
-    
+
     private void CUsernamePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CUsernamePasswordActionPerformed
         String CUsername = null;
         String CPassword = null;
@@ -1201,12 +1463,12 @@ public final class ControlPanel extends javax.swing.JFrame {
                 } catch (UnsupportedEncodingException ex1) {
                     Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
                 }
-                
+
             }
-            
+
         }
     }//GEN-LAST:event_CUsernamePasswordActionPerformed
-    
+
     private void YodaEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YodaEnabledActionPerformed
         if (this.YodaEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=1");
@@ -1214,7 +1476,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseYoda&value=0");
         }
     }//GEN-LAST:event_YodaEnabledActionPerformed
-    
+
     private void ChatEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatEnabledActionPerformed
         if (this.ChatEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=1");
@@ -1222,7 +1484,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseClever&value=0");
         }
     }//GEN-LAST:event_ChatEnabledActionPerformed
-    
+
     private void ChuckEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChuckEnabledActionPerformed
         if (this.ChuckEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=1");
@@ -1230,7 +1492,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=0");
         }
     }//GEN-LAST:event_ChuckEnabledActionPerformed
-    
+
     private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
         if (this.MeOutput.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
@@ -1238,7 +1500,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
         }
     }//GEN-LAST:event_MeOutputActionPerformed
-    
+
     private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
         if (this.ClearCmdsEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=1");
@@ -1246,7 +1508,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=0");
         }
     }//GEN-LAST:event_ClearCmdsEnabledActionPerformed
-    
+
     private void OnlyWhenLiveEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OnlyWhenLiveEnabledActionPerformed
         if (this.OnlyWhenLiveEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=1");
@@ -1254,7 +1516,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=0");
         }
     }//GEN-LAST:event_OnlyWhenLiveEnabledActionPerformed
-    
+
     private void EFollowMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EFollowMsgActionPerformed
         String OldFollowMSG = GetSettings().get("FollowMSG").toString();
         String NewFollowMSG = JOptionPane.showInputDialog(rootPane, "Set your follower message. use (_follower_) as a placeholder for the follower.", OldFollowMSG);
@@ -1276,7 +1538,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_EFollowMsgActionPerformed
-    
+
     private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
         if (this.FollowEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=1");
@@ -1284,7 +1546,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
         }
     }//GEN-LAST:event_FollowEnabledActionPerformed
-    
+
     private void REnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REnabledActionPerformed
         if (this.REnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=1");
@@ -1292,7 +1554,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=0");
         }
     }//GEN-LAST:event_REnabledActionPerformed
-    
+
     private void BHEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BHEnabledActionPerformed
         if (this.BHEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=1");
@@ -1300,13 +1562,13 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=0");
         }
     }//GEN-LAST:event_BHEnabledActionPerformed
-    
+
     private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PWhenIdleActionPerformed
-    
+
     private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
-        
+
         if (this.PWhenLive.isEditable()) {
             String idle = this.PWhenIdle.getText();
             String notidle = this.PWhenLive.getText();
@@ -1319,7 +1581,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
                 return;
             }
-            
+
             this.PWhenIdle.setEditable(false);
             this.PWhenLive.setEditable(false);
             this.PStartPoints.setEditable(false);
@@ -1338,7 +1600,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PStartPoints.setEditable(true);
         }
     }//GEN-LAST:event_EditPointsActionPerformed
-    
+
     private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
         if (this.PEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
@@ -1346,7 +1608,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
         }
     }//GEN-LAST:event_PEnabledActionPerformed
-    
+
     private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
         if (this.PointsName.isEditable()) {
             this.PointsName.setEditable(false);
@@ -1362,9 +1624,9 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PRenBut.setText("Save");
         }
     }//GEN-LAST:event_PRenButActionPerformed
-    
+
     private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
-        
+
         try {
             String[] ToAdd = this.AddBadWord.getText().split(" ");
             http.GetScotty("https://api.scottybot.net/badwords/add?authkey=" + AuthKey + "&word=" + URLEncoder.encode(ToAdd[0], "UTF-8"));
@@ -1374,7 +1636,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         this.AddBadWord.setText("");
     }//GEN-LAST:event_addbadwordActionPerformed
-    
+
     private void RemoveBadWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveBadWordActionPerformed
         List<String> ToRemove = new ArrayList();
         ToRemove.addAll(this.BadWordList.getSelectedValuesList());
@@ -1387,39 +1649,39 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         this.PopBadWords();
     }//GEN-LAST:event_RemoveBadWordActionPerformed
-    
+
     private void TimoutDurationPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_TimoutDurationPropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_TimoutDurationPropertyChange
-    
+
     private void TimoutDurationMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseReleased
         http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=TimeOutLength&value=" + String.valueOf(this.TimoutDuration.getValue()));
     }//GEN-LAST:event_TimoutDurationMouseReleased
-    
+
     private void TimoutDurationMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TimoutDurationMouseDragged
         this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
     }//GEN-LAST:event_TimoutDurationMouseDragged
-    
+
     private void CapPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseReleased
         http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=CapPercent&value=" + this.CapPercent.getValue());
     }//GEN-LAST:event_CapPercentMouseReleased
-    
+
     private void CapPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapPercentMouseDragged
         this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");        // TODO add your handling code here:
     }//GEN-LAST:event_CapPercentMouseDragged
-    
+
     private void SymPercentPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_SymPercentPropertyChange
-        
+
     }//GEN-LAST:event_SymPercentPropertyChange
-    
+
     private void SymPercentMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseReleased
         http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=SymbolCount&value=" + this.SymPercent.getValue());        // TODO add your handling code here:
     }//GEN-LAST:event_SymPercentMouseReleased
-    
+
     private void SymPercentMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SymPercentMouseDragged
         this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");        // TODO add your handling code here:
     }//GEN-LAST:event_SymPercentMouseDragged
-    
+
     private void SymbolsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SymbolsOnOffActionPerformed
         if (this.SymbolsOnOff.isSelected()) {
             this.SymbolsOnOff.setText("Symbols Enabled");
@@ -1429,7 +1691,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseSymbols&value=0");
         }        // TODO add your handling code here:
     }//GEN-LAST:event_SymbolsOnOffActionPerformed
-    
+
     private void CapsOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CapsOnOffActionPerformed
         if (this.CapsOnOff.isSelected()) {
             this.CapsOnOff.setText("Caps Enabled");
@@ -1439,11 +1701,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseCapitals&value=0");
         }
     }//GEN-LAST:event_CapsOnOffActionPerformed
-    
+
     private void CapsOnOffMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CapsOnOffMouseReleased
-        
+
     }//GEN-LAST:event_CapsOnOffMouseReleased
-    
+
     private void RepeatOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatOnOffActionPerformed
         if (this.RepeatOnOff.isSelected()) {
             this.RepeatOnOff.setText("Repeat Enabled");
@@ -1453,7 +1715,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseRepeat&value=0");
         }
     }//GEN-LAST:event_RepeatOnOffActionPerformed
-    
+
     private void LinksOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinksOnOffActionPerformed
         if (this.LinksOnOff.isSelected()) {
             this.LinksOnOff.setText("Links Enabled");
@@ -1463,7 +1725,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseLinks&value=0");
         }
     }//GEN-LAST:event_LinksOnOffActionPerformed
-    
+
     private void FOnOffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOnOffActionPerformed
         if (this.FOnOff.isSelected()) {
             this.FOnOff.setText("All Filtering Enabled");
@@ -1473,7 +1735,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseFilter&value=0");
         }
     }//GEN-LAST:event_FOnOffActionPerformed
-    
+
     private void QEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QEnabledActionPerformed
         if (this.QEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=1");
@@ -1481,7 +1743,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseQuotes&value=0");
         }
     }//GEN-LAST:event_QEnabledActionPerformed
-    
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         while (true) {
             try {
@@ -1497,34 +1759,34 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }    // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
-    
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+
         delquote dq = new delquote();
         dq.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-    
+
     private void addquotebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addquotebuttonActionPerformed
         addquote aq = new addquote();
         aq.setVisible(true);
     }//GEN-LAST:event_addquotebuttonActionPerformed
-    
+
     private void RepeatListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RepeatListActionPerformed
         RepeatList rl = new RepeatList();
         rl.setVisible(true);
     }//GEN-LAST:event_RepeatListActionPerformed
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DeletePermAdjust dpa = new DeletePermAdjust();
         dpa.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AddEditCMD cmd = new AddEditCMD();
         cmd.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void RefreshCMDsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshCMDsActionPerformed
         while (true) {
             try {
@@ -1540,13 +1802,13 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_RefreshCMDsActionPerformed
-    
+
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (!this.CheckNewVer()) {
             JOptionPane.showMessageDialog(rootPane, "No new updates.");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-    
+
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
@@ -1557,11 +1819,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ChatSendKeyPressed
-    
+
     private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ChatSendActionPerformed
-    
+
     private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
         if (evt.getClickCount() == 2) {
             try {
@@ -1589,12 +1851,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "No Follower Message Font Settings set");
             return;
         }
-        
+
         if (!af.isVisible()) {
             af.setVisible(true);
         }
     }//GEN-LAST:event_AlertPaneOpenActionPerformed
-    
+
     private void FollowSoundSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowSoundSetActionPerformed
         FileNameExtensionFilter SoundFilter = new FileNameExtensionFilter("MP3 Files", "mp3");
         JFileChooser Open = new JFileChooser();
@@ -1624,7 +1886,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 //            }
 //        }.start();
     }//GEN-LAST:event_FollowSoundSetActionPerformed
-    
+
     private void FollowIMGSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowIMGSetActionPerformed
         FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image Files", "jpg", "gif", "png", "bmp");
         JFileChooser Open = new JFileChooser();
@@ -1636,7 +1898,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             CentralStore.GUISaveSettings("FollowIMG", FileLoc);
         }
     }//GEN-LAST:event_FollowIMGSetActionPerformed
-    
+
     private void SetFollowAlertMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SetFollowAlertMsgActionPerformed
         String msg = null;
         msg = JOptionPane.showInputDialog("Set Follower Message, use (_follower_) where the follower will be.");
@@ -1644,32 +1906,32 @@ public final class ControlPanel extends javax.swing.JFrame {
             GUISaveSettings("FollowerMSG", msg);
         }
     }//GEN-LAST:event_SetFollowAlertMsgActionPerformed
-    
+
     private void FollowerMSGFontActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowerMSGFontActionPerformed
         Font font = FontChooser.showDialog(this, "Font Chooser", new Font("Dialog", 0, 12));
         GUISaveSettings("FFontSize", String.valueOf(font.getSize()));
         GUISaveSettings("FFontName", font.getName());
         GUISaveSettings("FFontStyle", String.valueOf(font.getStyle()));
     }//GEN-LAST:event_FollowerMSGFontActionPerformed
-    
+
     private void SetFontColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SetFontColorActionPerformed
         int RGB = JColorChooser.showDialog(this, "Pick Follower Color", null).getRGB();
         GUISaveSettings("FFontColor", String.valueOf(RGB));
     }//GEN-LAST:event_SetFontColorActionPerformed
-    
+
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         extchat.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
-    
+
     private void WooshMeEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WooshMeEnabledActionPerformed
         if (this.WooshMeEnabled.isSelected()) {
             CentralStore.GUISaveSettings("WooshME", "true");
         } else {
             CentralStore.GUISaveSettings("WooshME", "false");
         }
-        
+
     }//GEN-LAST:event_WooshMeEnabledActionPerformed
-    
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -1684,13 +1946,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.PWhenLive.setText(GetSettings().get("notidlepoints").toString());
         this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
         this.PStartPoints.setText(GetSettings().get("startpoints").toString());
-        
+
         if ("1".equals(GetSettings().get("UseBankheist"))) {
             this.BHEnabled.setSelected(true);
         } else {
             this.BHEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("UseRaffle"))) {
             this.REnabled.setSelected(true);
         } else {
@@ -1701,31 +1963,31 @@ public final class ControlPanel extends javax.swing.JFrame {
         } else {
             this.QEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("UseFollower"))) {
             this.FollowEnabled.setSelected(true);
         } else {
             this.FollowEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("OnlyWhenLive"))) {
             this.OnlyWhenLiveEnabled.setSelected(true);
         } else {
             this.OnlyWhenLiveEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("PurgeCommands"))) {
             this.ClearCmdsEnabled.setSelected(true);
         } else {
             this.ClearCmdsEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("UseME"))) {
             this.MeOutput.setSelected(true);
         } else {
             this.MeOutput.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("Donated"))) {
             //this.JSettingsPane.setEnabledAt(2, true);
 
@@ -1740,27 +2002,27 @@ public final class ControlPanel extends javax.swing.JFrame {
                 t.setEnabled(false);
             }
         }
-        
+
         if ("1".equals(GetSettings().get("UseChuck"))) {
             this.ChuckEnabled.setSelected(true);
         } else {
             this.ChuckEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("UseClever"))) {
             this.ChatEnabled.setSelected(true);
         } else {
             this.ChatEnabled.setSelected(false);
         }
-        
+
         if ("1".equals(GetSettings().get("UseYoda"))) {
             this.YodaEnabled.setSelected(true);
         } else {
             this.YodaEnabled.setSelected(false);
         }
-        
+
     }
-    
+
     public void PopBadWords() {
         BadWordsList.clear();
         this.BadWordList.setModel(BadWordsList);
@@ -1776,17 +2038,17 @@ public final class ControlPanel extends javax.swing.JFrame {
                 }
             }
         }
-        
+
         for (Object t : ToPopulate.values()) {
             BadWordsList.addElement(t.toString());
         }
-        
+
     }
-    
+
     public void RefreshAllSettings() {
         try {
             RefreshSettings();
-            
+
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1794,11 +2056,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         PopFilterSettings();
         PopulateAllSettings();
     }
-    
+
     public void PopFilterSettings() {
-        
+
         JSONObject FSettings = GetSettings();
-        
+
         if ("1".equals(FSettings.get("UseFilter").toString())) {
             this.FOnOff.setSelected(true);
             this.FOnOff.setText("All Filtering Enabled");
@@ -1806,7 +2068,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.FOnOff.setSelected(false);
             this.FOnOff.setText(("All Filtering Disabled"));
         }
-        
+
         if ("1".equals(FSettings.get("UseLinks").toString())) {
             this.LinksOnOff.setSelected(true);
             this.LinksOnOff.setText("Links Enabled");
@@ -1814,7 +2076,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.LinksOnOff.setSelected(false);
             this.LinksOnOff.setText(("Links Disabled"));
         }
-        
+
         if ("1".equals(FSettings.get("UseRepeat"))) {
             this.RepeatOnOff.setSelected(true);
             this.RepeatOnOff.setText("Repeat Enabled");
@@ -1822,7 +2084,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.RepeatOnOff.setText("Repeat Disabled");
             this.RepeatOnOff.setSelected(false);
         }
-        
+
         if ("1".equals(FSettings.get("UseCapitals"))) {
             this.CapsOnOff.setSelected(true);
             this.CapsOnOff.setText("Caps Enabled");
@@ -1830,7 +2092,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.CapsOnOff.setText("Caps Disabled");
             this.CapsOnOff.setSelected(false);
         }
-        
+
         if ("1".equals(FSettings.get("UseSymbols"))) {
             this.SymbolsOnOff.setSelected(true);
             this.SymbolsOnOff.setText("Symbols Enabled");
@@ -1838,15 +2100,15 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.SymbolsOnOff.setText("Symbols Disabled");
             this.SymbolsOnOff.setSelected(false);
         }
-        
+
         this.CapPercent.setValue(Integer.parseInt(FSettings.get("CapPercent").toString()));
         this.SymPercent.setValue(Integer.parseInt(FSettings.get("SymbolCount").toString()));
         this.TimoutDuration.setValue(Integer.parseInt(FSettings.get("TimeOutLength").toString()));
-        
+
         this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
         this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");
         this.SymPercentDis.setText(String.valueOf(this.SymPercent.getValue()) + " Percent");
-        
+
     }
 
     /**
@@ -1863,7 +2125,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
+
                 }
             }
         } catch (ClassNotFoundException ex) {

@@ -58,7 +58,11 @@ public class ChatPopOut extends javax.swing.JFrame {
         jScrollPane5.setViewportView(ChatOutput);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         ExtChatOutput.setEditable(false);
         ExtChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -69,8 +73,6 @@ public class ChatPopOut extends javax.swing.JFrame {
         ExtChatOutput.setToolTipText("");
         ExtChatOutput.setDoubleBuffered(true);
         jScrollPane6.setViewportView(ExtChatOutput);
-
-        getContentPane().add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 837, 540));
 
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
@@ -88,8 +90,6 @@ public class ChatPopOut extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(Viewers);
 
-        getContentPane().add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(843, 0, 184, 540));
-
         ChatSend.setBackground(new java.awt.Color(0, 0, 0));
         ChatSend.setForeground(new java.awt.Color(255, 255, 255));
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
@@ -104,10 +104,37 @@ public class ChatPopOut extends javax.swing.JFrame {
                 ChatSendKeyPressed(evt);
             }
         });
-        getContentPane().add(ChatSend, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 546, 837, -1));
 
         jLabel14.setText("Double click name to purge");
-        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 549, -1, -1));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane6)
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
+                .addComponent(jLabel14)
+                .addGap(29, 29, 29))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel14)))
+                .addGap(11, 11, 11))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -136,6 +163,10 @@ public class ChatPopOut extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ChatSendKeyPressed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formComponentResized
 
     /**
      * @param args the command line arguments

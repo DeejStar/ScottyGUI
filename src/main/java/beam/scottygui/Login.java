@@ -21,6 +21,8 @@ import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -40,6 +42,12 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
+        String laf = UIManager.getSystemLookAndFeelClassName();
+        try {
+            UIManager.setLookAndFeel(laf);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.setProperty("file.encoding", "UTF-8");
         Field charset = null;
         try {
