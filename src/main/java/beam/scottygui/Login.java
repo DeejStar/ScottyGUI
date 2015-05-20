@@ -5,9 +5,12 @@
  */
 package beam.scottygui;
 
+import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.Password;
 import static beam.scottygui.Stores.CentralStore.UserID;
+import static beam.scottygui.Stores.CentralStore.Username;
 import static beam.scottygui.Stores.CentralStore.newline;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
@@ -20,6 +23,8 @@ import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -30,8 +35,6 @@ import org.json.simple.parser.ParseException;
  */
 public class Login extends javax.swing.JFrame {
 
-    public String Username = "";
-    public String Password = "";
     HTTP http = new HTTP();
     JSONUtil json = new JSONUtil();
 
@@ -39,6 +42,12 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
+        String laf = UIManager.getSystemLookAndFeelClassName();
+        try {
+            UIManager.setLookAndFeel(laf);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.setProperty("file.encoding", "UTF-8");
         Field charset = null;
         try {
@@ -71,8 +80,8 @@ public class Login extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        code = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        CodeField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -109,13 +118,18 @@ public class Login extends javax.swing.JFrame {
 
         jLabel4.setText("using your beam info.");
 
-        code.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                codeKeyPressed(evt);
+        jLabel5.setText("2-Factor (optional)");
+
+        CodeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CodeFieldActionPerformed(evt);
             }
         });
-
-        jLabel5.setText("2-Factor (optional)");
+        CodeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CodeFieldKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -123,26 +137,29 @@ public class Login extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(PassField)
-                                .addComponent(LoginField)
-                                .addComponent(code, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel3)))
+                        .addContainerGap(130, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(LoginField, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(CodeField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(PassField, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)))
+                        .addGap(24, 24, 24))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(91, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(96, 96, 96))
         );
@@ -163,8 +180,8 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(code, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))))
+                            .addComponent(jLabel5)
+                            .addComponent(CodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1))
         );
@@ -185,20 +202,25 @@ public class Login extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1MouseClicked
 
-    private void codeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            Login();
-        }
-    }//GEN-LAST:event_codeKeyPressed
-
     private void PassFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PassFieldKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             Login();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_PassFieldKeyPressed
 
+    private void CodeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CodeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CodeFieldActionPerformed
+
+    private void CodeFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CodeFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            Login();
+        }         // TODO add your handling code here:
+    }//GEN-LAST:event_CodeFieldKeyPressed
+
     public void Login() {
         Username = this.LoginField.getText();
+        CentralStore.UserName = Username;
         Password = new String(this.PassField.getPassword());
 //        if (!"".equalsIgnoreCase(Username));
 //
@@ -209,15 +231,8 @@ public class Login extends javax.swing.JFrame {
         System.out.println(Username + ":" + Password);
         JSONParser parser = new JSONParser();
         String ToParse = "";
-        String Code = "";
         try {
-            Code = this.code.getText();
-            System.out.println(Code);
-        } catch (Exception e) {
-
-        }
-        try {
-            ToParse = http.Login(Username, Password, Code);
+            ToParse = http.Login(Username, Password, new String(this.CodeField.getPassword()));
 // TODO add your handling code here:
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -237,7 +252,7 @@ public class Login extends javax.swing.JFrame {
         JSONObject AuthReturn = null;
         String URL = null;
         try {
-            URL = "https://api.scottybot.net/api/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + code;
+            URL = "https://api.scottybot.net/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -251,8 +266,13 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
             return;
         }
-        AuthKey = (String) AuthReturn.get("AuthKey");
-        AuthKey = AuthKey.replace("\"", "");
+        AuthKey = (String) AuthReturn.get("AuthKeyv2");
+        //AuthKey = AuthKey.replace("\"", "");
+        try {
+            AuthKey = URLEncoder.encode(AuthKey, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         ControlPanel cp = new ControlPanel();
         cp.setVisible(true);
@@ -295,9 +315,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField CodeField;
     private javax.swing.JTextField LoginField;
     private javax.swing.JPasswordField PassField;
-    private javax.swing.JTextField code;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -29,7 +29,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -100,7 +102,7 @@ public class HTTP {
                 Thread.sleep(1000);
             }
         }
-
+        System.out.println(dataIn);
         return dataIn;
 
     }
@@ -154,6 +156,7 @@ public class HTTP {
         }
 
     }
+    JSONParser parser = new JSONParser();
 
     public String GetScotty(String urlString) {
         String dataIn = "";
@@ -184,12 +187,25 @@ public class HTTP {
                 }
             }
         }
+        System.out.println(dataIn);
         if (TimesToTry == 10) {
             JOptionPane.showMessageDialog(null, "Error communicating with server, logging out to prevent corruption.");
             CentralStore.cp.dispose();
             CentralStore.cp = null;
             Login login = new Login();
             login.setVisible(true);
+        }
+
+        JSONObject CheckForFailed = null;
+        try {
+            CheckForFailed = (JSONObject) parser.parse(dataIn);
+        } catch (ParseException ex) {
+            Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (CheckForFailed.containsValue("Not Authed")) {
+            System.out.println(CheckForFailed.toString());
+            JOptionPane.showMessageDialog(null, "Issue talking with server. Did you log in elsewhere with this username? Closing program.");
+            System.exit(0);
         }
         return dataIn;
     }

@@ -15,10 +15,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author tjhasty
- */
 public class ChatPopOut extends javax.swing.JFrame {
 
     /**
@@ -27,6 +23,59 @@ public class ChatPopOut extends javax.swing.JFrame {
     public ChatPopOut() {
         initComponents();
         this.Viewers.setModel(ChatUserList);
+//        this.ExtChatOutput.setEditorKit(new HTMLEditorKit() {
+//            @Override
+//            public ViewFactory getViewFactory() {
+//                return new HTMLFactory() {
+//                    @Override
+//                    public View create(Element e) {
+//                        View v = super.create(e);
+//                        if (v instanceof InlineView) {
+//                            return new InlineView(e) {
+//                                @Override
+//                                public int getBreakWeight(int axis, float pos, float len) {
+//                                    return GoodBreakWeight;
+//                                }
+//
+//                                @Override
+//                                public View breakView(int axis, int p0, float pos, float len) {
+//                                    if (axis == View.X_AXIS) {
+//                                        checkPainter();
+//                                        int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+//                                        if (p0 == getStartOffset() && p1 == getEndOffset()) {
+//                                            return this;
+//                                        }
+//                                        return createFragment(p0, p1);
+//                                    }
+//                                    return this;
+//                                }
+//                            };
+//                        } else if (v instanceof ParagraphView) {
+//                            return new ParagraphView(e) {
+//                                @Override
+//                                protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
+//                                    if (r == null) {
+//                                        r = new SizeRequirements();
+//                                    }
+//                                    float pref = layoutPool.getPreferredSpan(axis);
+//                                    float min = layoutPool.getMinimumSpan(axis);
+//                                    // Don't include insets, Box.getXXXSpan will include them. 
+//                                    r.minimum = (int) min;
+//                                    r.preferred = Math.max(r.minimum, (int) pref);
+//                                    r.maximum = Integer.MAX_VALUE;
+//                                    r.alignment = 0.5f;
+//                                    return r;
+//                                }
+//
+//                            };
+//                        }
+//                        return v;
+//                    }
+//                };
+//            }
+//        });
+        this.ExtChatOutput.setContentType("text/html");
+
     }
 
     /**
@@ -40,12 +89,12 @@ public class ChatPopOut extends javax.swing.JFrame {
 
         jScrollPane5 = new javax.swing.JScrollPane();
         ChatOutput = new javax.swing.JEditorPane();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        ExtChatOutput = new javax.swing.JEditorPane();
         jScrollPane7 = new javax.swing.JScrollPane();
         Viewers = new javax.swing.JList();
         ChatSend = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ExtChatOutput = new javax.swing.JTextPane();
 
         ChatOutput.setEditable(false);
         ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -58,16 +107,6 @@ public class ChatPopOut extends javax.swing.JFrame {
         jScrollPane5.setViewportView(ChatOutput);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        ExtChatOutput.setEditable(false);
-        ExtChatOutput.setBackground(new java.awt.Color(0, 0, 0));
-        ExtChatOutput.setBorder(new javax.swing.border.MatteBorder(null));
-        ExtChatOutput.setContentType("text/html"); // NOI18N
-        ExtChatOutput.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        ExtChatOutput.setText("");
-        ExtChatOutput.setToolTipText("");
-        ExtChatOutput.setDoubleBuffered(true);
-        jScrollPane6.setViewportView(ExtChatOutput);
 
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
@@ -102,14 +141,19 @@ public class ChatPopOut extends javax.swing.JFrame {
 
         jLabel14.setText("Double click name to purge");
 
+        ExtChatOutput.setBackground(new java.awt.Color(0, 0, 0));
+        ExtChatOutput.setForeground(new java.awt.Color(255, 255, 255));
+        ExtChatOutput.setDoubleBuffered(true);
+        jScrollPane2.setViewportView(ExtChatOutput);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -120,9 +164,9 @@ public class ChatPopOut extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,11 +186,11 @@ public class ChatPopOut extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ViewersMouseClicked
-    
+
     private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ChatSendActionPerformed
-    
+
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
@@ -196,11 +240,11 @@ public class ChatPopOut extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JEditorPane ChatOutput;
     private javax.swing.JTextField ChatSend;
-    public javax.swing.JEditorPane ExtChatOutput;
+    public javax.swing.JTextPane ExtChatOutput;
     public javax.swing.JList Viewers;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     // End of variables declaration//GEN-END:variables
 }

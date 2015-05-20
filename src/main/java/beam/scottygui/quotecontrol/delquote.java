@@ -43,7 +43,7 @@ public final class delquote extends javax.swing.JFrame {
         this.QToDelList.setModel(quoteList);
         while (true) {
             try {
-                JSONObject QL = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/api/quotes?authkey=" + AuthKey));
+                JSONObject QL = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/quotes?authkey=" + AuthKey));
                 System.out.println(QL.toString());
                 for (Object t : QL.keySet()) {
                     Reversed.put(QL.get(t.toString()).toString(), t.toString());
@@ -147,7 +147,7 @@ public final class delquote extends javax.swing.JFrame {
         for (String t : IDsToDel) {
             while (true) {
                 try {
-                    http.GetScotty("https://api.scottybot.net/api/quotes/delete?authkey=" + AuthKey + "&id=" + t);
+                    http.GetScotty("https://api.scottybot.net/quotes/delete?authkey=" + AuthKey + "&id=" + t);
                     break;
                 } catch (Exception ex) {
                     Logger.getLogger(delquote.class.getName()).log(Level.SEVERE, null, ex);

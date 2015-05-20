@@ -50,6 +50,7 @@ public class CentralStore {
     public static String Cookie = null;
     public static Endpoint endpoint = new EndPoint();
     public static Long UserID = null;
+    public static String UserName = null;
     public static List<String> UniqueChatters = new ArrayList();
     public static Long TopViewers = null;
     public static Integer Joined = 0;
@@ -63,8 +64,10 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 17;
+    public static Integer CurVer = 24;
     public static Integer LastCount = null;
+    public static String Username = "";
+    public static String Password = "";
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();
@@ -115,7 +118,7 @@ public class CentralStore {
         if (ChanSettings.size() > 0) {
             ChanSettings.clear();
         }
-        ChanSettings.putAll((JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/api/settings?authkey=" + AuthKey)));
+        ChanSettings.putAll((JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey)));
         System.out.println(ChanSettings.toString());
     }
 
