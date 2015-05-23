@@ -9,9 +9,6 @@ import beam.scottygui.ChatHandler.ChatFormatter;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
 import static beam.scottygui.Stores.CentralStore.ChatUserList;
-import static beam.scottygui.Stores.CentralStore.Joined;
-import static beam.scottygui.Stores.CentralStore.LastCount;
-import static beam.scottygui.Stores.CentralStore.Left;
 import static beam.scottygui.Stores.CentralStore.MsgCounter;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
@@ -52,16 +49,6 @@ public class EndPoint extends Endpoint {
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
-                try {
-                    int Total = Joined + Left;
-                    int Diff = Joined - Left;
-                    float Retained = ((float) Diff / (float) Total) * (float) 100;
-                    if (!"NaN".toLowerCase().equalsIgnoreCase(String.valueOf(Retained).toLowerCase())) {
-                        cp.PercentRetainedViewers.setText(Math.round(Retained) + "% retained viewership");
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
 
                 System.out.println(message);
                 JSONObject msg = null;
@@ -74,41 +61,6 @@ public class EndPoint extends Endpoint {
                 String EventType = msg.get("event").toString();
                 switch (EventType.toUpperCase()) {
                     case "STATS":
-                        data = (JSONObject) msg.get("data");
-                        Integer viewers = 0;
-                        try {
-                            viewers = Integer.parseInt(data.get("viewers").toString());
-                        } catch (Exception e) {
-                        }
-                        if (LastCount == null) {
-                            LastCount = viewers;
-                        } else {
-                            if (viewers < LastCount) {
-                                int totick = LastCount - viewers;
-                                while (totick > 0) {
-                                    CentralStore.Left++;
-                                    totick--;
-                                }
-                            }
-                            if (viewers > LastCount) {
-                                int totick = viewers - LastCount;
-                                while (totick > 0) {
-                                    CentralStore.Joined++;
-                                    totick--;
-                                }
-                            }
-                        }
-                        if (viewers == null) {
-                            cp.CurViewers.setText("Offline");
-                        } else {
-                            cp.CurViewers.setText(viewers.toString() + " viewers");
-                            if (CentralStore.TopViewers < viewers) {
-                                CentralStore.TopViewers = Long.parseLong(viewers.toString());
-                                cp.TopViewers.setText("Top Viewer Count: " + CentralStore.TopViewers.toString());
-                                System.out.println(CentralStore.TopViewers.toString());
-                            }
-                        }
-
                         break;
 
                     case "CHATMESSAGE":
@@ -140,8 +92,8 @@ public class EndPoint extends Endpoint {
                         break;
                     case "USERLEAVE":
                         //Left++;
-                        data = (JSONObject) msg.get("data");
-                        username = data.get("username").toString();
+                        //data = (JSONObject) msg.get("data");
+                        //username = data.get("username").toString();
 //                        if (ChatUserList.contains(username)) {
 //                            ChatUserList.removeElement(username);
 //

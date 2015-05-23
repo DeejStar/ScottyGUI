@@ -496,6 +496,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ScottyGUI Ver. " + this.CurVer);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton6.setText("Chat");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -503,11 +504,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 0, 100, -1));
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 8, 110, -1));
 
         TopViewers.setText("0 Top Viewers");
+        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(139, 8, 200, -1));
 
         ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1281,17 +1285,19 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel14)
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel14))))
+                        .addComponent(jScrollPane5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1307,14 +1313,18 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ControlTab.addTab("Chat", jPanel8);
 
+        getContentPane().add(ControlTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 43, -1, -1));
+
         jButton5.setText("Check Updates");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 0, 152, -1));
 
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 11, -1, 30));
 
         AlertPaneOpen.setText("Alert Pane");
         AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
@@ -1322,6 +1332,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AlertPaneOpenActionPerformed(evt);
             }
         });
+        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 0, 128, -1));
 
         RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1329,54 +1340,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RefreshAllActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(101, 101, 101)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton5)
-                        .addComponent(RefreshAll)
-                        .addComponent(AlertPaneOpen)
-                        .addComponent(jButton6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(TopViewers)
-                            .addComponent(CurViewers))
-                        .addGap(18, 18, 18)
-                        .addComponent(ControlTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(3, 3, 3))
-        );
+        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(627, 0, 160, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -1806,31 +1770,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "No new updates.");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                CentralStore.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
-                ChatSend.setText("");
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_ChatSendKeyPressed
-
-    private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ChatSendActionPerformed
-
-    private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
-        if (evt.getClickCount() == 2) {
-            try {
-                session.getBasicRemote().sendText(CentralStore.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_ViewersMouseClicked
     AlertFrame af = new AlertFrame();
     private void AlertPaneOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlertPaneOpenActionPerformed
         if (!GUISettings.containsKey("FollowSound")) {
@@ -1929,6 +1868,31 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_WooshMeEnabledActionPerformed
+
+    private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                CentralStore.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                ChatSend.setText("");
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ChatSendKeyPressed
+
+    private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ChatSendActionPerformed
+
+    private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
+        if (evt.getClickCount() == 2) {
+            try {
+                session.getBasicRemote().sendText(CentralStore.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ViewersMouseClicked
 
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
@@ -2116,7 +2080,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -2206,7 +2170,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JSlider TimoutDuration;
     public javax.swing.JLabel TopViewers;
     public javax.swing.JLabel UChatters;
-    public javax.swing.JList Viewers;
+    private javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JButton addbadword;

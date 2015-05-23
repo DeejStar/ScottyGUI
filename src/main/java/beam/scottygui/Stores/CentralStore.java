@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -64,13 +66,15 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 24;
+    public static Integer CurVer = 25;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
+    public static ExecutorService WorkerThreads = Executors.newFixedThreadPool(50);
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();
+
     }
 
     public static void GUILoadSettings() {
