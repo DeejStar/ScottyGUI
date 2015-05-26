@@ -67,14 +67,14 @@ public class ChatFormatter {
         JSONArray msgdata = (JSONArray) msg.get("message");
         for (Object t : msgdata) {
             JSONObject obj = (JSONObject) t;
-            System.out.println(obj.toString());
+            //System.out.println(obj.toString());
             String type = obj.get("type").toString();
             if ("TEXT".equals(type.toUpperCase())) {
                 MSG = MSG + " " + obj.get("data").toString();
             } else if ("EMOTICON".equalsIgnoreCase(type)) {
                 String imglink = "https://beam.pro/emoticons/" + obj.get("path") + ".png";
                 String ShowEmote = "<IMG SRC=\"" + imglink + "\" width=\"20\" height=\"20\" >";
-                System.out.println(ShowEmote);
+                //System.out.println(ShowEmote);
                 MSG = MSG + ShowEmote;
             } else {
                 String url = obj.get("text").toString();

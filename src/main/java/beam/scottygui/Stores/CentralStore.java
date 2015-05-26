@@ -66,7 +66,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 25;
+    public static Integer CurVer = 27;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -123,7 +123,7 @@ public class CentralStore {
             ChanSettings.clear();
         }
         ChanSettings.putAll((JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey)));
-        System.out.println(ChanSettings.toString());
+        //System.out.println(ChanSettings.toString());
     }
 
     public static String SendMSG(String message) {

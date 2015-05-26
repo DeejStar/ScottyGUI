@@ -102,7 +102,7 @@ public class HTTP {
                 Thread.sleep(1000);
             }
         }
-        System.out.println(dataIn);
+        ////System.out.println(dataIn);
         return dataIn;
 
     }
@@ -164,9 +164,9 @@ public class HTTP {
         while (TimesToTry < 10) {
             try {
                 urlString = urlString.trim();
-                System.out.println(urlString);
+                ////System.out.println(urlString);
                 URL url = new URL(urlString);
-                // System.out.println("DEBUG: Getting data from " + url.toString());
+                // ////System.out.println("DEBUG: Getting data from " + url.toString());
                 URLConnection conn = url.openConnection();
                 conn.setRequestProperty("User-Agent", "ScottyBot");
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -179,7 +179,7 @@ public class HTTP {
                 break;
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;
-                System.out.println(ex.getMessage());
+                ////System.out.println(ex.getMessage());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex1) {
@@ -187,7 +187,7 @@ public class HTTP {
                 }
             }
         }
-        System.out.println(dataIn);
+        ////System.out.println(dataIn);
         if (TimesToTry == 10) {
             JOptionPane.showMessageDialog(null, "Error communicating with server, logging out to prevent corruption.");
             CentralStore.cp.dispose();
@@ -203,7 +203,7 @@ public class HTTP {
             Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (CheckForFailed.containsValue("Not Authed")) {
-            System.out.println(CheckForFailed.toString());
+            ////System.out.println(CheckForFailed.toString());
             JOptionPane.showMessageDialog(null, "Issue talking with server. Did you log in elsewhere with this username? Closing program.");
             System.exit(0);
         }
@@ -216,9 +216,9 @@ public class HTTP {
         while (TimesToTry < 10) {
             try {
                 urlString = urlString.trim();
-                System.out.println(urlString);
+                ////System.out.println(urlString);
                 URL url = new URL(urlString);
-                // System.out.println("DEBUG: Getting data from " + url.toString());
+                // ////System.out.println("DEBUG: Getting data from " + url.toString());
                 URLConnection conn = url.openConnection();
                 conn.setRequestProperty("Cookie", "sails.sid=" + CentralStore.Cookie);
                 conn.setRequestProperty("User-Agent", "ScottyBot");
@@ -232,7 +232,7 @@ public class HTTP {
                 break;
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;
-                System.out.println(ex.getMessage());
+                ////System.out.println(ex.getMessage());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex1) {
@@ -253,9 +253,9 @@ public class HTTP {
         while (TimesToTry < 10) {
             try {
                 urlString = urlString.trim();
-                System.out.println(urlString);
+                ////System.out.println(urlString);
                 URL url = new URL(urlString);
-                // System.out.println("DEBUG: Getting data from " + url.toString());
+                // ////System.out.println("DEBUG: Getting data from " + url.toString());
                 URLConnection conn = url.openConnection();
                 conn.setRequestProperty("User-Agent", "ScottyBot");
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -268,7 +268,7 @@ public class HTTP {
                 break;
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;
-                System.out.println(ex.getMessage());
+                ////System.out.println(ex.getMessage());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex1) {

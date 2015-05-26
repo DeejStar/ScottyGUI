@@ -18,6 +18,7 @@ import static beam.scottygui.Stores.CentralStore.GUISettings;
 import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.RefreshSettings;
 import static beam.scottygui.Stores.CentralStore.SendMSG;
+import static beam.scottygui.Stores.CentralStore.Username;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.extchat;
 import static beam.scottygui.Stores.CentralStore.newline;
@@ -102,7 +103,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        System.out.println(VerCheck.toString());
+        //System.out.println(VerCheck.toString());
         int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
         if (NewVer > CurVer) {
             int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
@@ -140,7 +141,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
 
                     try {
-                        System.out.println(cmd.toString());
+                        //System.out.println(cmd.toString());
                         Runtime.getRuntime().exec(cmd.toString());
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
@@ -162,7 +163,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("Populating Viewer List");
+                    //System.out.println("Populating Viewer List");
                     JSONArray InitUserList = null;
 
                     while (true) {
@@ -318,7 +319,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         JSONObject CmdOutput = null;
         CmdOutput = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/commands?authkey=" + AuthKey));
 
-        System.out.println(CmdOutput.toString());
+        //System.out.println(CmdOutput.toString());
         JSONArray T = (JSONArray) CmdOutput.get("Commands");
         String out = "";
         for (Object t : T) {
@@ -365,64 +366,63 @@ public final class ControlPanel extends javax.swing.JFrame {
         TopViewers = new javax.swing.JLabel();
         ControlTab = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jPanel16 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         CmdInfo = new javax.swing.JTextArea();
-        RefreshCMDs = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         RepeatList = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        RefreshCMDs = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jPanel15 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         QuotePanel = new javax.swing.JTextArea();
-        jLabel3 = new javax.swing.JLabel();
-        addquotebutton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        NumOfQuotes = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         QEnabled = new javax.swing.JCheckBox();
+        NumOfQuotes = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        addquotebutton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        FOnOff = new javax.swing.JToggleButton();
+        jPanel14 = new javax.swing.JPanel();
         LinksOnOff = new javax.swing.JToggleButton();
         RepeatOnOff = new javax.swing.JToggleButton();
         CapsOnOff = new javax.swing.JToggleButton();
         SymbolsOnOff = new javax.swing.JToggleButton();
-        SymPercent = new javax.swing.JSlider();
-        CapPercent = new javax.swing.JSlider();
         jLabel5 = new javax.swing.JLabel();
+        FOnOff = new javax.swing.JToggleButton();
+        CapPercent = new javax.swing.JSlider();
+        SymPercent = new javax.swing.JSlider();
+        TimoutDuration = new javax.swing.JSlider();
         CapsPercentDis = new javax.swing.JLabel();
         SymPercentDis = new javax.swing.JLabel();
-        TimoutDuration = new javax.swing.JSlider();
         TimeoutLabel = new javax.swing.JLabel();
-        RemoveBadWord = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         BadWordList = new javax.swing.JList();
         addbadword = new javax.swing.JButton();
         AddBadWord = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        RemoveBadWord = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         JSettingsPane = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
-        PointsName = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        PRenBut = new javax.swing.JButton();
+        jPanel12 = new javax.swing.JPanel();
         PEnabled = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        PointsName = new javax.swing.JTextField();
+        PRenBut = new javax.swing.JButton();
         EditPoints = new javax.swing.JButton();
+        PWhenLive = new javax.swing.JTextField();
         PWhenIdle = new javax.swing.JTextField();
         PStartPoints = new javax.swing.JTextField();
-        PWhenLive = new javax.swing.JTextField();
+        BHEnabled = new javax.swing.JCheckBox();
+        REnabled = new javax.swing.JCheckBox();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        BHEnabled = new javax.swing.JCheckBox();
-        REnabled = new javax.swing.JCheckBox();
         SettingsPanel = new javax.swing.JPanel();
-        FollowEnabled = new javax.swing.JCheckBox();
-        EFollowMsg = new javax.swing.JButton();
-        OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
-        ClearCmdsEnabled = new javax.swing.JCheckBox();
-        MeOutput = new javax.swing.JCheckBox();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         FollowSoundSet = new javax.swing.JButton();
         FollowIMGSet = new javax.swing.JButton();
@@ -433,24 +433,32 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         WooshMeEnabled = new javax.swing.JCheckBox();
+        jPanel10 = new javax.swing.JPanel();
+        FollowEnabled = new javax.swing.JCheckBox();
+        EFollowMsg = new javax.swing.JButton();
+        OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
+        ClearCmdsEnabled = new javax.swing.JCheckBox();
+        MeOutput = new javax.swing.JCheckBox();
         DonatorPanel = new javax.swing.JPanel();
-        ChuckEnabled = new javax.swing.JCheckBox();
-        ChatEnabled = new javax.swing.JCheckBox();
+        jPanel11 = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
-        CUsernamePassword = new javax.swing.JButton();
+        ChatEnabled = new javax.swing.JCheckBox();
+        ChuckEnabled = new javax.swing.JCheckBox();
         ResetScottyName = new javax.swing.JButton();
+        CUsernamePassword = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         SessionMsgCount = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
+        jPanel13 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        ChatOutput = new javax.swing.JEditorPane();
         jScrollPane6 = new javax.swing.JScrollPane();
         Viewers = new javax.swing.JList();
         ChatSend = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        ChatOutput = new javax.swing.JEditorPane();
         jButton5 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
@@ -519,6 +527,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel16.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         CmdInfo.setEditable(false);
         CmdInfo.setColumns(20);
         CmdInfo.setLineWrap(true);
@@ -526,28 +538,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         CmdInfo.setWrapStyleWord(true);
         jScrollPane1.setViewportView(CmdInfo);
 
-        RefreshCMDs.setText("Refresh");
-        RefreshCMDs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RefreshCMDsActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Add/Edit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Reset/Permlevel/Delete CMD");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Auto-Refreshes every 5 minutes.");
+        jPanel16.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 51, 950, 452));
 
         RepeatList.setText("Repeat List");
         RepeatList.addActionListener(new java.awt.event.ActionListener() {
@@ -555,43 +546,42 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RepeatListActionPerformed(evt);
             }
         });
+        jPanel16.add(RepeatList, new org.netbeans.lib.awtextra.AbsoluteConstraints(866, 11, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(RefreshCMDs)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addGap(86, 86, 86)
-                        .addComponent(jLabel2)
-                        .addGap(154, 154, 154)
-                        .addComponent(RepeatList))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(RefreshCMDs)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel2))
-                    .addComponent(RepeatList))
-                .addGap(11, 11, 11)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jLabel2.setText("Auto-Refreshes every 5 minutes.");
+        jPanel16.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(488, 15, -1, -1));
+
+        jButton2.setText("Reset/Permlevel/Delete CMD");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel16.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(184, 11, -1, -1));
+
+        jButton1.setText("Add/Edit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel16.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(94, 11, -1, -1));
+
+        RefreshCMDs.setText("Refresh");
+        RefreshCMDs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefreshCMDsActionPerformed(evt);
+            }
+        });
+        jPanel16.add(RefreshCMDs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
+
+        jPanel1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 510));
 
         ControlTab.addTab("Commands", jPanel1);
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         QuotePanel.setEditable(false);
         QuotePanel.setColumns(20);
@@ -600,21 +590,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         QuotePanel.setWrapStyleWord(true);
         jScrollPane2.setViewportView(QuotePanel);
 
-        jLabel3.setText("Auto-Refreshes every 5 minutes.");
-
-        addquotebutton.setText("Add Quote");
-        addquotebutton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addquotebuttonActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Delete Quotes");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
+        jPanel15.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 66, 940, 440));
 
         jButton4.setText("Refresh");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -622,8 +598,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        jPanel15.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 12, -1, -1));
 
-        NumOfQuotes.setText("jLabel4");
+        jLabel3.setText("Auto-Refreshes every 5 minutes.");
+        jPanel15.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(592, 16, -1, -1));
 
         QEnabled.setText("Quotes Enabled");
         QEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -631,54 +609,34 @@ public final class ControlPanel extends javax.swing.JFrame {
                 QEnabledActionPerformed(evt);
             }
         });
+        jPanel15.add(QEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(387, 12, -1, -1));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(addquotebutton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(QEnabled)
-                .addGap(67, 67, 67)
-                .addComponent(jLabel3)
-                .addGap(34, 34, 34)
-                .addComponent(jButton4))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addquotebutton)
-                    .addComponent(jButton3)
-                    .addComponent(QEnabled)
-                    .addComponent(jButton4)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(NumOfQuotes)
-                            .addComponent(jLabel3))))
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        NumOfQuotes.setText("jLabel4");
+        jPanel15.add(NumOfQuotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(268, 16, 71, -1));
+
+        jButton3.setText("Delete Quotes");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel15.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 12, -1, -1));
+
+        addquotebutton.setText("Add Quote");
+        addquotebutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addquotebuttonActionPerformed(evt);
+            }
+        });
+        jPanel15.add(addquotebutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 12, 105, -1));
+
+        jPanel2.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         ControlTab.addTab("Quotes", jPanel2);
 
-        FOnOff.setText("Filter Master Switch");
-        FOnOff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FOnOffActionPerformed(evt);
-            }
-        });
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         LinksOnOff.setText("Links Switch");
         LinksOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -686,6 +644,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 LinksOnOffActionPerformed(evt);
             }
         });
+        jPanel14.add(LinksOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 108, 105, -1));
 
         RepeatOnOff.setText("Repeat Switch");
         RepeatOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -693,6 +652,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RepeatOnOffActionPerformed(evt);
             }
         });
+        jPanel14.add(RepeatOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 158, 105, -1));
 
         CapsOnOff.setText("Caps Switch");
         CapsOnOff.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -705,6 +665,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 CapsOnOffActionPerformed(evt);
             }
         });
+        jPanel14.add(CapsOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 205, 105, -1));
 
         SymbolsOnOff.setText("Symbols Switch");
         SymbolsOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -712,6 +673,31 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SymbolsOnOffActionPerformed(evt);
             }
         });
+        jPanel14.add(SymbolsOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 252, -1, -1));
+
+        jLabel5.setText("TimeOut Duration in Minutes");
+        jPanel14.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(56, 299, -1, -1));
+
+        FOnOff.setText("Filter Master Switch");
+        FOnOff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FOnOffActionPerformed(evt);
+            }
+        });
+        jPanel14.add(FOnOff, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 11, 183, 63));
+
+        CapPercent.setMinimum(30);
+        CapPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                CapPercentMouseDragged(evt);
+            }
+        });
+        CapPercent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                CapPercentMouseReleased(evt);
+            }
+        });
+        jPanel14.add(CapPercent, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 206, 292, -1));
 
         SymPercent.setMinimum(30);
         SymPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -729,24 +715,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SymPercentPropertyChange(evt);
             }
         });
-
-        CapPercent.setMinimum(30);
-        CapPercent.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                CapPercentMouseDragged(evt);
-            }
-        });
-        CapPercent.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                CapPercentMouseReleased(evt);
-            }
-        });
-
-        jLabel5.setText("TimeOut Duration in Minutes");
-
-        CapsPercentDis.setText("jLabel6");
-
-        SymPercentDis.setText("jLabel7");
+        jPanel14.add(SymPercent, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 272, 292, -1));
 
         TimoutDuration.setMaximum(60);
         TimoutDuration.setMinimum(1);
@@ -765,15 +734,16 @@ public final class ControlPanel extends javax.swing.JFrame {
                 TimoutDurationPropertyChange(evt);
             }
         });
+        jPanel14.add(TimoutDuration, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 344, 292, -1));
+
+        CapsPercentDis.setText("jLabel6");
+        jPanel14.add(CapsPercentDis, new org.netbeans.lib.awtextra.AbsoluteConstraints(567, 206, 94, -1));
+
+        SymPercentDis.setText("jLabel7");
+        jPanel14.add(SymPercentDis, new org.netbeans.lib.awtextra.AbsoluteConstraints(567, 272, 94, -1));
 
         TimeoutLabel.setText("jLabel7");
-
-        RemoveBadWord.setText("Remove From List");
-        RemoveBadWord.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RemoveBadWordActionPerformed(evt);
-            }
-        });
+        jPanel14.add(TimeoutLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(567, 344, 94, -1));
 
         BadWordList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -782,127 +752,40 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(BadWordList);
 
+        jPanel14.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(667, 126, 117, 181));
+
         addbadword.setText("Add word to list");
         addbadword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addbadwordActionPerformed(evt);
             }
         });
+        jPanel14.add(addbadword, new org.netbeans.lib.awtextra.AbsoluteConstraints(538, 127, 123, -1));
+        jPanel14.add(AddBadWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(538, 87, 123, -1));
 
         jLabel6.setText("New Bad Word");
+        jPanel14.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(491, 63, 85, -1));
 
         jLabel7.setText("Bad Words Filter");
+        jPanel14.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(622, 63, -1, -1));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(201, 201, 201)
-                .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(107, 107, 107)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(jLabel7))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LinksOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(RepeatOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CapsOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SymbolsOnOff))))
-                .addGap(10, 10, 10)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(CapsPercentDis, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(SymPercentDis, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(TimeoutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(273, 273, 273)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AddBadWord, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addbadword, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(RemoveBadWord))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FOnOff, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(LinksOnOff)
-                        .addGap(21, 21, 21)
-                        .addComponent(RepeatOnOff)
-                        .addGap(18, 18, 18)
-                        .addComponent(CapsOnOff)
-                        .addGap(18, 18, 18)
-                        .addComponent(SymbolsOnOff)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(AddBadWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(addbadword)
-                        .addGap(50, 50, 50)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CapPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CapsPercentDis))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SymPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SymPercentDis))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TimoutDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TimeoutLabel)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(RemoveBadWord)
-                        .addGap(11, 11, 11)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))))
-        );
+        RemoveBadWord.setText("Remove From List");
+        RemoveBadWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveBadWordActionPerformed(evt);
+            }
+        });
+        jPanel14.add(RemoveBadWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 86, -1, -1));
+
+        jPanel3.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 510));
 
         ControlTab.addTab("Filtering", jPanel3);
 
         JSettingsPane.setToolTipText("");
 
-        PointsName.setEditable(false);
-        PointsName.setText("jTextField1");
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setText("Points Name");
-
-        PRenBut.setText("Rename");
-        PRenBut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PRenButActionPerformed(evt);
-            }
-        });
+        jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         PEnabled.setText("Points Enabled");
         PEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -910,6 +793,22 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PEnabledActionPerformed(evt);
             }
         });
+        jPanel12.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 12, -1, -1));
+
+        jLabel8.setText("Points Name");
+        jPanel12.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 116, -1));
+
+        PointsName.setEditable(false);
+        PointsName.setText("jTextField1");
+        jPanel12.add(PointsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 82, 30));
+
+        PRenBut.setText("Rename");
+        PRenBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PRenButActionPerformed(evt);
+            }
+        });
+        jPanel12.add(PRenBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 85, 83, -1));
 
         EditPoints.setText("Edit");
         EditPoints.addActionListener(new java.awt.event.ActionListener() {
@@ -917,6 +816,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EditPointsActionPerformed(evt);
             }
         });
+        jPanel12.add(EditPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 141, 83, -1));
+
+        PWhenLive.setEditable(false);
+        PWhenLive.setText("jTextField2");
+        jPanel12.add(PWhenLive, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 82, -1));
 
         PWhenIdle.setEditable(false);
         PWhenIdle.setText("jTextField2");
@@ -925,18 +829,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PWhenIdleActionPerformed(evt);
             }
         });
+        jPanel12.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 142, 102, -1));
 
         PStartPoints.setEditable(false);
         PStartPoints.setText("jTextField3");
-
-        PWhenLive.setEditable(false);
-        PWhenLive.setText("jTextField2");
-
-        jLabel9.setText("Points When Live");
-
-        jLabel10.setText("Points When Not Live");
-
-        jLabel11.setText("Starting Points");
+        jPanel12.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(467, 142, 70, -1));
 
         BHEnabled.setText("BankHeist Enabled");
         BHEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -944,6 +841,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 BHEnabledActionPerformed(evt);
             }
         });
+        jPanel12.add(BHEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 210, -1, -1));
 
         REnabled.setText("Raffle Enabled");
         REnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -951,122 +849,22 @@ public final class ControlPanel extends javax.swing.JFrame {
                 REnabledActionPerformed(evt);
             }
         });
+        jPanel12.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(196, 210, -1, -1));
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(365, 365, 365)
-                .addComponent(PEnabled))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(326, 326, 326)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(227, 227, 227)
-                .addComponent(PRenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(326, 326, 326)
-                .addComponent(jLabel9)
-                .addGap(29, 29, 29)
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel11))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(227, 227, 227)
-                .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(197, 197, 197)
-                .addComponent(BHEnabled)
-                .addGap(27, 27, 27)
-                .addComponent(REnabled))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(PEnabled)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel8)
-                .addGap(6, 6, 6)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PRenBut)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(4, 4, 4)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(EditPoints)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(40, 40, 40)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BHEnabled)
-                    .addComponent(REnabled)))
-        );
+        jLabel9.setText("Points When Live");
+        jPanel12.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 118, -1, -1));
+
+        jLabel10.setText("Points When Not Live");
+        jPanel12.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(286, 118, -1, -1));
+
+        jLabel11.setText("Starting Points");
+        jPanel12.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(449, 118, -1, -1));
+
+        jPanel5.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
         JSettingsPane.addTab("Points", jPanel5);
 
         SettingsPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        FollowEnabled.setText("Follower Alert Enabled");
-        FollowEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FollowEnabledActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(FollowEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 7, 165, -1));
-
-        EFollowMsg.setText("Edit Chat Follower Message");
-        EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EFollowMsgActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(EFollowMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 32, -1, -1));
-
-        OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
-        OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
-        OnlyWhenLiveEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OnlyWhenLiveEnabledActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(OnlyWhenLiveEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(225, 7, -1, -1));
-
-        ClearCmdsEnabled.setText("Clear Commands Enabled");
-        ClearCmdsEnabled.setToolTipText("When enabled, will clear all commands by Non-mods once ran. It will still act on those commands.");
-        ClearCmdsEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ClearCmdsEnabledActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(ClearCmdsEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(378, 7, -1, -1));
-
-        MeOutput.setText("Set /me Bot Output");
-        MeOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MeOutputActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(543, 7, -1, -1));
 
         jLayeredPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLayeredPane1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1077,7 +875,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 FollowSoundSetActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(FollowSoundSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 34, 137, -1));
+        jLayeredPane1.add(FollowSoundSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 34, 160, -1));
 
         FollowIMGSet.setText("Set Follower Image");
         FollowIMGSet.addActionListener(new java.awt.event.ActionListener() {
@@ -1085,7 +883,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 FollowIMGSetActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(FollowIMGSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 63, 137, -1));
+        jLayeredPane1.add(FollowIMGSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 63, 160, -1));
 
         jLabel15.setText("Alert Pane Settings");
         jLayeredPane1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(36, 9, -1, -1));
@@ -1104,7 +902,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 FollowerMSGFontActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(FollowerMSGFont, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 121, 137, -1));
+        jLayeredPane1.add(FollowerMSGFont, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 121, 160, -1));
 
         SetFontColor.setText("Set Font Color");
         SetFontColor.addActionListener(new java.awt.event.ActionListener() {
@@ -1112,9 +910,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SetFontColorActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(SetFontColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 150, 137, -1));
+        jLayeredPane1.add(SetFontColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 150, 160, -1));
 
-        SettingsPanel.add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 284, -1, -1));
+        SettingsPanel.add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 284, 180, -1));
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1130,29 +928,59 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jPanel6.add(WooshMeEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 28, -1, -1));
 
-        SettingsPanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 284, -1, -1));
+        SettingsPanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, 180, 60));
+
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        FollowEnabled.setText("Follower Alert Enabled");
+        FollowEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowEnabledActionPerformed(evt);
+            }
+        });
+        jPanel10.add(FollowEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 190, -1));
+
+        EFollowMsg.setText("Edit Chat Follower Message");
+        EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EFollowMsgActionPerformed(evt);
+            }
+        });
+        jPanel10.add(EFollowMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+
+        OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
+        OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
+        OnlyWhenLiveEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OnlyWhenLiveEnabledActionPerformed(evt);
+            }
+        });
+        jPanel10.add(OnlyWhenLiveEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, -1));
+
+        ClearCmdsEnabled.setText("Clear Commands Enabled");
+        ClearCmdsEnabled.setToolTipText("When enabled, will clear all commands by Non-mods once ran. It will still act on those commands.");
+        ClearCmdsEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClearCmdsEnabledActionPerformed(evt);
+            }
+        });
+        jPanel10.add(ClearCmdsEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 10, -1, -1));
+
+        MeOutput.setText("Set /me Bot Output");
+        MeOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MeOutputActionPerformed(evt);
+            }
+        });
+        jPanel10.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 10, -1, -1));
+
+        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 100));
 
         JSettingsPane.addTab("Settings", SettingsPanel);
 
         DonatorPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        ChuckEnabled.setText("!Chuck Enabled");
-        ChuckEnabled.setToolTipText("Enabled !chuck commands for jokes");
-        ChuckEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ChuckEnabledActionPerformed(evt);
-            }
-        });
-        DonatorPanel.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(48, 23, -1, -1));
-
-        ChatEnabled.setText("!Chat Enabled");
-        ChatEnabled.setToolTipText("Type !chat and a message, it will respond to you \"intelligently\"");
-        ChatEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ChatEnabledActionPerformed(evt);
-            }
-        });
-        DonatorPanel.add(ChatEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(165, 23, -1, -1));
+        jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         YodaEnabled.setText("Yoda Enabled");
         YodaEnabled.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
@@ -1161,15 +989,25 @@ public final class ControlPanel extends javax.swing.JFrame {
                 YodaEnabledActionPerformed(evt);
             }
         });
-        DonatorPanel.add(YodaEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(276, 23, -1, -1));
+        jPanel11.add(YodaEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, -1, -1));
 
-        CUsernamePassword.setText("Set Custom Bot Username/Password");
-        CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
+        ChatEnabled.setText("!Chat Enabled");
+        ChatEnabled.setToolTipText("Type !chat and a message, it will respond to you \"intelligently\"");
+        ChatEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CUsernamePasswordActionPerformed(evt);
+                ChatEnabledActionPerformed(evt);
             }
         });
-        DonatorPanel.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 23, -1, -1));
+        jPanel11.add(ChatEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
+
+        ChuckEnabled.setText("!Chuck Enabled");
+        ChuckEnabled.setToolTipText("Enabled !chuck commands for jokes");
+        ChuckEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChuckEnabledActionPerformed(evt);
+            }
+        });
+        jPanel11.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         ResetScottyName.setText("Reset Bot Name Back To Scottybot");
         ResetScottyName.addActionListener(new java.awt.event.ActionListener() {
@@ -1177,7 +1015,17 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ResetScottyNameActionPerformed(evt);
             }
         });
-        DonatorPanel.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 52, 207, -1));
+        jPanel11.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 52, 270, -1));
+
+        CUsernamePassword.setText("Set Custom Bot Username/Password");
+        CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CUsernamePasswordActionPerformed(evt);
+            }
+        });
+        jPanel11.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 23, -1, -1));
+
+        DonatorPanel.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
 
         JSettingsPane.addTab("Donator Stuff", DonatorPanel);
 
@@ -1187,7 +1035,8 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(JSettingsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 848, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(JSettingsPane)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1235,6 +1084,21 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ControlTab.addTab("Statistics", jPanel7);
 
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        ChatOutput.setEditable(false);
+        ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
+        ChatOutput.setBorder(new javax.swing.border.MatteBorder(null));
+        ChatOutput.setContentType("text/html"); // NOI18N
+        ChatOutput.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        ChatOutput.setText("");
+        ChatOutput.setToolTipText("");
+        ChatOutput.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        ChatOutput.setDoubleBuffered(true);
+        ChatOutput.setMaximumSize(getPreferredSize());
+        ChatOutput.setMinimumSize(getPreferredSize());
+        jScrollPane5.setViewportView(ChatOutput);
+
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
         Viewers.setModel(new javax.swing.AbstractListModel() {
@@ -1251,8 +1115,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(Viewers);
 
-        ChatSend.setBackground(new java.awt.Color(0, 0, 0));
-        ChatSend.setForeground(new java.awt.Color(255, 255, 255));
+        ChatSend.setForeground(java.awt.Color.black);
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
         ChatSend.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ChatSend.addActionListener(new java.awt.event.ActionListener() {
@@ -1268,52 +1131,47 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel14.setText("Double click name to purge");
 
-        ChatOutput.setEditable(false);
-        ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
-        ChatOutput.setBorder(new javax.swing.border.MatteBorder(null));
-        ChatOutput.setContentType("text/html"); // NOI18N
-        ChatOutput.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        ChatOutput.setText("");
-        ChatOutput.setToolTipText("");
-        ChatOutput.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        ChatOutput.setDoubleBuffered(true);
-        ChatOutput.setMaximumSize(getPreferredSize());
-        ChatOutput.setMinimumSize(getPreferredSize());
-        jScrollPane5.setViewportView(ChatOutput);
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 726, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 232, Short.MAX_VALUE))
+            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel13Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel13Layout.createSequentialGroup()
+                            .addGap(740, 740, 740)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel13Layout.createSequentialGroup()
+                            .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(20, 20, 20)
+                            .addComponent(jLabel14)))
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 190, Short.MAX_VALUE))
+            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel13Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(3, 3, 3)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel14))
+                    .addGap(0, 160, Short.MAX_VALUE)))
+        );
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 720, Short.MAX_VALUE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel14)
-                        .addGap(20, 20, 20))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jScrollPane5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)))
-        );
+        jPanel8.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         ControlTab.addTab("Chat", jPanel8);
 
-        getContentPane().add(ControlTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 43, -1, -1));
+        getContentPane().add(ControlTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, 550));
 
         jButton5.setText("Check Updates");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -1400,6 +1258,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         String CPassword = null;
         CUsername = JOptionPane.showInputDialog(rootPane, "Enter Username For Your Custom Bot Name");
         if (CUsername == null) {
+            return;
+        }
+        if (CUsername.toLowerCase().equals(Username.toLowerCase())) {
+            JOptionPane.showMessageDialog(rootPane, "It's not smart to make the bot name your username.");
             return;
         }
         CPassword = JOptionPane.showInputDialog(rootPane, "Enter Password For Your Custom Bot Name");
@@ -2170,7 +2032,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JSlider TimoutDuration;
     public javax.swing.JLabel TopViewers;
     public javax.swing.JLabel UChatters;
-    private javax.swing.JList Viewers;
+    public javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JButton addbadword;
@@ -2201,6 +2063,13 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
+    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

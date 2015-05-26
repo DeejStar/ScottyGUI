@@ -44,7 +44,7 @@ public final class delquote extends javax.swing.JFrame {
         while (true) {
             try {
                 JSONObject QL = (JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/quotes?authkey=" + AuthKey));
-                System.out.println(QL.toString());
+                //System.out.println(QL.toString());
                 for (Object t : QL.keySet()) {
                     Reversed.put(QL.get(t.toString()).toString(), t.toString());
                     quoteList.addElement(QL.get(t));
@@ -78,6 +78,7 @@ public final class delquote extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         QToDelList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -86,12 +87,15 @@ public final class delquote extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(QToDelList);
 
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 21, 528, 170));
+
         QDel.setText("Delete Selected");
         QDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QDelActionPerformed(evt);
             }
         });
+        getContentPane().add(QDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 204, -1, -1));
 
         QDelCancel.setText("Cancel");
         QDelCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -99,34 +103,7 @@ public final class delquote extends javax.swing.JFrame {
                 QDelCancelActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addComponent(QDel)
-                        .addGap(140, 140, 140)
-                        .addComponent(QDelCancel)))
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(QDel)
-                    .addComponent(QDelCancel))
-                .addGap(38, 38, 38))
-        );
+        getContentPane().add(QDelCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(385, 204, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -173,7 +150,7 @@ public final class delquote extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

@@ -50,7 +50,7 @@ public class EndPoint extends Endpoint {
             @Override
             public void onMessage(String message) {
 
-                System.out.println(message);
+                //System.out.println(message);
                 JSONObject msg = null;
                 try {
                     msg = (JSONObject) parser.parse(message);

@@ -24,12 +24,9 @@ import java.util.logging.Logger;
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
-import javax.websocket.Session;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.ThreadPoolConfig;
-import org.glassfish.tyrus.container.grizzly.client.GrizzlyClientContainer;
-import org.glassfish.tyrus.container.grizzly.client.GrizzlyClientSocket;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -64,14 +61,13 @@ public class WebSocket {
         ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
         ClientManager client = ClientManager.createClient();
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
-        client.getProperties().put(GrizzlyClientContainer.SHARED_CONTAINER, true);
-        client.getProperties().put(GrizzlyClientContainer.SHARED_CONTAINER_IDLE_TIMEOUT, 5);
-        client.getProperties().put(GrizzlyClientSocket.SELECTOR_THREAD_POOL_CONFIG, ThreadPoolConfig.defaultConfig().setMaxPoolSize(50));
-        client.getProperties().put(GrizzlyClientSocket.WORKER_THREAD_POOL_CONFIG, ThreadPoolConfig.defaultConfig().setMaxPoolSize(100));
+        client.getProperties().put(ClientProperties.SHARED_CONTAINER, true);
+        client.getProperties().put(ClientProperties.SHARED_CONTAINER_IDLE_TIMEOUT, 5);
+        client.getProperties().put(ClientProperties.WORKER_THREAD_POOL_CONFIG, ThreadPoolConfig.defaultConfig().setMaxPoolSize(100));
 
         while (true) {
             try {
-                Session session = client.connectToServer(endpoint, cec, new URI(GetEndPointAndAuth(ChanID)));
+                client.connectToServer(endpoint, cec, new URI(GetEndPointAndAuth(ChanID)));
                 break;
             } catch (DeploymentException | IOException | URISyntaxException ex) {
                 Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,7 +85,7 @@ public class WebSocket {
         @Override
         public void run() {
             while (true) {
-                System.out.println("Looper looped");
+                //System.out.println("Looper looped");
                 JSONObject data = null;
                 JSONArray UserList = null;
                 try {
@@ -134,7 +130,7 @@ public class WebSocket {
                     if (CentralStore.TopViewers < viewers) {
                         CentralStore.TopViewers = Long.parseLong(viewers.toString());
                         cp.TopViewers.setText("Top Viewer Count: " + CentralStore.TopViewers.toString());
-                        System.out.println(CentralStore.TopViewers.toString());
+                        //System.out.println(CentralStore.TopViewers.toString());
                     }
                 }
                 try {
@@ -145,7 +141,7 @@ public class WebSocket {
                         cp.PercentRetainedViewers.setText(Math.round(Retained) + "% retained viewership");
                     }
                 } catch (Exception e) {
-                    System.err.println(e);
+                    //System.err.println(e);
                 }
                 try {
                     Thread.sleep(30 * 1000);

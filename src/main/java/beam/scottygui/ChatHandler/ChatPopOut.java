@@ -59,7 +59,7 @@ public class ChatPopOut extends javax.swing.JFrame {
 //                                    }
 //                                    float pref = layoutPool.getPreferredSpan(axis);
 //                                    float min = layoutPool.getMinimumSpan(axis);
-//                                    // Don't include insets, Box.getXXXSpan will include them. 
+//                                    // Don't include insets, Box.getXXXSpan will include them.
 //                                    r.minimum = (int) min;
 //                                    r.preferred = Math.max(r.minimum, (int) pref);
 //                                    r.maximum = Integer.MAX_VALUE;
@@ -124,8 +124,8 @@ public class ChatPopOut extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(Viewers);
 
-        ChatSend.setBackground(new java.awt.Color(0, 0, 0));
-        ChatSend.setForeground(new java.awt.Color(255, 255, 255));
+        ChatSend.setBackground(java.awt.Color.white);
+        ChatSend.setForeground(java.awt.Color.black);
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
         ChatSend.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ChatSend.addActionListener(new java.awt.event.ActionListener() {
@@ -209,7 +209,7 @@ public class ChatPopOut extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

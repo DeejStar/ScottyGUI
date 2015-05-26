@@ -51,7 +51,6 @@ public final class AlertFrame extends javax.swing.JFrame {
      */
     public AlertFrame() {
         initComponents();
-        ImageViewer.setBackground(Color.GREEN);
         StartFollowerWatcher();
     }
 
@@ -76,25 +75,13 @@ public final class AlertFrame extends javax.swing.JFrame {
                 formWindowClosed(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         AlertBG.setBackground(new java.awt.Color(51, 255, 51));
+        AlertBG.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        AlertBG.add(ImageViewer, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 590, 425));
 
-        javax.swing.GroupLayout AlertBGLayout = new javax.swing.GroupLayout(AlertBG);
-        AlertBG.setLayout(AlertBGLayout);
-        AlertBGLayout.setHorizontalGroup(
-            AlertBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(AlertBGLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ImageViewer, javax.swing.GroupLayout.PREFERRED_SIZE, 644, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        AlertBGLayout.setVerticalGroup(
-            AlertBGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(AlertBGLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ImageViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        getContentPane().add(AlertBG, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, -1, -1));
 
         jButton1.setText("Test Followers");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -102,26 +89,7 @@ public final class AlertFrame extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(AlertBG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(133, 133, 133)
-                .addComponent(jButton1))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(AlertBG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1))
-        );
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 460, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -129,7 +97,7 @@ public final class AlertFrame extends javax.swing.JFrame {
 Player playMP3 = null;
 
     public void StartFollowerWatcher() {
-
+        System.out.println("STARTING FOLLOWER WATCHER");
         new Thread("Follow Watcher") {
             @Override
             public void run() {
@@ -137,7 +105,13 @@ Player playMP3 = null;
                     JSONArray Followers = null;
                     while (true) {
                         try {
-                            Followers = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow"));
+                            System.out.println("Getting current follower count");
+                            JSONObject obj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID));
+                            System.out.println(obj.toString());
+                            long numFollowers = (long) obj.get("numFollowers");
+                            System.out.println("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers);
+                            Followers = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers));
+
                             break;
                         } catch (ParseException ex) {
                             Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,7 +197,7 @@ Player playMP3 = null;
         String FontName = GUISettings.get("FFontName").toString();
         int FontSize = Integer.parseInt(GUISettings.get("FFontSize").toString());
         int FontStyle = Integer.parseInt(GUISettings.get("FFontStyle").toString());
-        System.out.println(FontName + ":" + FontSize);
+        //System.out.println(FontName + ":" + FontSize);
         textPane.setFont(new Font(FontName, FontStyle, FontSize));
         textPane.setForeground(Color.decode(GUISettings.get("FFontColor").toString()));
         new Thread("Visual Alert!") {

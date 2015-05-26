@@ -41,7 +41,7 @@ public class LiveLoadHandler {
         client.getChannel("/api/v1/live").publish(data, new ClientSessionChannel.MessageListener() {
             @Override
             public void onMessage(ClientSessionChannel channel, Message message) {
-                System.out.println("RECEIVED THIS >>>> " + message);
+                //System.out.println("RECEIVED THIS >>>> " + message);
                 if (message.isSuccessful()) {
                     // The message reached the server
                 }
@@ -53,7 +53,7 @@ public class LiveLoadHandler {
 
         @Override
         public void onMessage(ClientSessionChannel channel, Message message) {
-            System.out.println("GOT MESSAGE >> " + message);
+            //System.out.println("GOT MESSAGE >> " + message);
         }
     }
 }

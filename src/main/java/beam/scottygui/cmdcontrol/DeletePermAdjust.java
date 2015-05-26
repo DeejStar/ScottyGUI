@@ -39,7 +39,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(CmdOutput.toString());
+        //System.out.println(CmdOutput.toString());
         JSONArray T = (JSONArray) CmdOutput.get("Commands");
         String out = "";
         for (Object t : T) {
@@ -102,6 +102,9 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         jLabel3.setText("Perm Level");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        getContentPane().add(CMDList, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 178, -1));
 
         permlevel1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Streamer", "Mod", "Everyone" };
@@ -111,7 +114,10 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         permlevel1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(permlevel1);
 
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(52, 71, 151, 80));
+
         jLabel4.setText("Set New Perm level");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(68, 53, -1, -1));
 
         DELCMD.setText("Delete Command");
         DELCMD.addActionListener(new java.awt.event.ActionListener() {
@@ -119,6 +125,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
                 DELCMDActionPerformed(evt);
             }
         });
+        getContentPane().add(DELCMD, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
 
         jButton1.setText("Change Perm Level");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -126,6 +133,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 151, -1));
 
         jButton2.setText("Done");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -133,6 +141,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 110, 134, 57));
 
         jButton3.setText("Reset Counter");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -140,53 +149,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(CMDList, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jLabel4)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(DELCMD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton3))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CMDList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DELCMD))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(1, 1, 1)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(5, 5, 5))
-        );
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -298,7 +261,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
