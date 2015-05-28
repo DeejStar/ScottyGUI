@@ -107,7 +107,6 @@ Player playMP3 = null;
                         try {
                             System.out.println("Getting current follower count");
                             JSONObject obj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID));
-                            System.out.println(obj.toString());
                             long numFollowers = (long) obj.get("numFollowers");
                             System.out.println("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers);
                             Followers = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers));
