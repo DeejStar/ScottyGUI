@@ -11,7 +11,6 @@ import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
 import beam.scottygui.websocket.EndPoint;
-import beam.scottygui.websocket.WebSocket;
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -29,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.websocket.Endpoint;
 import javax.websocket.Session;
+import org.apache.http.client.CookieStore;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -66,11 +65,31 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 27;
+    public static Integer CurVer = 28;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
     public static ExecutorService WorkerThreads = Executors.newFixedThreadPool(50);
+    public static CookieStore cookie = null;
+    public static String EndPoints = "";
+
+    public static String getEndPoint() {
+        return EndPoints;
+    }
+
+    public static void setEndPoint(String endpoint) {
+
+        EndPoints = endpoint;
+    }
+
+    public static String getAuthKey() {
+        return BeamAuthKey;
+    }
+
+    public static void setAuthKey(String authKey) {
+
+        BeamAuthKey = authKey;
+    }
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();
@@ -135,35 +154,6 @@ public class CentralStore {
         obj.put("arguments", msg);
         obj.put("id", "2");
         return obj.toString();
-    }
-
-    public static String GetEndPointAndAuth(Long ChanID) {
-        JSONParser parser = new JSONParser();
-        HTTP http = new HTTP();
-        JSONObject obj = null;
-        while (true) {
-            try {
-                obj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID));
-                break;
-            } catch (ParseException ex) {
-                Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-
-        JSONArray EndPoints = (JSONArray) obj.get("endpoints");
-        List<String> EPToRandom = new ArrayList();
-        for (Object t : EndPoints) {
-            EPToRandom.add(t.toString());
-        }
-        Random myRandomizer = new Random();
-        String EndPoint = EPToRandom.get(myRandomizer.nextInt(EPToRandom.size()));
-        BeamAuthKey = obj.get("authkey").toString();
-        return EndPoint;
     }
 
     public static JSONObject Auth(String Auth) throws InterruptedException {

@@ -8,7 +8,6 @@ package beam.scottygui.websocket;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.ChatUserList;
-import static beam.scottygui.Stores.CentralStore.GetEndPointAndAuth;
 import static beam.scottygui.Stores.CentralStore.Joined;
 import static beam.scottygui.Stores.CentralStore.LastCount;
 import static beam.scottygui.Stores.CentralStore.Left;
@@ -19,6 +18,7 @@ import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.ClientEndpointConfig;
@@ -26,7 +26,6 @@ import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.client.ThreadPoolConfig;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,13 +37,29 @@ import org.json.simple.parser.ParseException;
  */
 public class WebSocket {
 
-    public void connect(Long ChanID) {
+    public void connect(final Long ChanID) {
         CentralStore.TopViewers = Long.parseLong("0");
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+            private int counter = 0;
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                return true;
+                if (counter < 4) {
+                    try {
+                        new HTTP().GetAuth();
+                    } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                        Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    return true;
+                } else {
+                    try {
+                        new HTTP().GetAuth();
+                    } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                        Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    new WebSocket().connect(ChanID);
+                    return false;
+                }
             }
 
             @Override
@@ -61,15 +76,13 @@ public class WebSocket {
         ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
         ClientManager client = ClientManager.createClient();
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
-        client.getProperties().put(ClientProperties.SHARED_CONTAINER, true);
-        client.getProperties().put(ClientProperties.SHARED_CONTAINER_IDLE_TIMEOUT, 5);
-        client.getProperties().put(ClientProperties.WORKER_THREAD_POOL_CONFIG, ThreadPoolConfig.defaultConfig().setMaxPoolSize(100));
-
         while (true) {
             try {
-                client.connectToServer(endpoint, cec, new URI(GetEndPointAndAuth(ChanID)));
+                new HTTP().GetAuth();
+                client.connectToServer(endpoint, cec, new URI(CentralStore.getEndPoint()));
+                System.out.println("Logged in, do you see me naow?");
                 break;
-            } catch (DeploymentException | IOException | URISyntaxException ex) {
+            } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException | DeploymentException | URISyntaxException ex) {
                 Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

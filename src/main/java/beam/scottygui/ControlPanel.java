@@ -406,7 +406,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         RemoveBadWord = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        JSettingsPane = new javax.swing.JTabbedPane();
+        settingsTabs = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         PEnabled = new javax.swing.JCheckBox();
@@ -440,7 +440,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         ClearCmdsEnabled = new javax.swing.JCheckBox();
         MeOutput = new javax.swing.JCheckBox();
         DonatorPanel = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
+        DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
         ChatEnabled = new javax.swing.JCheckBox();
         ChuckEnabled = new javax.swing.JCheckBox();
@@ -781,7 +781,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ControlTab.addTab("Filtering", jPanel3);
 
-        JSettingsPane.setToolTipText("");
+        settingsTabs.setToolTipText("");
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -862,7 +862,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel5.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
-        JSettingsPane.addTab("Points", jPanel5);
+        settingsTabs.addTab("Points", jPanel5);
 
         SettingsPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -976,11 +976,11 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 100));
 
-        JSettingsPane.addTab("Settings", SettingsPanel);
+        settingsTabs.addTab("Settings", SettingsPanel);
 
         DonatorPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        DonationPane.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         YodaEnabled.setText("Yoda Enabled");
         YodaEnabled.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
@@ -989,7 +989,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 YodaEnabledActionPerformed(evt);
             }
         });
-        jPanel11.add(YodaEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, -1, -1));
+        DonationPane.add(YodaEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, -1, -1));
 
         ChatEnabled.setText("!Chat Enabled");
         ChatEnabled.setToolTipText("Type !chat and a message, it will respond to you \"intelligently\"");
@@ -998,7 +998,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ChatEnabledActionPerformed(evt);
             }
         });
-        jPanel11.add(ChatEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
+        DonationPane.add(ChatEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
 
         ChuckEnabled.setText("!Chuck Enabled");
         ChuckEnabled.setToolTipText("Enabled !chuck commands for jokes");
@@ -1007,7 +1007,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ChuckEnabledActionPerformed(evt);
             }
         });
-        jPanel11.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
+        DonationPane.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         ResetScottyName.setText("Reset Bot Name Back To Scottybot");
         ResetScottyName.addActionListener(new java.awt.event.ActionListener() {
@@ -1015,7 +1015,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ResetScottyNameActionPerformed(evt);
             }
         });
-        jPanel11.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 52, 270, -1));
+        DonationPane.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 52, 270, -1));
 
         CUsernamePassword.setText("Set Custom Bot Username/Password");
         CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
@@ -1023,11 +1023,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 CUsernamePasswordActionPerformed(evt);
             }
         });
-        jPanel11.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 23, -1, -1));
+        DonationPane.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 23, -1, -1));
 
-        DonatorPanel.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
+        DonatorPanel.add(DonationPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
 
-        JSettingsPane.addTab("Donator Stuff", DonatorPanel);
+        settingsTabs.addTab("Donator Stuff", DonatorPanel);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1035,14 +1035,14 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(JSettingsPane)
+                .addComponent(settingsTabs)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(JSettingsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(settingsTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         ControlTab.addTab("Settings", jPanel4);
@@ -1115,7 +1115,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(Viewers);
 
-        ChatSend.setForeground(java.awt.Color.black);
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
         ChatSend.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ChatSend.addActionListener(new java.awt.event.ActionListener() {
@@ -1815,13 +1814,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         if ("1".equals(GetSettings().get("Donated"))) {
             //this.JSettingsPane.setEnabledAt(2, true);
 
-            Component[] ToEnable = this.DonatorPanel.getComponents();
+            Component[] ToEnable = this.DonationPane.getComponents();
             for (Component t : ToEnable) {
                 t.setEnabled(true);
             }
         } else {
 //            this.JSettingsPane.setEnabledAt(2, false);
-            Component[] ToEnable = this.DonatorPanel.getComponents();
+            Component[] ToEnable = this.DonationPane.getComponents();
             for (Component t : ToEnable) {
                 t.setEnabled(false);
             }
@@ -1992,6 +1991,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextArea CmdInfo;
     private javax.swing.JTabbedPane ControlTab;
     public javax.swing.JLabel CurViewers;
+    private javax.swing.JPanel DonationPane;
     private javax.swing.JPanel DonatorPanel;
     private javax.swing.JButton EFollowMsg;
     private javax.swing.JButton EditPoints;
@@ -2000,7 +2000,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton FollowIMGSet;
     private javax.swing.JButton FollowSoundSet;
     private javax.swing.JButton FollowerMSGFont;
-    private javax.swing.JTabbedPane JSettingsPane;
     private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JCheckBox MeOutput;
     private javax.swing.JLabel NumOfQuotes;
@@ -2064,7 +2063,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
@@ -2084,5 +2082,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JTabbedPane settingsTabs;
     // End of variables declaration//GEN-END:variables
 }

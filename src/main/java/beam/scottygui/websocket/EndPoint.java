@@ -38,7 +38,9 @@ public class EndPoint extends Endpoint {
     public void onOpen(final Session session, EndpointConfig config) {
         while (true) {
             try {
-                session.getBasicRemote().sendText(CentralStore.Auth(BeamAuthKey).toString());
+                String ToAuthWith = CentralStore.Auth(BeamAuthKey).toString();
+                System.out.println(ToAuthWith);
+                session.getBasicRemote().sendText(ToAuthWith);
                 CentralStore.session = session;
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,7 +52,7 @@ public class EndPoint extends Endpoint {
             @Override
             public void onMessage(String message) {
 
-                //System.out.println(message);
+                System.out.println(message);
                 JSONObject msg = null;
                 try {
                     msg = (JSONObject) parser.parse(message);
