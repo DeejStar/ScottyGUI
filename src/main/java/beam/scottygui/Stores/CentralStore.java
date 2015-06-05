@@ -65,7 +65,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 28;
+    public static Integer CurVer = 30;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -83,12 +83,12 @@ public class CentralStore {
     }
 
     public static String getAuthKey() {
-        return BeamAuthKey;
+        return AuthKey;
     }
 
     public static void setAuthKey(String authKey) {
 
-        BeamAuthKey = authKey;
+        AuthKey = authKey;
     }
 
     public static String GUIGetSetting(String Setting) {

@@ -5,7 +5,6 @@
  */
 package beam.scottygui.Utils;
 
-import beam.scottygui.Login;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.ChanID;
 import java.io.BufferedReader;
@@ -19,6 +18,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +165,7 @@ public class HTTP {
             //Console(ChanID + " >>>>>>  " + dataIn);
             JSONObject obj = (JSONObject) jsonParser.parse(dataIn);
             AuthKey = obj.get("authkey").toString();
-            CentralStore.setAuthKey(AuthKey);
+            CentralStore.BeamAuthKey = AuthKey;
             JSONArray endpointsArray = (JSONArray) obj.get("endpoints");
 
             for (Object t : endpointsArray) {
@@ -179,6 +179,8 @@ public class HTTP {
         }
     }
     JSONParser parser = new JSONParser();
+
+    Map<String, String> getscottyReturnOnCrash = new HashMap();
 
     public String GetScotty(String urlString) {
         String dataIn = "";
@@ -211,11 +213,11 @@ public class HTTP {
         }
         ////System.out.println(dataIn);
         if (TimesToTry == 10) {
-            JOptionPane.showMessageDialog(null, "Error communicating with server, logging out to prevent corruption.");
-            CentralStore.cp.dispose();
-            CentralStore.cp = null;
-            Login login = new Login();
-            login.setVisible(true);
+            if (this.getscottyReturnOnCrash.containsKey(urlString)) {
+                return this.getscottyReturnOnCrash.get(urlString);
+            } else {
+                return "{}";
+            }
         }
 
         JSONObject CheckForFailed = null;
@@ -225,10 +227,10 @@ public class HTTP {
             Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (CheckForFailed.containsValue("Not Authed")) {
-            ////System.out.println(CheckForFailed.toString());
-            JOptionPane.showMessageDialog(null, "Issue talking with server. Did you log in elsewhere with this username? Closing program.");
+            JOptionPane.showMessageDialog(null, "Issues AuthKey is invalid, did you log in elsewhere with this username? Closing program.");
             System.exit(0);
         }
+        this.getscottyReturnOnCrash.put(urlString, dataIn);
         return dataIn;
     }
 
