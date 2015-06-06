@@ -289,6 +289,7 @@ public class HTTP {
                         dataIn += inputLine;
                     }
                 }
+                //System.err.println(urlString + " >>>>> " + dataIn);
                 break;
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;

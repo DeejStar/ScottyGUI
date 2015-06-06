@@ -364,7 +364,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         CurViewers = new javax.swing.JLabel();
         TopViewers = new javax.swing.JLabel();
-        ControlTab = new javax.swing.JTabbedPane();
+        whitelistPane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -447,6 +447,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         YodaEnabled = new javax.swing.JCheckBox();
         ChatEnabled = new javax.swing.JCheckBox();
         ChuckEnabled = new javax.swing.JCheckBox();
+        PNotes = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
@@ -460,6 +461,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         Viewers = new javax.swing.JList();
         ChatSend = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        showWhitelist = new javax.swing.JTextPane();
         jButton5 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
@@ -513,7 +517,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 0, 100, -1));
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, 100, -1));
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -522,9 +526,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         TopViewers.setText("0 Top Viewers");
         getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(139, 8, 200, -1));
 
-        ControlTab.addMouseListener(new java.awt.event.MouseAdapter() {
+        whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ControlTabMouseClicked(evt);
+                whitelistPaneMouseClicked(evt);
             }
         });
 
@@ -578,7 +582,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 510));
 
-        ControlTab.addTab("Commands", jPanel1);
+        whitelistPane.addTab("Commands", jPanel1);
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -633,7 +637,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel2.add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        ControlTab.addTab("Quotes", jPanel2);
+        whitelistPane.addTab("Quotes", jPanel2);
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -780,7 +784,9 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel3.add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 510));
 
-        ControlTab.addTab("Filtering", jPanel3);
+        whitelistPane.addTab("Filtering", jPanel3);
+
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         settingsTabs.setToolTipText("");
 
@@ -1038,23 +1044,17 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         settingsTabs.addTab("Donator Stuff", DonatorPanel);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(settingsTabs)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(settingsTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 17, -1, 520));
 
-        ControlTab.addTab("Settings", jPanel4);
+        PNotes.setText("Patch Notes");
+        PNotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PNotesActionPerformed(evt);
+            }
+        });
+        jPanel4.add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 0, -1, -1));
+
+        whitelistPane.addTab("Settings", jPanel4);
 
         UChatters.setText("0 Unique Chatters This Session.");
 
@@ -1091,7 +1091,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(SessionMsgCount))
         );
 
-        ControlTab.addTab("Statistics", jPanel7);
+        whitelistPane.addTab("Statistics", jPanel7);
 
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1177,9 +1177,30 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel8.add(jPanel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        ControlTab.addTab("Chat", jPanel8);
+        whitelistPane.addTab("Chat", jPanel8);
 
-        getContentPane().add(ControlTab, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, 550));
+        jScrollPane4.setViewportView(showWhitelist);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(646, Short.MAX_VALUE))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        whitelistPane.addTab("Whitelist", jPanel11);
+
+        getContentPane().add(whitelistPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, 550));
 
         jButton5.setText("Check Updates");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -1187,7 +1208,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 0, 152, -1));
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 10, 152, -1));
 
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 11, -1, 30));
@@ -1198,7 +1219,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AlertPaneOpenActionPerformed(evt);
             }
         });
-        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 0, 128, -1));
+        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 128, -1));
 
         RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1206,7 +1227,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RefreshAllActionPerformed(evt);
             }
         });
-        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(627, 0, 160, -1));
+        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 10, 160, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -1216,7 +1237,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         RefreshAllSettings();
     }//GEN-LAST:event_RefreshAllActionPerformed
 
-    private void ControlTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ControlTabMouseClicked
+    private void whitelistPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_whitelistPaneMouseClicked
         //        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
         //        switch (tab.toLowerCase()) {
         //            case "commands": {
@@ -1239,7 +1260,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         //                this.PopFilterSettings();
         //                break;
         //        }
-    }//GEN-LAST:event_ControlTabMouseClicked
+    }//GEN-LAST:event_whitelistPaneMouseClicked
 
     public void PopGuiSettings() {
         if (!CentralStore.GUISettings.containsKey("WooshME")) {
@@ -1781,6 +1802,61 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RouletteEnableActionPerformed
 
+    private void PNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PNotesActionPerformed
+        PatchNotes pnoteswindow = new PatchNotes();
+        pnoteswindow.setVisible(true);
+    }//GEN-LAST:event_PNotesActionPerformed
+
+    private void PopWhiteList() {
+        JSONObject whitelist = null;
+        try {
+            whitelist = (JSONObject) new JSONParser().parse(http.GetScotty("https://api.scottybot.net/whitelist?channame=" + ChanID));
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String ToDisplay = "";
+        for (Object t : whitelist.keySet()) {
+            String player = t.toString();
+            JSONObject obj = (JSONObject) whitelist.get(t);
+            String Duration = "";
+            String beamid = "";
+
+            Long dur = (Long) obj.get("duration");
+            Long bid = (Long) obj.get("beamid");
+            if (dur == null) {
+                Duration = "N/A";
+            } else {
+                Long DaysInMilli = 24 * 60L * 60 * 1000;
+                Long TimeLeft = dur - System.currentTimeMillis();
+                System.err.println(DaysInMilli + ":" + TimeLeft + ":" + System.currentTimeMillis() + ":" + dur);
+                if (TimeLeft < DaysInMilli) {
+                    Duration = "Less than a day.";
+                } else {
+                    Duration = String.valueOf(Math.round((float) TimeLeft / (float) DaysInMilli)) + " days left";
+                }
+            }
+
+            if (bid == null) {
+                beamid = "N/A";
+            } else {
+                JSONObject getUsername = null;
+                try {
+                    getUsername = (JSONObject) new JSONParser().parse(http.get("https://beam.pro/api/v1/users/" + bid));
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                beamid = (String) getUsername.get("username");
+            }
+            if (ToDisplay.equals("")) {
+                ToDisplay = player + "(" + beamid + ") " + Duration;
+            } else {
+                ToDisplay = ToDisplay + newline + player + "(" + beamid + ") " + Duration;
+            }
+        }
+        this.showWhitelist.setText(ToDisplay);
+
+    }
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -1890,6 +1966,8 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             this.PEnabled.setEnabled(true);
         }
+
+        this.PopWhiteList();
 
     }
 
@@ -2036,7 +2114,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox ChuckEnabled;
     private javax.swing.JCheckBox ClearCmdsEnabled;
     private javax.swing.JTextArea CmdInfo;
-    private javax.swing.JTabbedPane ControlTab;
     public javax.swing.JLabel CurViewers;
     private javax.swing.JPanel DonationPane;
     private javax.swing.JPanel DonatorPanel;
@@ -2052,6 +2129,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel NumOfQuotes;
     private javax.swing.JCheckBox OnlyWhenLiveEnabled;
     private javax.swing.JCheckBox PEnabled;
+    private javax.swing.JButton PNotes;
     private javax.swing.JButton PRenBut;
     private javax.swing.JPanel PSettings;
     private javax.swing.JTextField PStartPoints;
@@ -2112,6 +2190,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
@@ -2128,8 +2207,11 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane settingsTabs;
+    private javax.swing.JTextPane showWhitelist;
+    private javax.swing.JTabbedPane whitelistPane;
     // End of variables declaration//GEN-END:variables
 }
