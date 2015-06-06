@@ -75,6 +75,7 @@ public class ChatPopOut extends javax.swing.JFrame {
 //            }
 //        });
         this.ExtChatOutput.setContentType("text/html");
+        //this.ExtChatOutput.setText(new HTTP().BeamGet("https://beam.pro/embed/chat/" + ChanID));
 
     }
 

@@ -439,13 +439,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
         ClearCmdsEnabled = new javax.swing.JCheckBox();
         MeOutput = new javax.swing.JCheckBox();
+        CUsernamePassword = new javax.swing.JButton();
+        ResetScottyName = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
         ChatEnabled = new javax.swing.JCheckBox();
         ChuckEnabled = new javax.swing.JCheckBox();
-        ResetScottyName = new javax.swing.JButton();
-        CUsernamePassword = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
@@ -912,7 +912,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jLayeredPane1.add(SetFontColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 150, 160, -1));
 
-        SettingsPanel.add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 284, 180, -1));
+        SettingsPanel.add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 284, 180, 180));
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -976,6 +976,22 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 100));
 
+        CUsernamePassword.setText("Set Custom Bot Username/Password");
+        CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CUsernamePasswordActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 420, 210, -1));
+
+        ResetScottyName.setText("Reset Bot Name Back To Scottybot");
+        ResetScottyName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetScottyNameActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 450, 210, -1));
+
         settingsTabs.addTab("Settings", SettingsPanel);
 
         DonatorPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1008,22 +1024,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         DonationPane.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
-
-        ResetScottyName.setText("Reset Bot Name Back To Scottybot");
-        ResetScottyName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ResetScottyNameActionPerformed(evt);
-            }
-        });
-        DonationPane.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 52, 270, -1));
-
-        CUsernamePassword.setText("Set Custom Bot Username/Password");
-        CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CUsernamePasswordActionPerformed(evt);
-            }
-        });
-        DonationPane.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(626, 23, -1, -1));
 
         DonatorPanel.add(DonationPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
 

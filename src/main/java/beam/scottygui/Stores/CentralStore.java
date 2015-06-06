@@ -65,7 +65,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 30;
+    public static Integer CurVer = 31;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
