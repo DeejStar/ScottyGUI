@@ -408,7 +408,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         settingsTabs = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
-        jPanel12 = new javax.swing.JPanel();
+        PSettings = new javax.swing.JPanel();
         PEnabled = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
         PointsName = new javax.swing.JTextField();
@@ -422,6 +422,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        RouletteEnable = new javax.swing.JCheckBox();
         SettingsPanel = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         FollowSoundSet = new javax.swing.JButton();
@@ -785,7 +786,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        PSettings.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         PEnabled.setText("Points Enabled");
         PEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -793,14 +794,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PEnabledActionPerformed(evt);
             }
         });
-        jPanel12.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 12, -1, -1));
+        PSettings.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 12, -1, -1));
 
         jLabel8.setText("Points Name");
-        jPanel12.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 116, -1));
+        PSettings.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 116, -1));
 
         PointsName.setEditable(false);
         PointsName.setText("jTextField1");
-        jPanel12.add(PointsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 82, 30));
+        PSettings.add(PointsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 82, 30));
 
         PRenBut.setText("Rename");
         PRenBut.addActionListener(new java.awt.event.ActionListener() {
@@ -808,7 +809,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PRenButActionPerformed(evt);
             }
         });
-        jPanel12.add(PRenBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 85, 83, -1));
+        PSettings.add(PRenBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 85, 83, -1));
 
         EditPoints.setText("Edit");
         EditPoints.addActionListener(new java.awt.event.ActionListener() {
@@ -816,11 +817,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EditPointsActionPerformed(evt);
             }
         });
-        jPanel12.add(EditPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 141, 83, -1));
+        PSettings.add(EditPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 141, 83, -1));
 
         PWhenLive.setEditable(false);
         PWhenLive.setText("jTextField2");
-        jPanel12.add(PWhenLive, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 82, -1));
+        PSettings.add(PWhenLive, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 82, -1));
 
         PWhenIdle.setEditable(false);
         PWhenIdle.setText("jTextField2");
@@ -829,11 +830,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PWhenIdleActionPerformed(evt);
             }
         });
-        jPanel12.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 142, 102, -1));
+        PSettings.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 142, 102, -1));
 
         PStartPoints.setEditable(false);
         PStartPoints.setText("jTextField3");
-        jPanel12.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(467, 142, 70, -1));
+        PSettings.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(467, 142, 70, -1));
 
         BHEnabled.setText("BankHeist Enabled");
         BHEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -841,7 +842,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 BHEnabledActionPerformed(evt);
             }
         });
-        jPanel12.add(BHEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 210, -1, -1));
+        PSettings.add(BHEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 210, -1, -1));
 
         REnabled.setText("Raffle Enabled");
         REnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -849,18 +850,26 @@ public final class ControlPanel extends javax.swing.JFrame {
                 REnabledActionPerformed(evt);
             }
         });
-        jPanel12.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(196, 210, -1, -1));
+        PSettings.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 210, -1, -1));
 
         jLabel9.setText("Points When Live");
-        jPanel12.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 118, -1, -1));
+        PSettings.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 118, -1, -1));
 
         jLabel10.setText("Points When Not Live");
-        jPanel12.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(286, 118, -1, -1));
+        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(286, 118, -1, -1));
 
         jLabel11.setText("Starting Points");
-        jPanel12.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(449, 118, -1, -1));
+        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(449, 118, -1, -1));
 
-        jPanel5.add(jPanel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
+        RouletteEnable.setText("Roulette Enabled");
+        RouletteEnable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RouletteEnableActionPerformed(evt);
+            }
+        });
+        PSettings.add(RouletteEnable, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
+
+        jPanel5.add(PSettings, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
         settingsTabs.addTab("Points", jPanel5);
 
@@ -894,7 +903,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 SetFollowAlertMsgActionPerformed(evt);
             }
         });
-        jLayeredPane1.add(SetFollowAlertMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 92, -1, -1));
+        jLayeredPane1.add(SetFollowAlertMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 92, 160, -1));
 
         FollowerMSGFont.setText("Set Follower Font");
         FollowerMSGFont.addActionListener(new java.awt.event.ActionListener() {
@@ -1427,8 +1436,17 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
         if (this.PEnabled.isSelected()) {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(true);
+            }
         } else {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(false);
+            }
+            this.PEnabled.setEnabled(true);
         }
     }//GEN-LAST:event_PEnabledActionPerformed
 
@@ -1755,6 +1773,14 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ViewersMouseClicked
 
+    private void RouletteEnableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RouletteEnableActionPerformed
+        if (this.RouletteEnable.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=0");
+        }
+    }//GEN-LAST:event_RouletteEnableActionPerformed
+
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
@@ -1780,6 +1806,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.REnabled.setSelected(true);
         } else {
             this.REnabled.setSelected(false);
+        }
+
+        if ("1".equals(GetSettings().get("UseRoulette"))) {
+            this.RouletteEnable.setSelected(true);
+        } else {
+            this.RouletteEnable.setSelected(false);
         }
         if ("1".equals(GetSettings().get("UseQuotes"))) {
             this.QEnabled.setSelected(true);
@@ -1842,6 +1874,21 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.YodaEnabled.setSelected(true);
         } else {
             this.YodaEnabled.setSelected(false);
+        }
+
+        if (this.PEnabled.isSelected()) {
+
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(true);
+            }
+        } else {
+
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(false);
+            }
+            this.PEnabled.setEnabled(true);
         }
 
     }
@@ -2006,6 +2053,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox OnlyWhenLiveEnabled;
     private javax.swing.JCheckBox PEnabled;
     private javax.swing.JButton PRenBut;
+    private javax.swing.JPanel PSettings;
     private javax.swing.JTextField PStartPoints;
     private javax.swing.JTextField PWhenIdle;
     private javax.swing.JTextField PWhenLive;
@@ -2020,6 +2068,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton RepeatList;
     private javax.swing.JToggleButton RepeatOnOff;
     private javax.swing.JButton ResetScottyName;
+    private javax.swing.JCheckBox RouletteEnable;
     public javax.swing.JLabel SessionMsgCount;
     private javax.swing.JButton SetFollowAlertMsg;
     private javax.swing.JButton SetFontColor;
@@ -2063,7 +2112,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
