@@ -13,6 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>beam.scottygui.MainApp</mainClass>
     </properties>
+    
+
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
@@ -132,6 +134,8 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        
     </build>
     <repositories>
         <repository>
@@ -141,6 +145,8 @@
         </repository>
     </repositories>
     <dependencies>
+        
+        
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>

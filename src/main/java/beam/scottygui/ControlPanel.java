@@ -1665,6 +1665,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
     AlertFrame af = new AlertFrame();
     private void AlertPaneOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlertPaneOpenActionPerformed
+
         if (!GUISettings.containsKey("FollowSound")) {
             JOptionPane.showMessageDialog(rootPane, "No Audio File Set");
             return;
