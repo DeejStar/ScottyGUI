@@ -23,6 +23,7 @@ import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.extchat;
 import static beam.scottygui.Stores.CentralStore.newline;
 import static beam.scottygui.Stores.CentralStore.session;
+import beam.scottygui.TwitterInfo.TwitterAuthInfo;
 import beam.scottygui.Utils.FontChooser;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
@@ -423,6 +424,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         RouletteEnable = new javax.swing.JCheckBox();
+        jLabel17 = new javax.swing.JLabel();
         SettingsPanel = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         FollowSoundSet = new javax.swing.JButton();
@@ -442,6 +444,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         MeOutput = new javax.swing.JCheckBox();
         CUsernamePassword = new javax.swing.JButton();
         ResetScottyName = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -804,7 +807,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         PSettings.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 12, -1, -1));
 
         jLabel8.setText("Points Name");
-        PSettings.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, 116, -1));
+        PSettings.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 116, -1));
 
         PointsName.setEditable(false);
         PointsName.setText("jTextField1");
@@ -860,13 +863,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         PSettings.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 210, -1, -1));
 
         jLabel9.setText("Points When Live");
-        PSettings.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 118, -1, -1));
+        PSettings.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, -1, -1));
 
         jLabel10.setText("Points When Not Live");
-        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(286, 118, -1, -1));
+        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, -1, -1));
 
         jLabel11.setText("Starting Points");
-        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(449, 118, -1, -1));
+        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 120, -1, -1));
 
         RouletteEnable.setText("Roulette Enabled");
         RouletteEnable.addActionListener(new java.awt.event.ActionListener() {
@@ -875,6 +878,9 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         PSettings.add(RouletteEnable, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
+
+        jLabel17.setText("All per 15 minutes!");
+        PSettings.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 120, -1, -1));
 
         jPanel5.add(PSettings, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
@@ -1007,6 +1013,14 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         SettingsPanel.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 450, 210, -1));
+
+        jButton7.setText("Set Twitter Auth Info");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1801,6 +1815,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         pnoteswindow.setVisible(true);
     }//GEN-LAST:event_PNotesActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        TwitterAuthInfo tai = new TwitterAuthInfo();
+        tai.setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2163,6 +2182,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JFrame jFrame1;
@@ -2174,6 +2194,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
