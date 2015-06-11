@@ -44,8 +44,8 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
         }
         this.CKey.setText((String) ToParse.get("CKey"));
         this.CSecret.setText((String) ToParse.get("CSecret"));
-        this.AToken.setText((String) ToParse.get("ATokenSecret"));
-        this.ATokenSecret.setText((String) ToParse.get("AToken"));
+        this.AToken.setText((String) ToParse.get("AToken"));
+        this.ATokenSecret.setText((String) ToParse.get("ATokenSecret"));
     }
 
     /**
