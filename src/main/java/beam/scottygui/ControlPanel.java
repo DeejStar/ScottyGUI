@@ -442,9 +442,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
         ClearCmdsEnabled = new javax.swing.JCheckBox();
         MeOutput = new javax.swing.JCheckBox();
+        jLabel18 = new javax.swing.JLabel();
         CUsernamePassword = new javax.swing.JButton();
         ResetScottyName = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        StoredAuthKey = new javax.swing.JTextField();
+        ShowStoredKey = new javax.swing.JButton();
+        GenNewStoredKey = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -996,6 +1000,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jPanel10.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 10, -1, -1));
 
+        jLabel18.setText("Stored Auth Key (Usable and static)");
+        jPanel10.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 80, -1, -1));
+
         SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 100));
 
         CUsernamePassword.setText("Set Custom Bot Username/Password");
@@ -1021,6 +1028,26 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         SettingsPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
+
+        StoredAuthKey.setEditable(false);
+        StoredAuthKey.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        SettingsPanel.add(StoredAuthKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 110, 300, -1));
+
+        ShowStoredKey.setText("Show Key");
+        ShowStoredKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowStoredKeyActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(ShowStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 150, -1, -1));
+
+        GenNewStoredKey.setText("Generate New Key");
+        GenNewStoredKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenNewStoredKeyActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(GenNewStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 150, -1, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1820,6 +1847,28 @@ public final class ControlPanel extends javax.swing.JFrame {
         tai.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void ShowStoredKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowStoredKeyActionPerformed
+        JSONObject key = new JSONObject();
+        String ToParse = new HTTP().GetScotty("https://api.scottybot.net/storedauth?authkey=" + AuthKey);
+        try {
+            key.putAll((JSONObject) new JSONParser().parse(ToParse));
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.StoredAuthKey.setText(key.get("Key").toString());
+    }//GEN-LAST:event_ShowStoredKeyActionPerformed
+
+    private void GenNewStoredKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenNewStoredKeyActionPerformed
+        JSONObject key = new JSONObject();
+        String ToParse = new HTTP().GetScotty("https://api.scottybot.net/storedauth/new?authkey=" + AuthKey);
+        try {
+            key.putAll((JSONObject) new JSONParser().parse(ToParse));
+        } catch (ParseException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.StoredAuthKey.setText(key.get("Key").toString());
+    }//GEN-LAST:event_GenNewStoredKeyActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2137,6 +2186,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton FollowIMGSet;
     private javax.swing.JButton FollowSoundSet;
     private javax.swing.JButton FollowerMSGFont;
+    private javax.swing.JButton GenNewStoredKey;
     private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JCheckBox MeOutput;
     private javax.swing.JLabel NumOfQuotes;
@@ -2164,6 +2214,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton SetFollowAlertMsg;
     private javax.swing.JButton SetFontColor;
     private javax.swing.JPanel SettingsPanel;
+    private javax.swing.JButton ShowStoredKey;
+    private javax.swing.JTextField StoredAuthKey;
     private javax.swing.JSlider SymPercent;
     private javax.swing.JLabel SymPercentDis;
     private javax.swing.JToggleButton SymbolsOnOff;
@@ -2195,6 +2247,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
