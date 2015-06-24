@@ -44,7 +44,7 @@
             <Property name="columns" type="int" value="20"/>
             <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="V34:&#xa;You can not generate/regenerate a static authkey that can be used outside of ScottyGUI.&#xa;&#xa;&#xa;V32:&#xa;Added Roulette toggle.&#xa;Set so if points are off all points settings are untouchable.&#xa;Added Whitelist display.&#xa;"/>
+            <Property name="text" type="java.lang.String" value="V35:&#xa;Major fix to make the follower alert more reliable for channels with over 100 followers.&#xa;&#xa;V34:&#xa;You can not generate/regenerate a static authkey that can be used outside of ScottyGUI.&#xa;&#xa;&#xa;V32:&#xa;Added Roulette toggle.&#xa;Set so if points are off all points settings are untouchable.&#xa;Added Whitelist display.&#xa;"/>
             <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>

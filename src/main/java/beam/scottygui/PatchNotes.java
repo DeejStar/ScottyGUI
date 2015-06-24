@@ -38,7 +38,7 @@ public class PatchNotes extends javax.swing.JFrame {
         curPatchNotes.setColumns(20);
         curPatchNotes.setLineWrap(true);
         curPatchNotes.setRows(5);
-        curPatchNotes.setText("V34:\nYou can not generate/regenerate a static authkey that can be used outside of ScottyGUI.\n\n\nV32:\nAdded Roulette toggle.\nSet so if points are off all points settings are untouchable.\nAdded Whitelist display.\n");
+        curPatchNotes.setText("V35:\nMajor fix to make the follower alert more reliable for channels with over 100 followers.\n\nV34:\nYou can not generate/regenerate a static authkey that can be used outside of ScottyGUI.\n\n\nV32:\nAdded Roulette toggle.\nSet so if points are off all points settings are untouchable.\nAdded Whitelist display.\n");
         curPatchNotes.setWrapStyleWord(true);
         jScrollPane2.setViewportView(curPatchNotes);
 

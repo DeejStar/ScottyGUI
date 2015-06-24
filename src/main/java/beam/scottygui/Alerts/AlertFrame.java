@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -96,25 +97,39 @@ public final class AlertFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 Player playMP3 = null;
 
+    public JSONArray GetLastFollowers(Long ChanID) throws InterruptedException {
+        JSONParser parser = new JSONParser();
+        JSONArray result = new JSONArray();
+        boolean Got = false;
+        boolean Live = false;
+        int page = 0;
+        while (true) {
+            try {
+                JSONArray toAdd = new JSONArray();
+                toAdd.addAll((JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=100&page=" + page)));
+                if (toAdd.isEmpty()) {
+                    break;
+                }
+                result.addAll(toAdd);
+                page++;
+            } catch (ParseException ex) {
+                sleep(1500);
+            }
+        }
+        return result;
+    }
+
     public void StartFollowerWatcher() {
         System.out.println("STARTING FOLLOWER WATCHER");
         new Thread("Follow Watcher") {
             @Override
             public void run() {
                 while (true) {
-                    JSONArray Followers = null;
-                    while (true) {
-                        try {
-                            System.out.println("Getting current follower count");
-                            JSONObject obj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID));
-                            long numFollowers = (long) obj.get("numFollowers");
-                            System.out.println("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers);
-                            Followers = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=" + numFollowers));
-
-                            break;
-                        } catch (ParseException ex) {
-                            Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    JSONArray Followers = new JSONArray();
+                    try {
+                        Followers.addAll(GetLastFollowers(ChanID));
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (FollowerCache.isEmpty()) {
                         for (Object t : Followers) {
@@ -153,6 +168,7 @@ Player playMP3 = null;
     }
 
     public void BeginAlert(String Follower) {
+        System.out.println("New Follower Detected > " + Follower);
         if (this.isVisible()) {
             this.StartAudio();
             this.StartImage(Follower);
