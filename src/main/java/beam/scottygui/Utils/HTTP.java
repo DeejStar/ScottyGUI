@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -52,6 +53,46 @@ public class HTTP {
     List<String> EndPoints = new ArrayList();
     String Username = "";
     String Password = "";
+
+    public String shortenUrl(final String longUrl) {
+
+        if (CentralStore.isgdCache.containsKey(longUrl)) {
+            return CentralStore.isgdCache.get(longUrl);
+        } else {
+            if (CentralStore.IsGdNextCheck < System.currentTimeMillis()) {
+                String URL_SHORTENER_URL = "http://is.gd/create.php?format=simple&url=";
+                try {
+                    URL obj = new URL(URL_SHORTENER_URL + longUrl);
+                    //System.out.println("URL = >> " + obj);
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                    // optional default is GET
+                    con.setRequestMethod("GET");
+
+                    //add request header
+                    con.setRequestProperty("User-Agent", "ScottyBot");
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    //print result
+                    CentralStore.isgdCache.put(longUrl, response.toString());
+                    return response.toString();
+                } catch (IOException e) {
+                    CentralStore.IsGdNextCheck = System.currentTimeMillis() + 120000;
+                    return longUrl;
+                }
+            } else {
+                return longUrl;
+            }
+        }
+    }
 
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
 

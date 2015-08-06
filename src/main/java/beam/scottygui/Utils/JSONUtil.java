@@ -18,8 +18,13 @@
 package beam.scottygui.Utils;
 
 import static java.lang.Thread.sleep;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -39,6 +44,78 @@ public class JSONUtil {
     // }
     public String ToReturn = null;
     HTTP http = new HTTP();
+
+    public List<String> GetUserList(Long ChanID) throws InterruptedException, Exception {
+        JSONParser parser = new JSONParser();
+        HTTP http = new HTTP();
+        JSONArray result = new JSONArray();
+        boolean Got = false;
+        int page = 0;
+        while (true) {
+            try {
+                JSONArray toAdd = new JSONArray();
+                toAdd.addAll((JSONArray) parser.parse(http.get("https://beam.pro/api/v1/chats/" + ChanID + "/users?limit=50&page=" + page)));
+                if (toAdd.isEmpty()) {
+                    break;
+                }
+                result.addAll(toAdd);
+                page++;
+            } catch (ParseException ex) {
+                sleep(1500);
+            }
+        }
+//        List<String> Followers = new ArrayList();
+//        Iterator i = result.iterator();
+//        while (i.hasNext()) {
+//            JSONObject user = (JSONObject) i.next();
+//            Followers.add((String) user.get("username"));
+//        }
+
+        JSONArray array = (JSONArray) result;
+        List<String> UserList = new ArrayList();
+        for (Object t : array) {
+            JSONObject chan = (JSONObject) t;
+            String AddName = chan.get("userName").toString();
+            if (!UserList.contains(AddName)) {
+                UserList.add(AddName);
+
+            }
+        }
+
+        return UserList;
+    }
+
+    public List<String> GetLastFollowers(Long ChanID) throws InterruptedException {
+        HTTP http = new HTTP();
+        JSONParser parser = new JSONParser();
+        JSONArray result = new JSONArray();
+        boolean Got = false;
+        boolean Live = false;
+        int page = 0;
+        while (true) {
+            try {
+                JSONArray toAdd = new JSONArray();
+                toAdd.addAll((JSONArray) parser.parse(http.get("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=100&page=" + page)));
+                if (toAdd.isEmpty()) {
+                    break;
+                }
+                result.addAll(toAdd);
+                page++;
+            } catch (ParseException ex) {
+                Random rand = new Random();
+                int n = rand.nextInt(5000) + 1;
+                sleep(n);
+            }
+        }
+        List<String> Followers = new ArrayList();
+        Iterator i = result.iterator();
+        while (i.hasNext()) {
+            JSONObject user = (JSONObject) i.next();
+            Followers.add((String) user.get("username"));
+        }
+
+        return Followers;
+    }
 
     public String GetUserName(String ChanID) throws InterruptedException {
         JSONParser parser = new JSONParser();

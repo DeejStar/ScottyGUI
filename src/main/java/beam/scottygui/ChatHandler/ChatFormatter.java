@@ -10,6 +10,7 @@ import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.ChatCache;
 import static beam.scottygui.Stores.CentralStore.UserName;
 import static beam.scottygui.Stores.CentralStore.cp;
+import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -77,7 +78,8 @@ public class ChatFormatter {
                 //System.out.println(ShowEmote);
                 MSG = MSG + ShowEmote;
             } else {
-                String url = obj.get("text").toString();
+                String urltoshorten = obj.get("text").toString();
+                String url = new HTTP().shortenUrl(urltoshorten);
                 String URLLink = "<a href=\"" + url + "\">" + url + "</a>";
                 MSG = MSG + " " + URLLink;
             }

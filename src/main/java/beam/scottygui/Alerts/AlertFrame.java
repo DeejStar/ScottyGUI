@@ -5,7 +5,6 @@
  */
 package beam.scottygui.Alerts;
 
-import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.GUISettings;
 import beam.scottygui.Utils.HTTP;
 import java.awt.Color;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,10 +28,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -44,15 +39,15 @@ public final class AlertFrame extends javax.swing.JFrame {
     public List<String> FollowerCache = new ArrayList();
     public JSONParser parser = new JSONParser();
     HTTP http = new HTTP();
-    boolean PlayingAudio = false;
-    boolean ShowingImg = false;
+    public boolean PlayingAudio = false;
+    public boolean ShowingImg = false;
 
     /**
      * Creates new form AlertFrame
      */
     public AlertFrame() {
         initComponents();
-        StartFollowerWatcher();
+        //StartFollowerWatcher();
     }
 
     /**
@@ -96,76 +91,6 @@ public final class AlertFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 Player playMP3 = null;
-
-    public JSONArray GetLastFollowers(Long ChanID) throws InterruptedException {
-        JSONParser parser = new JSONParser();
-        JSONArray result = new JSONArray();
-        boolean Got = false;
-        boolean Live = false;
-        int page = 0;
-        while (true) {
-            try {
-                JSONArray toAdd = new JSONArray();
-                toAdd.addAll((JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID + "/follow?limit=100&page=" + page)));
-                if (toAdd.isEmpty()) {
-                    break;
-                }
-                result.addAll(toAdd);
-                page++;
-            } catch (ParseException ex) {
-                sleep(1500);
-            }
-        }
-        return result;
-    }
-
-    public void StartFollowerWatcher() {
-        System.out.println("STARTING FOLLOWER WATCHER");
-        new Thread("Follow Watcher") {
-            @Override
-            public void run() {
-                while (true) {
-                    JSONArray Followers = new JSONArray();
-                    try {
-                        Followers.addAll(GetLastFollowers(ChanID));
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if (FollowerCache.isEmpty()) {
-                        for (Object t : Followers) {
-                            JSONObject obj = (JSONObject) t;
-                            String userid = obj.get("username").toString();
-                            FollowerCache.add(userid);
-                        }
-                    }
-
-                    for (Object t : Followers) {
-                        JSONObject obj = (JSONObject) t;
-                        String userid = obj.get("username").toString();
-                        if (!FollowerCache.contains(userid)) {
-                            FollowerCache.add(userid);
-                            String User = obj.get("username").toString();
-                            BeginAlert(User);
-                            while (PlayingAudio || ShowingImg) {
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                        }
-                    }
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-            }
-
-        }.start();
-    }
 
     public void BeginAlert(String Follower) {
         System.out.println("New Follower Detected > " + Follower);
@@ -228,13 +153,11 @@ Player playMP3 = null;
                     try {
                         //AlertMSG.setText(FollowMessage);
 
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                         //AlertMSG.setText("");
                         textPane.setText("");
                         ShowingImg = false;
-                        if (!playMP3.isComplete()) {
-                            playMP3.close();
-                        }
+                        playMP3.close();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -268,6 +191,7 @@ Player playMP3 = null;
                         Thread.sleep(10000);
                         //AlertMSG.setText("");
                         textPane.setText("");
+                        playMP3.close();
                         ShowingImg = false;
                     } catch (InterruptedException ex) {
                         Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);

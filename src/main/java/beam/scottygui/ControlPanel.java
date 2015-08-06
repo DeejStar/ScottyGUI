@@ -21,6 +21,7 @@ import static beam.scottygui.Stores.CentralStore.SendMSG;
 import static beam.scottygui.Stores.CentralStore.Username;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.extchat;
+import static beam.scottygui.Stores.CentralStore.llSocket;
 import static beam.scottygui.Stores.CentralStore.newline;
 import static beam.scottygui.Stores.CentralStore.session;
 import beam.scottygui.TwitterInfo.TwitterAuthInfo;
@@ -158,39 +159,38 @@ public final class ControlPanel extends javax.swing.JFrame {
         return false;
     }
 
-    public void PopChatList() {
-        this.Viewers.setModel(ChatUserList);
-        new Thread("Update Viewer List") {
-            @Override
-            public void run() {
-                while (true) {
-                    //System.out.println("Populating Viewer List");
-                    JSONArray InitUserList = null;
-
-                    while (true) {
-                        try {
-                            InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
-                            break;
-                        } catch (ParseException ex) {
-                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    ChatUserList.clear();
-                    for (Object t : InitUserList) {
-                        JSONObject obj = (JSONObject) t;
-                        ChatUserList.add(obj.get("user_name").toString());
-                    }
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
-
-    }
-
+//    public void PopChatList() {
+//        this.Viewers.setModel(ChatUserList);
+//        new Thread("Update Viewer List") {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    //System.out.println("Populating Viewer List");
+//                    JSONArray InitUserList = null;
+//
+//                    while (true) {
+//                        try {
+//                            InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
+//                            break;
+//                        } catch (ParseException ex) {
+//                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                    ChatUserList.clear();
+//                    for (Object t : InitUserList) {
+//                        JSONObject obj = (JSONObject) t;
+//                        ChatUserList.add(obj.get("user_name").toString());
+//                    }
+//                    try {
+//                        Thread.sleep(15000);
+//                    } catch (InterruptedException ex) {
+//                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            }
+//        }.start();
+//
+//    }
     public ControlPanel() {
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         GUILoadSettings();
@@ -219,6 +219,22 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         PopFilterSettings();
         PopBadWords();
+
+        new Thread("LiveLoad Thread Pinger") {
+            @Override
+            public void run() {
+                while (true) {
+                    if (llSocket != null) {
+                        llSocket.getAsyncRemote().sendText("2");
+                    }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }.start();
 
         new Thread("5 Minutes CMD Refresh") {
             @Override
@@ -283,7 +299,8 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
-        this.PopChatList();
+        Viewers.setModel(ChatUserList);
+        //this.PopChatList();
         this.socket.connect(ChanID);
         this.PopGuiSettings();
 //        LiveLoadHandler llh = new LiveLoadHandler();
@@ -1704,7 +1721,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "No new updates.");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-    AlertFrame af = new AlertFrame();
+    AlertFrame af = CentralStore.getAlertFrame();
     private void AlertPaneOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlertPaneOpenActionPerformed
 
         if (!GUISettings.containsKey("FollowSound")) {

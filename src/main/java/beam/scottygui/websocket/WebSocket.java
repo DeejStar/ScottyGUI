@@ -11,7 +11,6 @@ import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.Joined;
 import static beam.scottygui.Stores.CentralStore.LastCount;
 import static beam.scottygui.Stores.CentralStore.Left;
-import static beam.scottygui.Stores.CentralStore.WorkerThreads;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.endpoint;
 import beam.scottygui.Utils.HTTP;
@@ -44,32 +43,19 @@ public class WebSocket {
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                if (counter < 4) {
-                    try {
-                        new HTTP().GetAuth();
-                    } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
-                        Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    return true;
-                } else {
-                    try {
-                        new HTTP().GetAuth();
-                    } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
-                        Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    new WebSocket().connect(ChanID);
-                    return false;
-                }
+                new WebSocket().connect(ChanID);
+                return false;
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                return true;
+                new WebSocket().connect(ChanID);
+                return false;
             }
 
             @Override
             public long getDelay() {
-                return 0;
+                return 1;
             }
         };
 
@@ -86,11 +72,85 @@ public class WebSocket {
                 Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        Runnable looper = new Looper();
-        WorkerThreads.execute(looper);
+        //Runnable looper = new Looper();
+        //WorkerThreads.execute(looper);
+        if (CentralStore.LiveLoad == null) {
+            while (true) {
+                try {
+                    CentralStore.LiveLoad = new llSocket(ChanID);
+                    CentralStore.WorkerThreads.submit(CentralStore.LiveLoad);
+                    break;
+                } catch (URISyntaxException | InterruptedException | IOException | ParseException ex) {
+                    Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
-    public static class Looper implements Runnable {
+    public class llSocket implements Runnable {
+
+        //HTTP http = CentralStore.getHTTP(ChanID);
+        private Long chanid = null;
+
+        llSocket(Long CID) throws URISyntaxException, InterruptedException, IOException, ParseException {
+
+            //Thread.currentThread().setName(ChanName);
+            //JSONUtil json = new JSONUtil();
+            this.chanid = CID;
+//            int tried = 0;
+//            while (tried < 5) {
+//                tried++;
+//                try {
+//                    hub.GetUserID(chanid);
+//                    break;
+//                } catch (Exception e) {
+//
+//                }
+//            }
+
+        }
+
+        @Override
+        public void run() {
+
+            try {
+                ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
+                ClientManager Connectable = new ClientManager();
+                ClientManager.ReconnectHandler reconnectHandler;
+                reconnectHandler = new ClientManager.ReconnectHandler() {
+                    @Override
+                    public boolean onDisconnect(CloseReason closeReason) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onConnectFailure(Exception exception) {
+
+                        return true;
+                    }
+
+                    @Override
+                    public long getDelay() {
+                        return 1;
+
+                    }
+
+                };
+
+                Connectable.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+
+                //CentralStore.setReconnectCount(chanid, 0);
+                URI EndPoint = new URI("wss://beam.pro/socket.io/?__sails_io_sdk_version=0.11.0&__sails_io_sdk_platform=node&__sails_io_sdk_language=javascript&EIO=3&transport=websocket");
+                llEndPoint endpoint = new llEndPoint();
+                endpoint.ChanID = chanid;
+                Connectable.asyncConnectToServer(endpoint, cec, EndPoint);
+            } catch (Exception e) {
+                System.err.println("Interuppted");
+            }
+        }
+    }
+
+    public class Looper implements Runnable {
 
         HTTP http = new HTTP();
         JSONParser parser = new JSONParser();

@@ -5,9 +5,11 @@
  */
 package beam.scottygui.Stores;
 
+import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
 import beam.scottygui.websocket.EndPoint;
@@ -19,7 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -53,7 +58,7 @@ public class CentralStore {
     public static Long UserID = null;
     public static String UserName = null;
     public static List<String> UniqueChatters = new ArrayList();
-    public static Long TopViewers = null;
+    public static Long TopViewers = 0L;
     public static Integer Joined = 0;
     public static Integer Left = 0;
     public static Session session = null;
@@ -65,13 +70,37 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 35;
+    public static Integer CurVer = 36;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
     public static ExecutorService WorkerThreads = Executors.newFixedThreadPool(50);
     public static CookieStore cookie = null;
     public static String EndPoints = "";
+    public static Map<String, String> isgdCache = new ConcurrentHashMap();
+    public static long IsGdNextCheck = 0;
+    public static boolean isLive = false;
+    public static List<String> followerCache = new CopyOnWriteArrayList();
+    public static AlertFrame af = null;
+    public static String chanStatus = "";
+    public static Runnable LiveLoad = null;
+    public static Runnable FollowerQueue = null;
+    public static Session llSocket = null;
+
+    public static AlertFrame getAlertFrame() {
+        if (af == null) {
+            af = new AlertFrame();
+        }
+        return af;
+    }
+
+    public static String getchanStatus(Long ChanID) throws InterruptedException {
+        if ("".equalsIgnoreCase(chanStatus)) {
+            chanStatus = new JSONUtil().GetStatus(ChanID);
+
+        }
+        return chanStatus;
+    }
 
     public static String getEndPoint() {
         return EndPoints;

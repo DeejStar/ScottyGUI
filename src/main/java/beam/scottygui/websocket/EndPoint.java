@@ -8,11 +8,15 @@ package beam.scottygui.websocket;
 import beam.scottygui.ChatHandler.ChatFormatter;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
+import static beam.scottygui.Stores.CentralStore.ChanID;
 import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.MsgCounter;
 import static beam.scottygui.Stores.CentralStore.UniqueChatters;
 import static beam.scottygui.Stores.CentralStore.cp;
+import beam.scottygui.Utils.JSONUtil;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.Endpoint;
@@ -47,6 +51,17 @@ public class EndPoint extends Endpoint {
             }
             break;
         }
+
+        List<String> userList = new ArrayList();
+        try {
+            userList.addAll(new JSONUtil().GetUserList(ChanID));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ChatUserList.clear();
+        ChatUserList.addAll(userList.toArray());
 
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
@@ -85,21 +100,20 @@ public class EndPoint extends Endpoint {
                         ChatFormatter.FormatChat(data);
                         break;
                     case "USERJOIN":
-                        //Joined++;
                         data = (JSONObject) msg.get("data");
                         username = data.get("username").toString();
+                        System.out.println(username + " joined the channel.");
                         if (!ChatUserList.contains(username)) {
                             ChatUserList.add(username);
                         }
                         break;
                     case "USERLEAVE":
-                        //Left++;
-                        //data = (JSONObject) msg.get("data");
-                        //username = data.get("username").toString();
-//                        if (ChatUserList.contains(username)) {
-//                            ChatUserList.removeElement(username);
-//
-//                        }
+                        data = (JSONObject) msg.get("data");
+                        username = data.get("username").toString();
+                        System.out.println(username + " left the channel.");
+                        if (ChatUserList.contains(username)) {
+                            ChatUserList.removeElement(username);
+                        }
                         break;
                 }
 
