@@ -38,7 +38,7 @@ public class PatchNotes extends javax.swing.JFrame {
         curPatchNotes.setColumns(20);
         curPatchNotes.setLineWrap(true);
         curPatchNotes.setRows(5);
-        curPatchNotes.setText("V36:\nMigrated backend to LiveLoading, so userlists, viewer count, follower alerts, and more now happen instantly and much more smoothly\n\nV35:\nMajor fix to make the follower alert more reliable for channels with over 100 followers.\n\nV34:\nYou can not generate/regenerate a static authkey that can be used outside of ScottyGUI.\n\n\nV32:\nAdded Roulette toggle.\nSet so if points are off all points settings are untouchable.\nAdded Whitelist display.\n");
+        curPatchNotes.setText("V37:\nMuch improved chat windows. Purged/Deleted messages can now wither have a line through them, or hidden completely. Added a setting to toggle this under the Settings tab.\nTwo new files are created. Last_5_Followers.txt and Last_Follower.txt. You can guess what they do :-)\n\nV36:\nMigrated backend to LiveLoading, so userlists, viewer count, follower alerts, and more now happen instantly and much more smoothly\n\nV35:\nMajor fix to make the follower alert more reliable for channels with over 100 followers.\n\nV34:\nYou can not generate/regenerate a static authkey that can be used outside of ScottyGUI.\n\n\nV32:\nAdded Roulette toggle.\nSet so if points are off all points settings are untouchable.\nAdded Whitelist display.\n");
         curPatchNotes.setWrapStyleWord(true);
         jScrollPane2.setViewportView(curPatchNotes);
 

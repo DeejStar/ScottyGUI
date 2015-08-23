@@ -11,6 +11,7 @@ import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.AuthKey;
 import static beam.scottygui.Stores.CentralStore.BadWordsList;
 import static beam.scottygui.Stores.CentralStore.ChanID;
+import static beam.scottygui.Stores.CentralStore.ChatCache;
 import static beam.scottygui.Stores.CentralStore.ChatUserList;
 import static beam.scottygui.Stores.CentralStore.GUILoadSettings;
 import static beam.scottygui.Stores.CentralStore.GUISaveSettings;
@@ -19,6 +20,8 @@ import static beam.scottygui.Stores.CentralStore.GetSettings;
 import static beam.scottygui.Stores.CentralStore.RefreshSettings;
 import static beam.scottygui.Stores.CentralStore.SendMSG;
 import static beam.scottygui.Stores.CentralStore.Username;
+import static beam.scottygui.Stores.CentralStore.chatArray;
+import static beam.scottygui.Stores.CentralStore.chatObject;
 import static beam.scottygui.Stores.CentralStore.cp;
 import static beam.scottygui.Stores.CentralStore.extchat;
 import static beam.scottygui.Stores.CentralStore.llSocket;
@@ -466,6 +469,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         StoredAuthKey = new javax.swing.JTextField();
         ShowStoredKey = new javax.swing.JButton();
         GenNewStoredKey = new javax.swing.JButton();
+        jLayeredPane2 = new javax.swing.JLayeredPane();
+        jLabel19 = new javax.swing.JLabel();
+        showPChat = new javax.swing.JCheckBox();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -1065,6 +1071,44 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         SettingsPanel.add(GenNewStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 150, -1, -1));
+
+        jLayeredPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("Chat Options");
+
+        showPChat.setText("Show Deleted Chat");
+        showPChat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPChatActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
+        jLayeredPane2.setLayout(jLayeredPane2Layout);
+        jLayeredPane2Layout.setHorizontalGroup(
+            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(showPChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(25, 25, 25))
+        );
+        jLayeredPane2Layout.setVerticalGroup(
+            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showPChat)
+                .addGap(0, 4, Short.MAX_VALUE))
+        );
+        jLayeredPane2.setLayer(jLabel19, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(showPChat, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        SettingsPanel.add(jLayeredPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, 50));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1886,6 +1930,38 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.StoredAuthKey.setText(key.get("Key").toString());
     }//GEN-LAST:event_GenNewStoredKeyActionPerformed
 
+    private void showPChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPChatActionPerformed
+        String html1 = "<html>";
+        String html2 = "</html>";
+        String newline = "<br>";
+        if (showPChat.isSelected()) {
+            CentralStore.GUISaveSettings("showpurged", "true");
+
+        } else {
+            CentralStore.GUISaveSettings("showpurged", "false");
+        }
+        ChatCache = "";
+        for (Object t : chatArray) {
+            String msgID = t.toString();
+            JSONObject msgObj = (JSONObject) chatObject.get(msgID);
+            //System.err.println(ID);
+            String msgTXT = msgObj.get("msg").toString();
+            if ((boolean) msgObj.get("purged")) {
+                if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
+                    msgTXT = "<strike>" + msgTXT + "</strike>";
+                    ChatCache = ChatCache + msgTXT + newline;
+                    System.err.println(msgObj.toJSONString());
+                }
+            } else {
+                ChatCache = ChatCache + msgTXT + newline;
+            }
+            CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
+            CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+            //CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
+            //CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
+        }
+    }//GEN-LAST:event_showPChatActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2265,6 +2341,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2274,6 +2351,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -2297,6 +2375,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane settingsTabs;
+    public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
     private javax.swing.JTabbedPane whitelistPane;
     // End of variables declaration//GEN-END:variables

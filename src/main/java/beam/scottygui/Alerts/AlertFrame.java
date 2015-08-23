@@ -93,7 +93,7 @@ public final class AlertFrame extends javax.swing.JFrame {
 Player playMP3 = null;
 
     public void BeginAlert(String Follower) {
-        System.out.println("New Follower Detected > " + Follower);
+        //System.out.println("New Follower Detected > " + Follower);
         if (this.isVisible()) {
             this.StartAudio();
             this.StartImage(Follower);

@@ -9,6 +9,8 @@ import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.Stores.CentralStore;
 import static beam.scottygui.Stores.CentralStore.ChatCache;
 import static beam.scottygui.Stores.CentralStore.UserName;
+import static beam.scottygui.Stores.CentralStore.chatArray;
+import static beam.scottygui.Stores.CentralStore.chatObject;
 import static beam.scottygui.Stores.CentralStore.cp;
 import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
@@ -34,7 +36,9 @@ public class ChatFormatter {
 
         JSONArray UserRoles = (JSONArray) msg.get("user_roles");
         List<String> Roles = new ArrayList();
-
+        if (!CentralStore.GUISettings.containsKey("showpurged")) {
+            CentralStore.GUISaveSettings("showpurged", "false");
+        }
         for (Object t : UserRoles) {
             Roles.add(t.toString().toUpperCase());
         }
@@ -66,6 +70,8 @@ public class ChatFormatter {
 
         String MSG = "";
         JSONArray msgdata = (JSONArray) msg.get("message");
+        String msgID = msg.get("id").toString();
+
         for (Object t : msgdata) {
             JSONObject obj = (JSONObject) t;
             //System.out.println(obj.toString());
@@ -94,7 +100,7 @@ public class ChatFormatter {
                 WooshMe = true;
             }
         }
-        String TestChat = "";
+        String chatPrep = "";
         if (WooshMe) {
             if (cp.WooshMeEnabled.isSelected()) {
                 new Thread("Sound Alert!") {
@@ -116,13 +122,39 @@ public class ChatFormatter {
                 }.start();
             }
 
-            TestChat = "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
-            ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
-
+            //TestChat = "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
+            //ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
+            chatPrep = "<b>" + username + "</b>" + "<font color=\"red\" size=\"5\">: " + MSG + "</font>";
         } else {
-            TestChat = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
-            ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
+            //TestChat = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
+            //ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
+            chatPrep = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
         }
+        chatArray.add(msgID);
+        JSONObject msgPrep = new JSONObject();
+        msgPrep.put("msg", chatPrep);
+        msgPrep.put("purged", false);
+        chatObject.put(msgID, msgPrep);
+        //System.err.println(chatObject.toJSONString());
+        ChatCache = "";
+        for (Object t : chatArray) {
+            String ID = t.toString();
+            JSONObject msgObj = (JSONObject) chatObject.get(ID);
+            //System.err.println(ID);
+            String msgTXT = msgObj.get("msg").toString();
+            if ((boolean) msgObj.get("purged")) {
+                if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
+                    msgTXT = "<strike>" + msgTXT + "</strike>";
+                    ChatCache = ChatCache + msgTXT + newline;
+                    System.err.println(msgObj.toJSONString());
+                }
+            } else {
+                ChatCache = ChatCache + msgTXT + newline;
+            }
+            //ChatCache = ChatCache + msgTXT + newline;
+            System.err.println(msgObj.toJSONString());
+        }
+        //System.err.println(ChatCache);
         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
         CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
 

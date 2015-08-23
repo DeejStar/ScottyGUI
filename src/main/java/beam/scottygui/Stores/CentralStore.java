@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 36;
+    public static Integer CurVer = 37;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -86,6 +87,45 @@ public class CentralStore {
     public static Runnable LiveLoad = null;
     public static Runnable FollowerQueue = null;
     public static Session llSocket = null;
+    public static JSONObject chatObject = new JSONObject();
+    public static JSONArray chatArray = new JSONArray();
+    public static JSONArray lastFollowed = new JSONArray();
+
+    public static void addFollowerToArray(String Username) {
+        if (lastFollowed.contains(Username)) {
+            return;
+        }
+        while (lastFollowed.size() > 4) {
+            lastFollowed.remove(0);
+        }
+        lastFollowed.add(0, Username);
+        try {
+            PrintWriter out = new PrintWriter("Last_5_Followers.txt");
+            String toPrint = "";
+            for (Object t : lastFollowed) {
+                String user = t.toString();
+                System.err.println(user);
+                if ("".equals(toPrint)) {
+                    toPrint = user;
+                } else {
+                    toPrint = toPrint + ", " + user;
+                }
+            }
+            System.err.println(toPrint);
+            out.print(toPrint);
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            PrintWriter out = new PrintWriter("Last_Follower.txt");
+            out.print(Username);
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public static AlertFrame getAlertFrame() {
         if (af == null) {
@@ -140,6 +180,23 @@ public class CentralStore {
             GUISettings.putAll((JSONObject) parser.parse(prop.getProperty("settings")));
         } catch (ParseException ex) {
             Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        File f = new File("Last_5_Followers.txt");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        File t = new File("Last_Follower.txt");
+        if (!t.exists()) {
+            try {
+                t.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

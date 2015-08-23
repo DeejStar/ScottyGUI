@@ -54,7 +54,7 @@ public class llEndPoint extends Endpoint {
         //System.err.println(Arrays.toString(Followers.toArray()));
         String toSub = this.subToEvents(ChanID);
 
-        System.err.println(toSub);
+        //System.err.println(toSub);
         session.getAsyncRemote().sendText(toSub);
         CentralStore.llSocket = session;
         session.addMessageHandler(new MessageHandler.Whole<String>() {
@@ -64,7 +64,7 @@ public class llEndPoint extends Endpoint {
                     //return;
                 }
                 message = message.replaceFirst("42", "");
-                System.err.println(message);
+                //System.err.println(message);
                 JSONArray input = new JSONArray();
                 try {
                     input.addAll((JSONArray) new JSONParser().parse(message));
@@ -100,6 +100,7 @@ public class llEndPoint extends Endpoint {
 
                     if (Followed && !followCache.contains(followerID)) {
                         System.err.println(ChanID + ":Follow detected from " + followerName);
+                        CentralStore.addFollowerToArray(followerName);
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
                     } else {

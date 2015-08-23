@@ -125,8 +125,6 @@ public class ChatPopOut extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(Viewers);
 
-        ChatSend.setBackground(java.awt.Color.white);
-        ChatSend.setForeground(java.awt.Color.black);
         ChatSend.setCaretColor(new java.awt.Color(255, 255, 255));
         ChatSend.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ChatSend.addActionListener(new java.awt.event.ActionListener() {
@@ -176,6 +174,7 @@ public class ChatPopOut extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
