@@ -71,7 +71,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 37;
+    public static Integer CurVer = 38;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -125,6 +125,7 @@ public class CentralStore {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
         }
+        CentralStore.GUISaveSettings("followerJSON", lastFollowed.toJSONString());
     }
 
     public static AlertFrame getAlertFrame() {
@@ -180,6 +181,13 @@ public class CentralStore {
             GUISettings.putAll((JSONObject) parser.parse(prop.getProperty("settings")));
         } catch (ParseException ex) {
             Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (GUISettings.containsKey("followerJSON")) {
+            try {
+                lastFollowed.addAll((JSONArray) new JSONParser().parse(GUISettings.get("followerJSON").toString()));
+            } catch (ParseException ex) {
+                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         File f = new File("Last_5_Followers.txt");
         if (!f.exists()) {

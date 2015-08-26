@@ -1366,6 +1366,14 @@ public final class ControlPanel extends javax.swing.JFrame {
         } else {
             this.WooshMeEnabled.setSelected(false);
         }
+        if (!CentralStore.GUISettings.containsKey("showpurged")) {
+            CentralStore.GUISaveSettings("showpurged", "false");
+        }
+        if ("false".equalsIgnoreCase(CentralStore.GUIGetSetting("showpurged"))) {
+            this.showPChat.setSelected(false);
+        } else {
+            this.showPChat.setSelected(true);
+        }
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
         try {
