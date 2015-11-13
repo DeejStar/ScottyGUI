@@ -13,6 +13,9 @@ import static beam.scottygui.Stores.CentralStore.chatArray;
 import static beam.scottygui.Stores.CentralStore.chatObject;
 import static beam.scottygui.Stores.CentralStore.cp;
 import beam.scottygui.Utils.HTTP;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.json.simple.JSONArray;
@@ -33,7 +37,6 @@ import org.json.simple.JSONObject;
 public class ChatFormatter {
 
     public static void FormatChat(JSONObject msg) {
-
         JSONArray UserRoles = (JSONArray) msg.get("user_roles");
         List<String> Roles = new ArrayList();
         if (!CentralStore.GUISettings.containsKey("showpurged")) {
@@ -45,7 +48,7 @@ public class ChatFormatter {
 
         String ranks = null;
         String username = null;
-
+        System.err.println(msg);
         for (String t : Roles) {
             if (ranks == null) {
                 ranks = t;
@@ -69,7 +72,9 @@ public class ChatFormatter {
         }
 
         String MSG = "";
-        JSONArray msgdata = (JSONArray) msg.get("message");
+        JSONObject msgdatapre = (JSONObject) msg.get("message");
+        JSONArray msgdata = (JSONArray) msgdatapre.get("message");
+        System.err.println(msgdata.toString());
         String msgID = msg.get("id").toString();
 
         for (Object t : msgdata) {
@@ -79,8 +84,43 @@ public class ChatFormatter {
             if ("TEXT".equals(type.toUpperCase())) {
                 MSG = MSG + " " + obj.get("data").toString();
             } else if ("EMOTICON".equalsIgnoreCase(type)) {
-                String imglink = "https://beam.pro/emoticons/" + obj.get("path") + ".png";
-                String ShowEmote = "<IMG SRC=\"" + imglink + "\" width=\"20\" height=\"20\" >";
+                String Pack = (String) obj.get("pack");
+                String imgURL = "https://beam.pro/_latest/emoticons/" + Pack + ".png";
+                JSONObject Coords = (JSONObject) obj.get("coords");
+                String text = obj.get("text").toString();
+                int X = Integer.parseInt(Coords.get("x").toString());
+                int Y = Integer.parseInt(Coords.get("y").toString());
+                BufferedImage Emote = null;
+                try {
+                    BufferedImage fullEmotes = null;
+                    if (CentralStore.EmoteMaps.containsKey(imgURL)) {
+                        fullEmotes = CentralStore.EmoteMaps.get(imgURL);
+                    } else {
+                        fullEmotes = ImageIO.read(new URL(imgURL));
+                        CentralStore.EmoteMaps.put(imgURL, fullEmotes);
+                    }
+                    Emote = fullEmotes.getSubimage(X, Y, 22, 22);
+                } catch (IOException ex) {
+                    Logger.getLogger(ChatFormatter.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                File temp;
+                String Path = null;
+                if (Emote != null) {
+                    if (!CentralStore.EmoticonPaths.containsKey(text)) {
+                        try {
+                            temp = File.createTempFile("emote", ".png");
+                            ImageIO.write(Emote, "PNG", new FileOutputStream(temp));
+                            Path = temp.getAbsolutePath();
+                            CentralStore.EmoticonPaths.put(text, Path);
+                            //System.err.println(Path);
+                        } catch (IOException ex) {
+                            Logger.getLogger(ChatFormatter.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        Path = CentralStore.EmoticonPaths.get(text);
+                    }
+                }
+                String ShowEmote = "<IMG SRC=file:///" + Path.replaceAll("\"", "/") + " width=\"20\" height=\"20\" >";
                 //System.out.println(ShowEmote);
                 MSG = MSG + ShowEmote;
             } else {

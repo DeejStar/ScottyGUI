@@ -225,6 +225,7 @@ public class HTTP {
 
     public String GetScotty(String urlString) {
         String dataIn = "";
+        System.err.println(urlString);
         int TimesToTry = 0;
         while (TimesToTry < 10) {
             try {

@@ -26,7 +26,6 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -81,18 +80,17 @@ public class EndPoint extends Endpoint {
                     Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 JSONObject data = null;
-                String EventType = msg.get("event").toString();
-                switch (EventType.toUpperCase()) {
+                String EventType = msg.get("event").toString().toUpperCase();
+                System.err.println(EventType);
+                switch (EventType) {
                     case "STATS":
                         break;
-
                     case "CHATMESSAGE":
                         MsgCounter++;
+                        JSONObject ChatMessage = (JSONObject) msg.get("data");
                         cp.SessionMsgCount.setText(MsgCounter.toString() + " messages this session.");
-                        data = (JSONObject) msg.get("data");
-                        String userid = data.get("user_id").toString();
-                        String username = data.get("user_name").toString();
-                        JSONArray msgdata = (JSONArray) data.get("message");
+                        String userid = ChatMessage.get("user_id").toString();
+                        String username = ChatMessage.get("user_name").toString();
 
                         if (!ChatUserList.contains(username)) {
                             ChatUserList.add(username);
@@ -103,7 +101,7 @@ public class EndPoint extends Endpoint {
                             cp.UChatters.setText(UniqueChatters.size() + " Unique Chatters This Session.");
                         }
 
-                        ChatFormatter.FormatChat(data);
+                        ChatFormatter.FormatChat(ChatMessage);
                         break;
                     case "USERJOIN":
                         data = (JSONObject) msg.get("data");

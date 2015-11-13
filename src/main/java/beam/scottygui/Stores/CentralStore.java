@@ -14,6 +14,7 @@ import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
 import beam.scottygui.websocket.EndPoint;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,7 +72,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 38;
+    public static Integer CurVer = 39;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -90,6 +91,8 @@ public class CentralStore {
     public static JSONObject chatObject = new JSONObject();
     public static JSONArray chatArray = new JSONArray();
     public static JSONArray lastFollowed = new JSONArray();
+    public static Map<String, BufferedImage> EmoteMaps = new ConcurrentHashMap();
+    public static Map<String, String> EmoticonPaths = new ConcurrentHashMap();
 
     public static void addFollowerToArray(String Username) {
         if (lastFollowed.contains(Username)) {
