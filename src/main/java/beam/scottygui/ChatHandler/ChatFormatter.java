@@ -68,7 +68,7 @@ public class ChatFormatter {
         } else if (Roles.contains("PREMIUM")) {
             username = "<font color=\"purple\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
         } else if (Roles.contains("USER")) {
-            username = "<font color=\"blue\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            username = "<font color=\"#2E64FE\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
         }
 
         String MSG = "";
