@@ -70,6 +70,9 @@ public class ChatFormatter {
         } else if (Roles.contains("USER")) {
             username = "<font color=\"#2E64FE\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
         }
+        if (Roles.contains("SUB")) {
+            username = "(S)" + username;
+        }
 
         String MSG = "";
         JSONObject msgdatapre = (JSONObject) msg.get("message");
