@@ -2101,10 +2101,12 @@ public final class ControlPanel extends javax.swing.JFrame {
                     http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
                 }
             } else {
+                http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
                 JOptionPane.showMessageDialog(rootPane, "Please set Twitter Auth Settings before enabling this.");
                 this.AutoTweet.setSelected(false);
             }
         } catch (Exception e) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
             JOptionPane.showMessageDialog(rootPane, "Errored talking to API, try again in a few minutes.");
             this.AutoTweet.setSelected(false);
             return;

@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>run</actionName>
-            <goals>
-                <goal>clean</goal>
-                <goal>package</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <runfx.args>-jar "${project.build.directory}/${project.build.finalName}.jar"</runfx.args>
-            </properties>
-        </action>
-        <action>
             <actionName>debug</actionName>
             <goals>
                 <goal>clean</goal>
@@ -32,11 +21,14 @@
             <goals>
                 <goal>process-classes</goal>
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+                
             </goals>
             <properties>
                 <exec.args>-classpath %classpath ${packageClassName}</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                
+                
             </properties>
         </action>
         <action>
@@ -47,6 +39,7 @@
             </packagings>
             <goals>
                 <goal>install</goal>
+                
             </goals>
         </action>
         <action>
@@ -58,5 +51,23 @@
             <goals>
                 <goal>test</goal>
             </goals>
-        </action>        
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <preAction>build-with-dependencies</preAction>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                <exec.executable>java</exec.executable>
+                <Env.JAVA_HOME>C:\Program Files\Java\jdk1.7.0_79</Env.JAVA_HOME>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
+                
     </actions>
