@@ -46,7 +46,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CentralStore {
 
-    public static Integer CurVer = 42;
+    public static Integer CurVer = 43;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -238,7 +238,9 @@ public class CentralStore {
         if (ChanSettings.size() > 0) {
             ChanSettings.clear();
         }
-        ChanSettings.putAll((JSONObject) parser.parse(http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey)));
+        String toParse = http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey);
+        System.err.println(toParse);
+        ChanSettings.putAll((JSONObject) parser.parse(toParse));
         //System.out.println(ChanSettings.toString());
     }
 

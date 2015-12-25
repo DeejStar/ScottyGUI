@@ -443,6 +443,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         RouletteEnable = new javax.swing.JCheckBox();
         jLabel17 = new javax.swing.JLabel();
+        PSubPoints = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
         SettingsPanel = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         FollowSoundSet = new javax.swing.JButton();
@@ -454,28 +456,33 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         WooshMeEnabled = new javax.swing.JCheckBox();
+        showPChat = new javax.swing.JCheckBox();
         jPanel10 = new javax.swing.JPanel();
         FollowEnabled = new javax.swing.JCheckBox();
         EFollowMsg = new javax.swing.JButton();
         OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
         ClearCmdsEnabled = new javax.swing.JCheckBox();
+        PSubAlert = new javax.swing.JCheckBox();
         MeOutput = new javax.swing.JCheckBox();
+        ESubMessage = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        TwitterAlertMSG = new javax.swing.JButton();
+        AutoTweet = new javax.swing.JCheckBox();
+        JoinAnnounce = new javax.swing.JCheckBox();
+        LeaveAnnounce = new javax.swing.JCheckBox();
+        LinkTitle = new javax.swing.JCheckBox();
         CUsernamePassword = new javax.swing.JButton();
         ResetScottyName = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
         StoredAuthKey = new javax.swing.JTextField();
         ShowStoredKey = new javax.swing.JButton();
         GenNewStoredKey = new javax.swing.JButton();
-        jLayeredPane2 = new javax.swing.JLayeredPane();
-        jLabel19 = new javax.swing.JLabel();
-        showPChat = new javax.swing.JCheckBox();
         jLabel18 = new javax.swing.JLabel();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
         ChatEnabled = new javax.swing.JCheckBox();
         ChuckEnabled = new javax.swing.JCheckBox();
-        PNotes = new javax.swing.JButton();
+        LeetSpeek = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
@@ -497,6 +504,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
+        PNotes = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -546,7 +554,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 10, 100, -1));
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, 100, -1));
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -865,11 +873,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PWhenIdleActionPerformed(evt);
             }
         });
-        PSettings.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 142, 102, -1));
+        PSettings.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 102, -1));
 
         PStartPoints.setEditable(false);
         PStartPoints.setText("jTextField3");
-        PSettings.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(467, 142, 70, -1));
+        PSettings.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 140, 70, -1));
 
         BHEnabled.setText("BankHeist Enabled");
         BHEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -891,10 +899,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         PSettings.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, -1, -1));
 
         jLabel10.setText("Points When Not Live");
-        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, -1, -1));
+        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
 
         jLabel11.setText("Starting Points");
-        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 120, -1, -1));
+        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 120, -1, -1));
 
         RouletteEnable.setText("Roulette Enabled");
         RouletteEnable.addActionListener(new java.awt.event.ActionListener() {
@@ -904,8 +912,15 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         PSettings.add(RouletteEnable, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
 
-        jLabel17.setText("All per 15 minutes!");
-        PSettings.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 120, -1, -1));
+        jLabel17.setText("Points tick every 15 minutes");
+        PSettings.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 140, 20));
+
+        PSubPoints.setEditable(false);
+        PSubPoints.setText("jTextField3");
+        PSettings.add(PSubPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, 70, -1));
+
+        jLabel20.setText("Sub Bonus Points");
+        PSettings.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, -1, -1));
 
         jPanel5.add(PSettings, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
@@ -973,9 +988,17 @@ public final class ControlPanel extends javax.swing.JFrame {
                 WooshMeEnabledActionPerformed(evt);
             }
         });
-        jPanel6.add(WooshMeEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 28, -1, -1));
+        jPanel6.add(WooshMeEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
-        SettingsPanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, 180, 60));
+        showPChat.setText("Show Deleted Chat");
+        showPChat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPChatActionPerformed(evt);
+            }
+        });
+        jPanel6.add(showPChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+
+        SettingsPanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 280, 150, 80));
 
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -993,7 +1016,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EFollowMsgActionPerformed(evt);
             }
         });
-        jPanel10.add(EFollowMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, -1, -1));
+        jPanel10.add(EFollowMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
         OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
         OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
@@ -1013,15 +1036,79 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jPanel10.add(ClearCmdsEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, -1));
 
+        PSubAlert.setText("Enable Subscriber Alert");
+        PSubAlert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PSubAlertActionPerformed(evt);
+            }
+        });
+        jPanel10.add(PSubAlert, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 10, -1, -1));
+
         MeOutput.setText("Set /me Bot Output");
         MeOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MeOutputActionPerformed(evt);
             }
         });
-        jPanel10.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, -1, -1));
+        jPanel10.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 10, -1, -1));
 
-        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 100));
+        ESubMessage.setText("Edit New Subscriber Message");
+        ESubMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ESubMessageActionPerformed(evt);
+            }
+        });
+        jPanel10.add(ESubMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 220, -1, -1));
+
+        jButton7.setText("Set Twitter Auth Info");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel10.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, -1, -1));
+
+        TwitterAlertMSG.setText("Edit Auto Tweet Message");
+        TwitterAlertMSG.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TwitterAlertMSGActionPerformed(evt);
+            }
+        });
+        jPanel10.add(TwitterAlertMSG, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 220, -1, -1));
+
+        AutoTweet.setText("Enable Auto Tweet");
+        AutoTweet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AutoTweetActionPerformed(evt);
+            }
+        });
+        jPanel10.add(AutoTweet, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 10, -1, -1));
+
+        JoinAnnounce.setText("Enable User Join Announce");
+        JoinAnnounce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JoinAnnounceActionPerformed(evt);
+            }
+        });
+        jPanel10.add(JoinAnnounce, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 200, -1, -1));
+
+        LeaveAnnounce.setText("Enable User Join Announce");
+        LeaveAnnounce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeaveAnnounceActionPerformed(evt);
+            }
+        });
+        jPanel10.add(LeaveAnnounce, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 230, -1, -1));
+
+        LinkTitle.setText("Enable Link Title Showing");
+        LinkTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LinkTitleActionPerformed(evt);
+            }
+        });
+        jPanel10.add(LinkTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, -1, -1));
+
+        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 260));
 
         CUsernamePassword.setText("Set Custom Bot Username/Password");
         CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
@@ -1039,17 +1126,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         SettingsPanel.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 450, 210, -1));
 
-        jButton7.setText("Set Twitter Auth Info");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
-
         StoredAuthKey.setEditable(false);
         StoredAuthKey.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        SettingsPanel.add(StoredAuthKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 140, 300, -1));
+        SettingsPanel.add(StoredAuthKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 420, 300, -1));
 
         ShowStoredKey.setText("Show Key");
         ShowStoredKey.addActionListener(new java.awt.event.ActionListener() {
@@ -1057,7 +1136,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ShowStoredKeyActionPerformed(evt);
             }
         });
-        SettingsPanel.add(ShowStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 180, -1, -1));
+        SettingsPanel.add(ShowStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 450, -1, -1));
 
         GenNewStoredKey.setText("Generate New Key");
         GenNewStoredKey.addActionListener(new java.awt.event.ActionListener() {
@@ -1065,48 +1144,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                 GenNewStoredKeyActionPerformed(evt);
             }
         });
-        SettingsPanel.add(GenNewStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 180, -1, -1));
-
-        jLayeredPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel19.setText("Chat Options");
-
-        showPChat.setText("Show Deleted Chat");
-        showPChat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPChatActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
-        jLayeredPane2.setLayout(jLayeredPane2Layout);
-        jLayeredPane2Layout.setHorizontalGroup(
-            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(showPChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(25, 25, 25))
-        );
-        jLayeredPane2Layout.setVerticalGroup(
-            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(showPChat)
-                .addGap(0, 4, Short.MAX_VALUE))
-        );
-        jLayeredPane2.setLayer(jLabel19, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(showPChat, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        SettingsPanel.add(jLayeredPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, 50));
+        SettingsPanel.add(GenNewStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 450, -1, -1));
 
         jLabel18.setText("Stored Auth Key (Usable and static)");
-        SettingsPanel.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 120, -1, -1));
+        SettingsPanel.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, -1, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1141,19 +1182,20 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         DonationPane.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
+        LeetSpeek.setText("L33t Enabled");
+        LeetSpeek.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
+        LeetSpeek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeetSpeekActionPerformed(evt);
+            }
+        });
+        DonationPane.add(LeetSpeek, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
+
         DonatorPanel.add(DonationPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
 
         settingsTabs.addTab("Donator Stuff", DonatorPanel);
 
         jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 17, -1, 520));
-
-        PNotes.setText("Patch Notes");
-        PNotes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PNotesActionPerformed(evt);
-            }
-        });
-        jPanel4.add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 0, -1, -1));
 
         whitelistPane.addTab("Settings", jPanel4);
 
@@ -1312,7 +1354,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AlertPaneOpenActionPerformed(evt);
             }
         });
-        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 128, -1));
+        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, 128, -1));
 
         RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1320,7 +1362,15 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RefreshAllActionPerformed(evt);
             }
         });
-        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 10, 160, -1));
+        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 10, 160, -1));
+
+        PNotes.setText("Patch Notes");
+        PNotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PNotesActionPerformed(evt);
+            }
+        });
+        getContentPane().add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -1447,13 +1497,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ChuckEnabledActionPerformed
 
-    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
-        if (this.MeOutput.isSelected()) {
-            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
+    private void PSubAlertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PSubAlertActionPerformed
+        if (this.PSubAlert.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 1);
         } else {
-            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 0);
         }
-    }//GEN-LAST:event_MeOutputActionPerformed
+    }//GEN-LAST:event_PSubAlertActionPerformed
 
     private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
         if (this.ClearCmdsEnabled.isSelected()) {
@@ -1527,10 +1577,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             String idle = this.PWhenIdle.getText();
             String notidle = this.PWhenLive.getText();
             String StartPoints = this.PStartPoints.getText();
+            String SubBonus = this.PSubPoints.getText();
             try {
                 Integer.parseInt(idle);
                 Integer.parseInt(notidle);
                 Integer.parseInt(StartPoints);
+                Integer.parseInt(SubBonus);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
                 return;
@@ -1539,10 +1591,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PWhenIdle.setEditable(false);
             this.PWhenLive.setEditable(false);
             this.PStartPoints.setEditable(false);
+            this.PSubPoints.setEditable(false);
             try {
                 http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
                 http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
                 http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
+                http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=subbonus&value=" + URLEncoder.encode(SubBonus, "UTF-8"));
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1552,6 +1606,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PWhenIdle.setEditable(true);
             this.PWhenLive.setEditable(true);
             this.PStartPoints.setEditable(true);
+            this.PSubPoints.setEditable(true);
         }
     }//GEN-LAST:event_EditPointsActionPerformed
 
@@ -1968,6 +2023,128 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showPChatActionPerformed
 
+    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
+        if (this.MeOutput.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
+        }
+    }//GEN-LAST:event_MeOutputActionPerformed
+
+    private void ESubMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ESubMessageActionPerformed
+        String OldSubMSG = GetSettings().get("subMsg").toString();
+        String NewSubMSG = JOptionPane.showInputDialog(rootPane, "Set your SubAlert message. Use \"(_user_)\" as a placeholder for the SubScriber.", OldSubMSG);
+        try {
+            if (!NewSubMSG.equals(OldSubMSG)) {
+                try {
+                    http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=subMSG&value=" + URLEncoder.encode(NewSubMSG, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (Exception e) {
+            //cop out
+        }
+        try {
+            RefreshAllSettings();
+            this.PopulateAllSettings();
+        } catch (Exception ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_ESubMessageActionPerformed
+
+    private void TwitterAlertMSGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TwitterAlertMSGActionPerformed
+        String OldSubMSG = GetSettings().get("AutoTweetMsg").toString();
+        String NewSubMSG = JOptionPane.showInputDialog(rootPane, "Set your Auto-Tweet message. Use \"(_status_)\" as a placeholder for the stream title.", OldSubMSG);
+        try {
+            if (!NewSubMSG.equals(OldSubMSG)) {
+                try {
+                    http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=AutoTweetMsg&value=" + URLEncoder.encode(NewSubMSG, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (Exception e) {
+            //cop out
+        }
+        try {
+            RefreshAllSettings();
+            this.PopulateAllSettings();
+        } catch (Exception ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }        // TODO add your handling code here:        // TODO add your handling code here:
+    }//GEN-LAST:event_TwitterAlertMSGActionPerformed
+
+    private void AutoTweetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoTweetActionPerformed
+        try {
+            String toSend = "https://api.scottybot.net/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
+            System.err.println(toSend);
+            String CKey = null;
+            String CSecret = null;
+            String AToken = null;
+            String ATokenSecret = null;
+            String toParse = new HTTP().GetScotty(toSend);
+            JSONObject toCheck = new JSONObject();
+            toCheck.putAll((JSONObject) new JSONParser().parse(toParse));
+            try {
+                CKey = (String) toCheck.get("CKey");
+                CSecret = (String) toCheck.get("CSecret");
+                AToken = (String) toCheck.get("AToken");
+                ATokenSecret = (String) toCheck.get("ATokenSecret");
+            } catch (Exception throwaway) {
+
+            }
+            if (!CKey.isEmpty() && !CSecret.isEmpty() && !AToken.isEmpty() && !ATokenSecret.isEmpty()) {
+                if (this.AutoTweet.isSelected()) {
+                    http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=1");
+                } else {
+                    http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Please set Twitter Auth Settings before enabling this.");
+                this.AutoTweet.setSelected(false);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Errored talking to API, try again in a few minutes.");
+            this.AutoTweet.setSelected(false);
+            return;
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AutoTweetActionPerformed
+
+    private void JoinAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JoinAnnounceActionPerformed
+        if (this.JoinAnnounce.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=0");
+        }
+    }//GEN-LAST:event_JoinAnnounceActionPerformed
+
+    private void LeaveAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveAnnounceActionPerformed
+        if (this.LeaveAnnounce.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=0");
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_LeaveAnnounceActionPerformed
+
+    private void LeetSpeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeetSpeekActionPerformed
+        if (this.LeetSpeek.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseLeet&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=UseLeet&value=0");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_LeetSpeekActionPerformed
+
+    private void LinkTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinkTitleActionPerformed
+        if (this.LinkTitle.isSelected()) {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useurl&value=1");
+        } else {
+            http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useurl&value=0");
+        }
+    }//GEN-LAST:event_LinkTitleActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2032,6 +2209,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.PWhenLive.setText(GetSettings().get("notidlepoints").toString());
         this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
         this.PStartPoints.setText(GetSettings().get("startpoints").toString());
+        this.PSubPoints.setText(GetSettings().get("subbonus").toString());
 
         if ("1".equals(GetSettings().get("UseBankheist"))) {
             this.BHEnabled.setSelected(true);
@@ -2074,7 +2252,12 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.ClearCmdsEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseME"))) {
+        if ("1".equals(GetSettings().get("subalert"))) {
+            this.PSubAlert.setSelected(true);
+        } else {
+            this.PSubAlert.setSelected(false);
+        }
+        if ("1".equals(GetSettings().get("useme"))) {
             this.MeOutput.setSelected(true);
         } else {
             this.MeOutput.setSelected(false);
@@ -2107,10 +2290,37 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.ChatEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseYoda"))) {
-            this.YodaEnabled.setSelected(true);
+        if ("1".equals(GetSettings().get("UseLeet"))) {
+            this.LeetSpeek.setSelected(true);
         } else {
-            this.YodaEnabled.setSelected(false);
+            this.LeetSpeek.setSelected(false);
+        }
+
+        if ("1".equals(GetSettings().get("useurl"))) {
+            this.LinkTitle.setSelected(true);
+        } else {
+            this.LinkTitle.setSelected(false);
+        }
+        if ("1".equals(GetSettings().get("useAutoTweet"))) {
+            this.AutoTweet.setSelected(true);
+        } else {
+            this.AutoTweet.setSelected(false);
+        }
+
+        if ("1".equals(GetSettings().get("subalert"))) {
+            this.PSubAlert.setSelected(true);
+        } else {
+            this.PSubAlert.setSelected(false);
+        }
+        if ("1".equals(GetSettings().get("joinAnnounce"))) {
+            this.JoinAnnounce.setSelected(true);
+        } else {
+            this.JoinAnnounce.setSelected(false);
+        }
+        if ("1".equals(GetSettings().get("leaveAnnounce"))) {
+            this.LeaveAnnounce.setSelected(true);
+        } else {
+            this.LeaveAnnounce.setSelected(false);
         }
 
         if (this.PEnabled.isSelected()) {
@@ -2263,6 +2473,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddBadWord;
     private javax.swing.JButton AlertPaneOpen;
+    private javax.swing.JCheckBox AutoTweet;
     private javax.swing.JCheckBox BHEnabled;
     private javax.swing.JList BadWordList;
     private javax.swing.JButton CUsernamePassword;
@@ -2279,6 +2490,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel DonationPane;
     private javax.swing.JPanel DonatorPanel;
     private javax.swing.JButton EFollowMsg;
+    private javax.swing.JButton ESubMessage;
     private javax.swing.JButton EditPoints;
     private javax.swing.JToggleButton FOnOff;
     private javax.swing.JCheckBox FollowEnabled;
@@ -2286,6 +2498,10 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton FollowSoundSet;
     private javax.swing.JButton FollowerMSGFont;
     private javax.swing.JButton GenNewStoredKey;
+    private javax.swing.JCheckBox JoinAnnounce;
+    private javax.swing.JCheckBox LeaveAnnounce;
+    private javax.swing.JCheckBox LeetSpeek;
+    private javax.swing.JCheckBox LinkTitle;
     private javax.swing.JToggleButton LinksOnOff;
     private javax.swing.JCheckBox MeOutput;
     private javax.swing.JLabel NumOfQuotes;
@@ -2295,6 +2511,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton PRenBut;
     private javax.swing.JPanel PSettings;
     private javax.swing.JTextField PStartPoints;
+    private javax.swing.JCheckBox PSubAlert;
+    private javax.swing.JTextField PSubPoints;
     private javax.swing.JTextField PWhenIdle;
     private javax.swing.JTextField PWhenLive;
     public javax.swing.JLabel PercentRetainedViewers;
@@ -2321,6 +2539,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel TimeoutLabel;
     private javax.swing.JSlider TimoutDuration;
     public javax.swing.JLabel TopViewers;
+    private javax.swing.JButton TwitterAlertMSG;
     public javax.swing.JLabel UChatters;
     public javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
@@ -2347,8 +2566,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2357,7 +2576,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;

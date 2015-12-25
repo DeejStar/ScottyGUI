@@ -195,7 +195,7 @@ public class Login extends javax.swing.JFrame {
             JSONObject ChanObj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + Username));
             ChanID = Long.parseLong(ChanObj.get("id").toString());
 
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(rootPane, "Login failed or Scottybot not in channel.");
             return;
