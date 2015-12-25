@@ -105,8 +105,7 @@ public class HTTP {
         urlParameters.add(new BasicNameValuePair("password", Password));
         urlParameters.add(new BasicNameValuePair("code", Code));
         HttpPost request = new HttpPost(url);
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-
+        request.setEntity(new UrlEncodedFormEntity(urlParameters, "UTF-8"));
         HttpResponse response = client.execute(request, context);
         String dataIn = null;
         try {

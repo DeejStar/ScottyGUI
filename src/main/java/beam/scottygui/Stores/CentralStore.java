@@ -46,6 +46,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CentralStore {
 
+    public static Integer CurVer = 42;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -72,7 +73,6 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
-    public static Integer CurVer = 40;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";

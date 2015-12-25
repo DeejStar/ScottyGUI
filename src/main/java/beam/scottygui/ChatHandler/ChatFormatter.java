@@ -70,7 +70,7 @@ public class ChatFormatter {
         } else if (Roles.contains("USER")) {
             username = "<font color=\"#2E64FE\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
         }
-        if (Roles.contains("SUB")) {
+        if (Roles.contains("SUBSCRIBER")) {
             username = "(S)" + username;
         }
 
