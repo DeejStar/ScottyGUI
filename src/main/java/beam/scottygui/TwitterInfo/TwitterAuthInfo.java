@@ -31,7 +31,7 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
         String authinfo = "";
         try {
             String toSend = "https://api.scottybot.net/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
-            System.err.println(toSend);
+            //System.err.println(toSend);
             authinfo = new HTTP().GetScotty(toSend);
 
         } catch (UnsupportedEncodingException ex) {
@@ -143,25 +143,25 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "1 or more fields are incorrect.");
             return;
         }
-        System.err.println("Got here 1");
+        //System.err.println("Got here 1");
 
         JSONObject AuthInfo = new JSONObject();
-        System.err.println("Got here 2");
+        //System.err.println("Got here 2");
         try {
             String ckey = CKey.getText().trim();
             String csecret = CSecret.getText().trim();
             String atoken = AToken.getText().trim();
             String atokensecret = ATokenSecret.getText().trim();
-            System.err.println("Got here 3");
+            //System.err.println("Got here 3");
             AuthInfo.put("ckey", ckey);
             AuthInfo.put("csecret", csecret);
             AuthInfo.put("atoken", atoken);
             AuthInfo.put("atokensecret", atokensecret);
-            System.err.println("Got here 4");
+            //System.err.println("Got here 4");
         } catch (Exception e) {
-            System.err.println(e);
+            //System.err.println(e);
         }
-        System.err.println("Got here 5");
+        //System.err.println("Got here 5");
         try {
             String ToSend = "https://api.scottybot.net/twitterauth/add?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&twitterauth=" + URLEncoder.encode(AuthInfo.toString(), "UTF-8");
             new HTTP().GetScotty(ToSend);
@@ -169,7 +169,7 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(TwitterAuthInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.err.println("Got here 6");
+        //System.err.println("Got here 6");
         this.dispose();
 
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -37,6 +37,8 @@ import org.json.simple.JSONObject;
 public class ChatFormatter {
 
     public static void FormatChat(JSONObject msg) {
+        boolean Whisper = false;
+        //System.out.println(msg);
         JSONArray UserRoles = (JSONArray) msg.get("user_roles");
         List<String> Roles = new ArrayList();
         if (!CentralStore.GUISettings.containsKey("showpurged")) {
@@ -48,7 +50,7 @@ public class ChatFormatter {
 
         String ranks = null;
         String username = null;
-        System.err.println(msg);
+        ////System.err.println(msg);
         for (String t : Roles) {
             if (ranks == null) {
                 ranks = t;
@@ -57,27 +59,48 @@ public class ChatFormatter {
             }
         }
 
+        String fontcolor = "";
+        String WhisperMSG = "";
         if (Roles.contains("OWNER")) {
             username = "<font color=\"white\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "white";
         } else if (Roles.contains("ADMIN")) {
             username = "<font color=\"red\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "red";
         } else if (Roles.contains("DEVELOPER")) {
             username = "<font color=\"yellow\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "yellow";
         } else if (Roles.contains("MOD")) {
             username = "<font color=\"green\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "green";
         } else if (Roles.contains("PREMIUM")) {
             username = "<font color=\"purple\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "purple";
         } else if (Roles.contains("USER")) {
             username = "<font color=\"#2E64FE\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "#2E64FE";
         }
         if (Roles.contains("SUBSCRIBER")) {
-            username = "(S)" + username;
+            username = username + " <IMG SRC=" + CentralStore.SubBadge + ">";
         }
 
         String MSG = "";
         JSONObject msgdatapre = (JSONObject) msg.get("message");
         JSONArray msgdata = (JSONArray) msgdatapre.get("message");
-        System.err.println(msgdata.toString());
+        System.out.println(msgdatapre);
+        if (msgdatapre.containsKey("meta")) {
+            JSONObject meta = (JSONObject) msgdatapre.get("meta");
+            if (meta.containsKey("whisper")) {
+                Whisper = (boolean) meta.get("whisper");
+            } else {
+                Whisper = false;
+            }
+        }
+        if (Whisper) {
+            WhisperMSG = "<font color=\"" + fontcolor + "\" size=\"5\">Whisper from </font>";
+        }
+        System.out.println("WHISPER : " + Whisper);
+        ////System.err.println(msgdata.toString());
         String msgID = msg.get("id").toString();
 
         for (Object t : msgdata) {
@@ -115,7 +138,7 @@ public class ChatFormatter {
                             ImageIO.write(Emote, "PNG", new FileOutputStream(temp));
                             Path = temp.getAbsolutePath();
                             CentralStore.EmoticonPaths.put(text, Path);
-                            //System.err.println(Path);
+                            ////System.err.println(Path);
                         } catch (IOException ex) {
                             Logger.getLogger(ChatFormatter.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -173,31 +196,40 @@ public class ChatFormatter {
             //ChatCache = ChatCache + newline + "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
             chatPrep = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
         }
+        chatPrep = WhisperMSG + chatPrep;
+        System.out.println(chatPrep);
+        String toRem = "";
+        while (chatArray.size() > 100) {
+            toRem = (String) chatArray.get(0);
+            chatArray.remove(0);
+            chatObject.remove(toRem);
+        }
         chatArray.add(msgID);
         JSONObject msgPrep = new JSONObject();
         msgPrep.put("msg", chatPrep);
         msgPrep.put("purged", false);
         chatObject.put(msgID, msgPrep);
-        //System.err.println(chatObject.toJSONString());
+        ////System.err.println(chatObject.toJSONString());
         ChatCache = "";
         for (Object t : chatArray) {
             String ID = t.toString();
             JSONObject msgObj = (JSONObject) chatObject.get(ID);
-            //System.err.println(ID);
+            ////System.err.println(ID);
             String msgTXT = msgObj.get("msg").toString();
+
             if ((boolean) msgObj.get("purged")) {
                 if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
                     msgTXT = "<strike>" + msgTXT + "</strike>";
                     ChatCache = ChatCache + msgTXT + newline;
-                    System.err.println(msgObj.toJSONString());
+                    //System.err.println(msgObj.toJSONString());
                 }
             } else {
                 ChatCache = ChatCache + msgTXT + newline;
             }
             //ChatCache = ChatCache + msgTXT + newline;
-            System.err.println(msgObj.toJSONString());
+            ////System.err.println(msgObj.toJSONString());
         }
-        //System.err.println(ChatCache);
+        ////System.err.println(ChatCache);
         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
         CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
 

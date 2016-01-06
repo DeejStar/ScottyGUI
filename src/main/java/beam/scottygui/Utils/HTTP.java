@@ -97,7 +97,7 @@ public class HTTP {
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
 
         String url = "https://beam.pro/api/v1/users/login";
-
+        JSONObject Error = new JSONObject();
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpClientContext context = HttpClientContext.create();
         List<NameValuePair> urlParameters = new ArrayList();
@@ -124,11 +124,24 @@ public class HTTP {
             }
             dataIn = result.toString();
             //System.err.println(dataIn);
+            //System.err.println(response.getStatusLine().getStatusCode() + ":" + response.getStatusLine().getReasonPhrase());
+            if (response.getStatusLine().getStatusCode() != 200) {
+
+                try {
+                    Error.putAll((JSONObject) new JSONParser().parse(dataIn));
+                } catch (Exception blah) {
+                }
+            }
+////System.err.println(dataIn);
         } finally {
             client.close();
         }
 
-        return dataIn;
+        if (Error.isEmpty()) {
+            return dataIn;
+        } else {
+            return Error.toString();
+        }
 
     }
 
@@ -224,7 +237,7 @@ public class HTTP {
 
     public String GetScotty(String urlString) {
         String dataIn = "";
-        System.err.println(urlString);
+        //System.err.println(urlString);
         int TimesToTry = 0;
         while (TimesToTry < 10) {
             try {
@@ -330,7 +343,7 @@ public class HTTP {
                         dataIn += inputLine;
                     }
                 }
-                //System.err.println(urlString + " >>>>> " + dataIn);
+                ////System.err.println(urlString + " >>>>> " + dataIn);
                 break;
             } catch (IOException | OutOfMemoryError ex) {
                 TimesToTry++;

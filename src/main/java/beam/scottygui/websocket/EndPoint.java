@@ -81,7 +81,7 @@ public class EndPoint extends Endpoint {
                 }
                 JSONObject data = null;
                 String EventType = msg.get("event").toString().toUpperCase();
-                System.err.println(EventType);
+                //System.err.println(EventType);
                 switch (EventType) {
                     case "STATS":
                         break;
@@ -129,24 +129,24 @@ public class EndPoint extends Endpoint {
                         for (Object t : chatArray) {
                             String msgID = t.toString();
                             JSONObject msgObj = (JSONObject) chatObject.get(msgID);
-                            //System.err.println(ID);
+                            ////System.err.println(ID);
                             String msgTXT = msgObj.get("msg").toString();
                             if ((boolean) msgObj.get("purged")) {
                                 if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
                                     msgTXT = "<strike>" + msgTXT + "</strike>";
                                     ChatCache = ChatCache + msgTXT + newline;
-                                    System.err.println(msgObj.toJSONString());
+                                    //System.err.println(msgObj.toJSONString());
                                 }
                             } else {
                                 ChatCache = ChatCache + msgTXT + newline;
                             }
-                            System.err.println(msgObj.toJSONString());
+                            //System.err.println(msgObj.toJSONString());
                         }
                         CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
                         CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
                         //CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
                         //CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
-                        System.err.println(chatObject.toJSONString());
+                        //System.err.println(chatObject.toJSONString());
                         break;
                 }
 

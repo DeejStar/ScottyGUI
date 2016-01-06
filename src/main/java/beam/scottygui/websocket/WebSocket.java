@@ -145,7 +145,7 @@ public class WebSocket {
                 endpoint.ChanID = chanid;
                 Connectable.asyncConnectToServer(endpoint, cec, EndPoint);
             } catch (Exception e) {
-                System.err.println("Interuppted");
+                //System.err.println("Interuppted");
             }
         }
     }
@@ -214,7 +214,7 @@ public class WebSocket {
                         cp.PercentRetainedViewers.setText(Math.round(Retained) + "% retained viewership");
                     }
                 } catch (Exception e) {
-                    //System.err.println(e);
+                    ////System.err.println(e);
                 }
                 try {
                     Thread.sleep(30 * 1000);

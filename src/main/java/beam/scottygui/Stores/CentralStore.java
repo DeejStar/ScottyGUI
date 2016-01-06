@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.websocket.Endpoint;
 import javax.websocket.Session;
 import org.apache.http.client.CookieStore;
@@ -46,7 +48,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CentralStore {
 
-    public static Integer CurVer = 43;
+    public static Integer CurVer = 45;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -93,6 +95,7 @@ public class CentralStore {
     public static JSONArray lastFollowed = new JSONArray();
     public static Map<String, BufferedImage> EmoteMaps = new ConcurrentHashMap();
     public static Map<String, String> EmoticonPaths = new ConcurrentHashMap();
+    public static String SubBadge = "";
 
     public static void addFollowerToArray(String Username) {
         if (lastFollowed.contains(Username)) {
@@ -107,14 +110,14 @@ public class CentralStore {
             String toPrint = "";
             for (Object t : lastFollowed) {
                 String user = t.toString();
-                System.err.println(user);
+                //System.err.println(user);
                 if ("".equals(toPrint)) {
                     toPrint = user;
                 } else {
                     toPrint = toPrint + ", " + user;
                 }
             }
-            System.err.println(toPrint);
+            //System.err.println(toPrint);
             out.print(toPrint);
             out.close();
         } catch (FileNotFoundException ex) {
@@ -239,20 +242,50 @@ public class CentralStore {
             ChanSettings.clear();
         }
         String toParse = http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey);
-        System.err.println(toParse);
+        //System.err.println(toParse);
         ChanSettings.putAll((JSONObject) parser.parse(toParse));
         //System.out.println(ChanSettings.toString());
     }
 
     public static String SendMSG(String message) {
-        JSONArray msg = new JSONArray();
-        msg.add(message);
-        JSONObject obj = new JSONObject();
-        obj.put("type", "method");
-        obj.put("method", "msg");
-        obj.put("arguments", msg);
-        obj.put("id", "2");
-        return obj.toString();
+        if (message.startsWith("/whisper".toLowerCase())) {
+            String[] split = message.split(" ");
+            String User = split[1].replace("@", "");
+            message = message.replace("/whisper " + User + " ", "").trim();
+            Iterator Users = ChatUserList.iterator();
+            boolean Match = false;
+            while (Users.hasNext()) {
+                String toCheck = Users.next().toString();
+                if (toCheck.equalsIgnoreCase(User)) {
+                    Match = true;
+                    break;
+                }
+            }
+            if (Match) {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "method");
+                obj.put("method", "whisper");
+                JSONArray args = new JSONArray();
+                args.add(0, User);
+                args.add(1, message);
+                obj.put("arguments", args);
+                obj.put("id", "2");
+                return obj.toString();
+            } else {
+
+                JOptionPane.showMessageDialog(extchat, "Unable to find user, check spelling.");
+                return "";
+            }
+        } else {
+            JSONArray msg = new JSONArray();
+            msg.add(message);
+            JSONObject obj = new JSONObject();
+            obj.put("type", "method");
+            obj.put("method", "msg");
+            obj.put("arguments", msg);
+            obj.put("id", "2");
+            return obj.toString();
+        }
     }
 
     public static JSONObject Auth(String Auth) throws InterruptedException {

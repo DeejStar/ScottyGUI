@@ -2005,13 +2005,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         for (Object t : chatArray) {
             String msgID = t.toString();
             JSONObject msgObj = (JSONObject) chatObject.get(msgID);
-            //System.err.println(ID);
+            ////System.err.println(ID);
             String msgTXT = msgObj.get("msg").toString();
             if ((boolean) msgObj.get("purged")) {
                 if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
                     msgTXT = "<strike>" + msgTXT + "</strike>";
                     ChatCache = ChatCache + msgTXT + newline;
-                    System.err.println(msgObj.toJSONString());
+                    //System.err.println(msgObj.toJSONString());
                 }
             } else {
                 ChatCache = ChatCache + msgTXT + newline;
@@ -2078,7 +2078,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void AutoTweetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoTweetActionPerformed
         try {
             String toSend = "https://api.scottybot.net/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
-            System.err.println(toSend);
+            //System.err.println(toSend);
             String CKey = null;
             String CSecret = null;
             String AToken = null;
@@ -2168,7 +2168,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             } else {
                 Long DaysInMilli = 24 * 60L * 60 * 1000;
                 Long TimeLeft = dur - System.currentTimeMillis();
-                System.err.println(DaysInMilli + ":" + TimeLeft + ":" + System.currentTimeMillis() + ":" + dur);
+                //System.err.println(DaysInMilli + ":" + TimeLeft + ":" + System.currentTimeMillis() + ":" + dur);
                 if (TimeLeft < DaysInMilli) {
                     Duration = "Less than a day.";
                 } else {

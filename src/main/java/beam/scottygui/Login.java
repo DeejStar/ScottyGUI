@@ -194,10 +194,28 @@ public class Login extends javax.swing.JFrame {
             UserID = Long.parseLong(obj.get("id").toString());
             JSONObject ChanObj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + Username));
             ChanID = Long.parseLong(ChanObj.get("id").toString());
+            //System.out.println(ChanObj);
+            try {
+                if (ChanObj.containsKey("badge")) {
+                    //System.out.println("BADGE FOUND");
+                    JSONObject badgeObj = new JSONObject();
+                    badgeObj.putAll((JSONObject) ChanObj.get("badge"));
+                    if (badgeObj.containsKey("url")) {
+                        CentralStore.SubBadge = badgeObj.get("url").toString();
+                    }
+                }
+            } catch (Exception e) {
+
+            }
 
         } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(rootPane, "Login failed or Scottybot not in channel.");
+            //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            if (!obj.isEmpty() && obj.containsKey("message")) {
+                String error = (String) obj.get("message");
+                JOptionPane.showMessageDialog(rootPane, "Error: " + error);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Login failed or Scottybot not in channel.");
+            }
             return;
         }
         JSONObject AuthReturn = null;
