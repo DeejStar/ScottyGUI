@@ -1,5 +1,7 @@
 package beam.scottygui;
 
+import beam.scottygui.Stores.CS;
+import beam.scottygui.websocket.WebSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -22,6 +24,30 @@ public class MainApp {
         }
         Login login = new Login();
         login.setVisible(true);
+        new Thread("PutTheadName") {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        if (CS.ChanID != null) {
+                            if (CS.session != null) {
+                                if (!CS.session.isOpen()) {
+                                    System.err.println("Lost chat connection, reconnecting.");
+                                    new WebSocket().connect(CS.ChanID);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }.start();
     }
 
 }

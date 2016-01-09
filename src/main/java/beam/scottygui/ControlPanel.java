@@ -7,31 +7,32 @@ package beam.scottygui;
 
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.AuthKey;
-import static beam.scottygui.Stores.CentralStore.BadWordsList;
-import static beam.scottygui.Stores.CentralStore.ChanID;
-import static beam.scottygui.Stores.CentralStore.ChatCache;
-import static beam.scottygui.Stores.CentralStore.ChatUserList;
-import static beam.scottygui.Stores.CentralStore.GUILoadSettings;
-import static beam.scottygui.Stores.CentralStore.GUISaveSettings;
-import static beam.scottygui.Stores.CentralStore.GUISettings;
-import static beam.scottygui.Stores.CentralStore.GetSettings;
-import static beam.scottygui.Stores.CentralStore.RefreshSettings;
-import static beam.scottygui.Stores.CentralStore.SendMSG;
-import static beam.scottygui.Stores.CentralStore.Username;
-import static beam.scottygui.Stores.CentralStore.chatArray;
-import static beam.scottygui.Stores.CentralStore.chatObject;
-import static beam.scottygui.Stores.CentralStore.cp;
-import static beam.scottygui.Stores.CentralStore.extchat;
-import static beam.scottygui.Stores.CentralStore.llSocket;
-import static beam.scottygui.Stores.CentralStore.newline;
-import static beam.scottygui.Stores.CentralStore.session;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.AuthKey;
+import static beam.scottygui.Stores.CS.BadWordsList;
+import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.ChatCache;
+import static beam.scottygui.Stores.CS.ChatUserList;
+import static beam.scottygui.Stores.CS.GUILoadSettings;
+import static beam.scottygui.Stores.CS.GUISaveSettings;
+import static beam.scottygui.Stores.CS.GUISettings;
+import static beam.scottygui.Stores.CS.GetSettings;
+import static beam.scottygui.Stores.CS.RefreshSettings;
+import static beam.scottygui.Stores.CS.SendMSG;
+import static beam.scottygui.Stores.CS.Username;
+import static beam.scottygui.Stores.CS.chatArray;
+import static beam.scottygui.Stores.CS.chatObject;
+import static beam.scottygui.Stores.CS.cp;
+import static beam.scottygui.Stores.CS.extchat;
+import static beam.scottygui.Stores.CS.llSocket;
+import static beam.scottygui.Stores.CS.newline;
+import static beam.scottygui.Stores.CS.session;
 import beam.scottygui.TwitterInfo.TwitterAuthInfo;
 import beam.scottygui.Utils.FontChooser;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.downloadFromUrl;
+import beam.scottygui.chanstatus.statuswindow;
 import beam.scottygui.cmdcontrol.AddEditCMD;
 import beam.scottygui.cmdcontrol.DeletePermAdjust;
 import beam.scottygui.cmdcontrol.RepeatList;
@@ -74,7 +75,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     HTTP http = new HTTP();
     JSONParser parser = new JSONParser();
     JSONUtil json = new JSONUtil();
-    Integer CurVer = CentralStore.CurVer;
+    Integer CurVer = CS.CurVer;
     WebSocket socket = new WebSocket();
 
     /**
@@ -200,7 +201,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         initComponents();
         DumpCurVer();
         CheckNewVer();
-        CentralStore.extchat = new ChatPopOut();
+        CS.extchat = new ChatPopOut();
         //Set chat window to auto-scroll
         DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -302,6 +303,14 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
+        new Thread("PopGameList") {
+            @Override
+            public void run() {
+// Thread code goes here.
+                CS.popGames();
+            }
+        }.start();
+
         Viewers.setModel(ChatUserList);
         //this.PopChatList();
         this.socket.connect(ChanID);
@@ -477,6 +486,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         ShowStoredKey = new javax.swing.JButton();
         GenNewStoredKey = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        PNotes = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -500,11 +511,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         showWhitelist = new javax.swing.JTextPane();
         jLabel16 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
-        PNotes = new javax.swing.JButton();
+        StreamSet = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -558,10 +568,10 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 8, 110, -1));
+        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 8, 70, -1));
 
         TopViewers.setText("0 Top Viewers");
-        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(139, 8, 200, -1));
+        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 90, -1));
 
         whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1108,7 +1118,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jPanel10.add(LinkTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, -1, -1));
 
-        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 900, 260));
+        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 900, 260));
 
         CUsernamePassword.setText("Set Custom Bot Username/Password");
         CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
@@ -1148,6 +1158,22 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel18.setText("Stored Auth Key (Usable and static)");
         SettingsPanel.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, -1, -1));
+
+        jButton5.setText("Check Updates");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 450, 152, -1));
+
+        PNotes.setText("Patch Notes");
+        PNotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PNotesActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 420, -1, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1337,14 +1363,6 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         getContentPane().add(whitelistPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, 550));
 
-        jButton5.setText("Check Updates");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 10, 152, -1));
-
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 11, -1, 30));
 
@@ -1364,13 +1382,15 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 10, 160, -1));
 
-        PNotes.setText("Patch Notes");
-        PNotes.addActionListener(new java.awt.event.ActionListener() {
+        StreamSet.setText("Channel Name and Game");
+        StreamSet.setActionCommand("Stream Title");
+        StreamSet.setEnabled(false);
+        StreamSet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PNotesActionPerformed(evt);
+                StreamSetActionPerformed(evt);
             }
         });
-        getContentPane().add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, -1));
+        getContentPane().add(StreamSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -1406,18 +1426,18 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_whitelistPaneMouseClicked
 
     public void PopGuiSettings() {
-        if (!CentralStore.GUISettings.containsKey("WooshME")) {
-            CentralStore.GUISaveSettings("WooshME", "false");
+        if (!CS.GUISettings.containsKey("WooshME")) {
+            CS.GUISaveSettings("WooshME", "false");
         }
-        if ("true".equals(CentralStore.GUIGetSetting("WooshME"))) {
+        if ("true".equals(CS.GUIGetSetting("WooshME"))) {
             this.WooshMeEnabled.setSelected(true);
         } else {
             this.WooshMeEnabled.setSelected(false);
         }
-        if (!CentralStore.GUISettings.containsKey("showpurged")) {
-            CentralStore.GUISaveSettings("showpurged", "false");
+        if (!CS.GUISettings.containsKey("showpurged")) {
+            CS.GUISaveSettings("showpurged", "false");
         }
-        if ("false".equalsIgnoreCase(CentralStore.GUIGetSetting("showpurged"))) {
+        if ("false".equalsIgnoreCase(CS.GUIGetSetting("showpurged"))) {
             this.showPChat.setSelected(false);
         } else {
             this.showPChat.setSelected(true);
@@ -1826,7 +1846,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "No new updates.");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-    AlertFrame af = CentralStore.getAlertFrame();
+    AlertFrame af = CS.getAlertFrame();
     private void AlertPaneOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AlertPaneOpenActionPerformed
 
         if (!GUISettings.containsKey("FollowSound")) {
@@ -1859,7 +1879,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         Open.addChoosableFileFilter(SoundFilter);
         if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             FileLoc = Open.getSelectedFile().getAbsolutePath();
-            CentralStore.GUISaveSettings("FollowSound", FileLoc);
+            CS.GUISaveSettings("FollowSound", FileLoc);
         }
 //        final String Audio = FileLoc;
 //        new Thread("Alert!") {
@@ -1889,7 +1909,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         Open.addChoosableFileFilter(imageFilter);
         if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             FileLoc = Open.getSelectedFile().getAbsolutePath();
-            CentralStore.GUISaveSettings("FollowIMG", FileLoc);
+            CS.GUISaveSettings("FollowIMG", FileLoc);
         }
     }//GEN-LAST:event_FollowIMGSetActionPerformed
 
@@ -1919,9 +1939,9 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void WooshMeEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WooshMeEnabledActionPerformed
         if (this.WooshMeEnabled.isSelected()) {
-            CentralStore.GUISaveSettings("WooshME", "true");
+            CS.GUISaveSettings("WooshME", "true");
         } else {
-            CentralStore.GUISaveSettings("WooshME", "false");
+            CS.GUISaveSettings("WooshME", "false");
         }
 
     }//GEN-LAST:event_WooshMeEnabledActionPerformed
@@ -1929,7 +1949,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
-                CentralStore.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
                 ChatSend.setText("");
             } catch (IOException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1944,7 +1964,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
         if (evt.getClickCount() == 2) {
             try {
-                session.getBasicRemote().sendText(CentralStore.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
+                session.getBasicRemote().sendText(CS.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
             } catch (IOException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1996,10 +2016,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         String html2 = "</html>";
         String newline = "<br>";
         if (showPChat.isSelected()) {
-            CentralStore.GUISaveSettings("showpurged", "true");
+            CS.GUISaveSettings("showpurged", "true");
 
         } else {
-            CentralStore.GUISaveSettings("showpurged", "false");
+            CS.GUISaveSettings("showpurged", "false");
         }
         ChatCache = "";
         for (Object t : chatArray) {
@@ -2008,7 +2028,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             ////System.err.println(ID);
             String msgTXT = msgObj.get("msg").toString();
             if ((boolean) msgObj.get("purged")) {
-                if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
+                if (Boolean.parseBoolean(CS.GUIGetSetting("showpurged"))) {
                     msgTXT = "<strike>" + msgTXT + "</strike>";
                     ChatCache = ChatCache + msgTXT + newline;
                     //System.err.println(msgObj.toJSONString());
@@ -2016,10 +2036,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             } else {
                 ChatCache = ChatCache + msgTXT + newline;
             }
-            CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
-            CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
-            //CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
-            //CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
+            CS.cp.ChatOutput.setText(html1 + ChatCache + html2);
+            CS.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+            //CentralStore.cp.ChatOutput.setCaretPosition(CS.cp.ChatOutput.getDocument().getLength());
+            //CentralStore.extchat.ExtChatOutput.setCaretPosition(CS.extchat.ExtChatOutput.getDocument().getLength());
         }
     }//GEN-LAST:event_showPChatActionPerformed
 
@@ -2146,6 +2166,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty("https://api.scottybot.net/settings/change?authkey=" + AuthKey + "&setting=useurl&value=0");
         }
     }//GEN-LAST:event_LinkTitleActionPerformed
+
+    private void StreamSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StreamSetActionPerformed
+        new statuswindow().setVisible(true);
+    }//GEN-LAST:event_StreamSetActionPerformed
 
     private void PopWhiteList() {
         JSONObject whitelist = null;
@@ -2535,6 +2559,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel SettingsPanel;
     private javax.swing.JButton ShowStoredKey;
     private javax.swing.JTextField StoredAuthKey;
+    public static javax.swing.JButton StreamSet;
     private javax.swing.JSlider SymPercent;
     private javax.swing.JLabel SymPercentDis;
     private javax.swing.JToggleButton SymbolsOnOff;

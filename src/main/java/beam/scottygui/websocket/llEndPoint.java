@@ -6,8 +6,8 @@
 package beam.scottygui.websocket;
 
 import beam.scottygui.Alerts.AlertFrame;
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.cp;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.JSONUtil;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -36,15 +36,15 @@ public class llEndPoint extends Endpoint {
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
         Thread.currentThread().setName(ChanID + "Liveload watcher");
-        if (CentralStore.FollowerQueue == null) {
-            CentralStore.FollowerQueue = new FollowLooper();
-            CentralStore.WorkerThreads.submit(CentralStore.FollowerQueue);
+        if (CS.FollowerQueue == null) {
+            CS.FollowerQueue = new FollowLooper();
+            CS.WorkerThreads.submit(CS.FollowerQueue);
         }
         final String startedStream = "chat:" + ChanID + ":StartStreaming";
         final String stopedStream = "chat:" + ChanID + ":StopStreaming";
         final String Followed = "channel:" + ChanID + ":followed";
         final String Updated = "channel:" + ChanID + ":update";
-        Followers = CentralStore.followerCache;
+        Followers = CS.followerCache;
         Followers.clear();
         try {
             Followers.addAll(new JSONUtil().GetLastFollowers(ChanID));
@@ -56,7 +56,7 @@ public class llEndPoint extends Endpoint {
 
         ////System.err.println(toSub);
         session.getAsyncRemote().sendText(toSub);
-        CentralStore.llSocket = session;
+        CS.llSocket = session;
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
@@ -76,12 +76,12 @@ public class llEndPoint extends Endpoint {
                 JSONObject objData = (JSONObject) input.get(1);
                 ////System.err.println("DATA = " + objData.toString());
                 if (startedStream.equalsIgnoreCase(Slug)) {
-                    CentralStore.isLive = true;
+                    CS.isLive = true;
 
                     return;
                 }
                 if (stopedStream.equalsIgnoreCase(Slug)) {
-                    CentralStore.isLive = false;
+                    CS.isLive = false;
                     ////System.err.println(ChanID + " Stream False");
                     return;
                 }
@@ -100,7 +100,7 @@ public class llEndPoint extends Endpoint {
 
                     if (Followed && !followCache.contains(followerID)) {
                         //System.err.println(ChanID + ":Follow detected from " + followerName);
-                        CentralStore.addFollowerToArray(followerName);
+                        CS.addFollowerToArray(followerName);
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
                     } else {
@@ -115,13 +115,13 @@ public class llEndPoint extends Endpoint {
                 if (Updated.equalsIgnoreCase(Slug)) {
                     if (objData.containsKey("name")) {
                         String newStatus = objData.get("name").toString();
-                        CentralStore.chanStatus = newStatus;
+                        CS.chanStatus = newStatus;
                     }
                     if (objData.containsKey("viewersCurrent")) {
                         Long curViewers = Long.parseLong(objData.get("viewersCurrent").toString());
-                        CentralStore.cp.CurViewers.setText("Current Viewers: " + curViewers);
-                        if (CentralStore.TopViewers < curViewers) {
-                            CentralStore.TopViewers = curViewers;
+                        CS.cp.CurViewers.setText("Current Viewers: " + curViewers);
+                        if (CS.TopViewers < curViewers) {
+                            CS.TopViewers = curViewers;
                             cp.TopViewers.setText("Top Viewers: " + curViewers);
 
                         }
@@ -139,7 +139,7 @@ public class llEndPoint extends Endpoint {
         @Override
         public void run() {
             System.out.println("FollowLooper Ran");
-            AlertFrame af = CentralStore.getAlertFrame();
+            AlertFrame af = CS.getAlertFrame();
             while (true) {
                 while (!af.isVisible()) {
                     NewFollowers.clear();

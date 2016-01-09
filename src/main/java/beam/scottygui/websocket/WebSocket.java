@@ -5,14 +5,14 @@
  */
 package beam.scottygui.websocket;
 
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.ChanID;
-import static beam.scottygui.Stores.CentralStore.ChatUserList;
-import static beam.scottygui.Stores.CentralStore.Joined;
-import static beam.scottygui.Stores.CentralStore.LastCount;
-import static beam.scottygui.Stores.CentralStore.Left;
-import static beam.scottygui.Stores.CentralStore.cp;
-import static beam.scottygui.Stores.CentralStore.endpoint;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.ChatUserList;
+import static beam.scottygui.Stores.CS.Joined;
+import static beam.scottygui.Stores.CS.LastCount;
+import static beam.scottygui.Stores.CS.Left;
+import static beam.scottygui.Stores.CS.cp;
+import static beam.scottygui.Stores.CS.endpoint;
 import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
 import java.net.URI;
@@ -37,19 +37,17 @@ import org.json.simple.parser.ParseException;
 public class WebSocket {
 
     public void connect(final Long ChanID) {
-        CentralStore.TopViewers = Long.parseLong("0");
+        CS.TopViewers = Long.parseLong("0");
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
             private int counter = 0;
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                new WebSocket().connect(ChanID);
                 return false;
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                new WebSocket().connect(ChanID);
                 return false;
             }
 
@@ -65,7 +63,7 @@ public class WebSocket {
         while (true) {
             try {
                 new HTTP().GetAuth();
-                client.connectToServer(endpoint, cec, new URI(CentralStore.getEndPoint()));
+                client.connectToServer(endpoint, cec, new URI(CS.getEndPoint()));
                 System.out.println("Logged in, do you see me naow?");
                 break;
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException | DeploymentException | URISyntaxException ex) {
@@ -74,11 +72,11 @@ public class WebSocket {
         }
         //Runnable looper = new Looper();
         //WorkerThreads.execute(looper);
-        if (CentralStore.LiveLoad == null) {
+        if (CS.LiveLoad == null) {
             while (true) {
                 try {
-                    CentralStore.LiveLoad = new llSocket(ChanID);
-                    CentralStore.WorkerThreads.submit(CentralStore.LiveLoad);
+                    CS.LiveLoad = new llSocket(ChanID);
+                    CS.WorkerThreads.submit(CS.LiveLoad);
                     break;
                 } catch (URISyntaxException | InterruptedException | IOException | ParseException ex) {
                     Logger.getLogger(WebSocket.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,7 +87,7 @@ public class WebSocket {
 
     public class llSocket implements Runnable {
 
-        //HTTP http = CentralStore.getHTTP(ChanID);
+        //HTTP http = CS.getHTTP(ChanID);
         private Long chanid = null;
 
         llSocket(Long CID) throws URISyntaxException, InterruptedException, IOException, ParseException {
@@ -184,14 +182,14 @@ public class WebSocket {
                     if (viewers < LastCount) {
                         int totick = LastCount - viewers;
                         while (totick > 0) {
-                            CentralStore.Left++;
+                            CS.Left++;
                             totick--;
                         }
                     }
                     if (viewers > LastCount) {
                         int totick = viewers - LastCount;
                         while (totick > 0) {
-                            CentralStore.Joined++;
+                            CS.Joined++;
                             totick--;
                         }
                     }
@@ -200,10 +198,10 @@ public class WebSocket {
                     cp.CurViewers.setText("Offline");
                 } else {
                     cp.CurViewers.setText(viewers.toString() + " viewers");
-                    if (CentralStore.TopViewers < viewers) {
-                        CentralStore.TopViewers = Long.parseLong(viewers.toString());
-                        cp.TopViewers.setText("Top Viewer Count: " + CentralStore.TopViewers.toString());
-                        //System.out.println(CentralStore.TopViewers.toString());
+                    if (CS.TopViewers < viewers) {
+                        CS.TopViewers = Long.parseLong(viewers.toString());
+                        cp.TopViewers.setText("Top Viewer Count: " + CS.TopViewers.toString());
+                        //System.out.println(CS.TopViewers.toString());
                     }
                 }
                 try {

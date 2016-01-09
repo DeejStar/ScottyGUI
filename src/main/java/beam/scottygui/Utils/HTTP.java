@@ -5,8 +5,8 @@
  */
 package beam.scottygui.Utils;
 
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.ChanID;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.ChanID;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,6 +34,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -56,10 +57,10 @@ public class HTTP {
 
     public String shortenUrl(final String longUrl) {
 
-        if (CentralStore.isgdCache.containsKey(longUrl)) {
-            return CentralStore.isgdCache.get(longUrl);
+        if (CS.isgdCache.containsKey(longUrl)) {
+            return CS.isgdCache.get(longUrl);
         } else {
-            if (CentralStore.IsGdNextCheck < System.currentTimeMillis()) {
+            if (CS.IsGdNextCheck < System.currentTimeMillis()) {
                 String URL_SHORTENER_URL = "http://is.gd/create.php?format=simple&url=";
                 try {
                     URL obj = new URL(URL_SHORTENER_URL + longUrl);
@@ -82,16 +83,56 @@ public class HTTP {
                     in.close();
 
                     //print result
-                    CentralStore.isgdCache.put(longUrl, response.toString());
+                    CS.isgdCache.put(longUrl, response.toString());
                     return response.toString();
                 } catch (IOException e) {
-                    CentralStore.IsGdNextCheck = System.currentTimeMillis() + 120000;
+                    CS.IsGdNextCheck = System.currentTimeMillis() + 120000;
                     return longUrl;
                 }
             } else {
                 return longUrl;
             }
         }
+    }
+
+    public void put(Map<String, String> object, String apiLoc) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        while (tried < 5) {
+            tried++;
+            try {
+                String url = "https://beam.pro/api/v1" + apiLoc;
+                System.err.println(url);
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    HttpClientContext context = HttpClientContext.create();
+                    context.setCookieStore(CS.cookie);
+                    List<NameValuePair> urlParameters = new ArrayList();
+                    for (Map.Entry<String, String> param : object.entrySet()) {
+                        urlParameters.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+
+                    }
+
+                    HttpPut request = new HttpPut(url);
+                    request.setEntity(new UrlEncodedFormEntity(urlParameters));
+                    HttpResponse response = client.execute(request, context);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    //System.err.println(result.toString());
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+
     }
 
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
@@ -110,7 +151,7 @@ public class HTTP {
         String dataIn = null;
         try {
             CookieStore cookieStore = context.getCookieStore();
-            CentralStore.cookie = cookieStore;
+            CS.cookie = cookieStore;
 //}
 //	System.out.println("Response Code : "
 //                + response.getStatusLine().getStatusCode());
@@ -200,7 +241,7 @@ public class HTTP {
         String AuthKey = "";
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpClientContext context = HttpClientContext.create();
-            context.setCookieStore(CentralStore.cookie);
+            context.setCookieStore(CS.cookie);
             String url = "https://beam.pro/api/v1/chats/" + ChanID;
             HttpGet request = new HttpGet(url);
             HttpResponse response = client.execute(request, context);
@@ -218,7 +259,7 @@ public class HTTP {
             //Console(ChanID + " >>>>>>  " + dataIn);
             JSONObject obj = (JSONObject) jsonParser.parse(dataIn);
             AuthKey = obj.get("authkey").toString();
-            CentralStore.BeamAuthKey = AuthKey;
+            CS.BeamAuthKey = AuthKey;
             JSONArray endpointsArray = (JSONArray) obj.get("endpoints");
 
             for (Object t : endpointsArray) {
@@ -227,7 +268,7 @@ public class HTTP {
 
             Random myRandomizer = new Random();
             String EndPoint = EndPoints.get(myRandomizer.nextInt(EndPoints.size()));
-            CentralStore.setEndPoint(EndPoint);
+            CS.setEndPoint(EndPoint);
             //System.out.println(dataIn);
         }
     }
@@ -298,7 +339,7 @@ public class HTTP {
                 URL url = new URL(urlString);
                 // ////System.out.println("DEBUG: Getting data from " + url.toString());
                 URLConnection conn = url.openConnection();
-                conn.setRequestProperty("Cookie", "sails.sid=" + CentralStore.Cookie);
+                conn.setRequestProperty("Cookie", "sails.sid=" + CS.Cookie);
                 conn.setRequestProperty("User-Agent", "ScottyBot");
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
                         conn.getInputStream()))) {

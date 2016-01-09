@@ -5,13 +5,13 @@
  */
 package beam.scottygui;
 
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.AuthKey;
-import static beam.scottygui.Stores.CentralStore.ChanID;
-import static beam.scottygui.Stores.CentralStore.Password;
-import static beam.scottygui.Stores.CentralStore.UserID;
-import static beam.scottygui.Stores.CentralStore.Username;
-import static beam.scottygui.Stores.CentralStore.newline;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.AuthKey;
+import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.Password;
+import static beam.scottygui.Stores.CS.UserID;
+import static beam.scottygui.Stores.CS.Username;
+import static beam.scottygui.Stores.CS.newline;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import java.awt.event.KeyEvent;
@@ -171,7 +171,7 @@ public class Login extends javax.swing.JFrame {
 
     public void Login() {
         Username = this.LoginField.getText();
-        CentralStore.UserName = Username;
+        CS.UserName = Username;
         Password = new String(this.PassField.getPassword());
 //        if (!"".equalsIgnoreCase(Username));
 //
@@ -201,7 +201,7 @@ public class Login extends javax.swing.JFrame {
                     JSONObject badgeObj = new JSONObject();
                     badgeObj.putAll((JSONObject) ChanObj.get("badge"));
                     if (badgeObj.containsKey("url")) {
-                        CentralStore.SubBadge = badgeObj.get("url").toString();
+                        CS.SubBadge = badgeObj.get("url").toString();
                     }
                 }
             } catch (Exception e) {

@@ -6,16 +6,16 @@
 package beam.scottygui.websocket;
 
 import beam.scottygui.ChatHandler.ChatFormatter;
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.BeamAuthKey;
-import static beam.scottygui.Stores.CentralStore.ChanID;
-import static beam.scottygui.Stores.CentralStore.ChatCache;
-import static beam.scottygui.Stores.CentralStore.ChatUserList;
-import static beam.scottygui.Stores.CentralStore.MsgCounter;
-import static beam.scottygui.Stores.CentralStore.UniqueChatters;
-import static beam.scottygui.Stores.CentralStore.chatArray;
-import static beam.scottygui.Stores.CentralStore.chatObject;
-import static beam.scottygui.Stores.CentralStore.cp;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.BeamAuthKey;
+import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.ChatCache;
+import static beam.scottygui.Stores.CS.ChatUserList;
+import static beam.scottygui.Stores.CS.MsgCounter;
+import static beam.scottygui.Stores.CS.UniqueChatters;
+import static beam.scottygui.Stores.CS.chatArray;
+import static beam.scottygui.Stores.CS.chatObject;
+import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.JSONUtil;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,10 +47,10 @@ public class EndPoint extends Endpoint {
     public void onOpen(final Session session, EndpointConfig config) {
         while (true) {
             try {
-                String ToAuthWith = CentralStore.Auth(BeamAuthKey).toString();
+                String ToAuthWith = CS.Auth(BeamAuthKey).toString();
                 //System.out.println(ToAuthWith);
                 session.getBasicRemote().sendText(ToAuthWith);
-                CentralStore.session = session;
+                CS.session = session;
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -132,7 +132,7 @@ public class EndPoint extends Endpoint {
                             ////System.err.println(ID);
                             String msgTXT = msgObj.get("msg").toString();
                             if ((boolean) msgObj.get("purged")) {
-                                if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
+                                if (Boolean.parseBoolean(CS.GUIGetSetting("showpurged"))) {
                                     msgTXT = "<strike>" + msgTXT + "</strike>";
                                     ChatCache = ChatCache + msgTXT + newline;
                                     //System.err.println(msgObj.toJSONString());
@@ -142,10 +142,10 @@ public class EndPoint extends Endpoint {
                             }
                             //System.err.println(msgObj.toJSONString());
                         }
-                        CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
-                        CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
-                        //CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
-                        //CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
+                        CS.cp.ChatOutput.setText(html1 + ChatCache + html2);
+                        CS.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+                        //CentralStore.cp.ChatOutput.setCaretPosition(CS.cp.ChatOutput.getDocument().getLength());
+                        //CentralStore.extchat.ExtChatOutput.setCaretPosition(CS.extchat.ExtChatOutput.getDocument().getLength());
                         //System.err.println(chatObject.toJSONString());
                         break;
                 }

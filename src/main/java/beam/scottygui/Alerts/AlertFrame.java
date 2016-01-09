@@ -5,7 +5,7 @@
  */
 package beam.scottygui.Alerts;
 
-import static beam.scottygui.Stores.CentralStore.GUISettings;
+import static beam.scottygui.Stores.CS.GUISettings;
 import beam.scottygui.Utils.HTTP;
 import java.awt.Color;
 import java.awt.Font;

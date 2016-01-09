@@ -5,8 +5,8 @@
  */
 package beam.scottygui.quotecontrol;
 
-import static beam.scottygui.Stores.CentralStore.AuthKey;
-import static beam.scottygui.Stores.CentralStore.cp;
+import static beam.scottygui.Stores.CS.AuthKey;
+import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.HTTP;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

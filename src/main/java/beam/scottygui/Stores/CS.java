@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.websocket.Endpoint;
@@ -46,9 +49,9 @@ import org.json.simple.parser.ParseException;
  *
  * @author tjhasty
  */
-public class CentralStore {
+public class CS {
 
-    public static Integer CurVer = 45;
+    public static Integer CurVer = 47;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -75,6 +78,7 @@ public class CentralStore {
     public static ChatPopOut extchat = null;
     public static DefaultListModel BadWordsList = new DefaultListModel();
     public static SortedListModel ChatUserList = new SortedListModel();
+    public static ComboBoxModel GameList = null;
     public static Integer LastCount = null;
     public static String Username = "";
     public static String Password = "";
@@ -96,6 +100,53 @@ public class CentralStore {
     public static Map<String, BufferedImage> EmoteMaps = new ConcurrentHashMap();
     public static Map<String, String> EmoticonPaths = new ConcurrentHashMap();
     public static String SubBadge = "";
+    public static JSONObject GameListJSON = new JSONObject();
+    public static List<String> GamesPreSorted = new ArrayList();
+
+    public static void setgamelistmodel() {
+
+        Collections.sort(GamesPreSorted);
+        GameList = new DefaultComboBoxModel(GamesPreSorted.toArray(new String[GamesPreSorted.size()]));
+        ControlPanel.StreamSet.setEnabled(true);
+        ChatPopOut.StreamSet.setEnabled(true);
+    }
+
+    public static void popGames() {
+        String toParse = http.get("https://api.scottybot.net/getgamearray");
+        while (true) {
+            if (toParse.equalsIgnoreCase("Populating, may take some time")) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                try {
+                    JSONArray toLoop = (JSONArray) new JSONParser().parse(toParse);
+                    for (Object t : toLoop) {
+                        JSONObject Game = (JSONObject) t;
+                        Long ID = (Long) Game.get("id");
+                        String Name = (String) Game.get("name");
+                        GamesPreSorted.add(Name);
+                        GameListJSON.put(Name, ID);
+                    }
+                    setgamelistmodel();
+                    break;
+                } catch (ParseException ex) {
+                    Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex1) {
+                        Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+            }
+        }
+    }
+
+    public static int getgameID(String game) {
+        return (int) GameListJSON.get(game);
+    }
 
     public static void addFollowerToArray(String Username) {
         if (lastFollowed.contains(Username)) {
@@ -121,7 +172,7 @@ public class CentralStore {
             out.print(toPrint);
             out.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
@@ -129,9 +180,9 @@ public class CentralStore {
             out.print(Username);
             out.close();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
-        CentralStore.GUISaveSettings("followerJSON", lastFollowed.toJSONString());
+        CS.GUISaveSettings("followerJSON", lastFollowed.toJSONString());
     }
 
     public static AlertFrame getAlertFrame() {
@@ -186,13 +237,13 @@ public class CentralStore {
         try {
             GUISettings.putAll((JSONObject) parser.parse(prop.getProperty("settings")));
         } catch (ParseException ex) {
-            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (GUISettings.containsKey("followerJSON")) {
             try {
                 lastFollowed.addAll((JSONArray) new JSONParser().parse(GUISettings.get("followerJSON").toString()));
             } catch (ParseException ex) {
-                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         File f = new File("Last_5_Followers.txt");
@@ -200,7 +251,7 @@ public class CentralStore {
             try {
                 f.createNewFile();
             } catch (IOException ex) {
-                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -209,7 +260,7 @@ public class CentralStore {
             try {
                 t.createNewFile();
             } catch (IOException ex) {
-                Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -224,12 +275,12 @@ public class CentralStore {
         try {
             output = new FileOutputStream("config.properties");
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             prop.store(output, null);
         } catch (IOException ex) {
-            Logger.getLogger(CentralStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

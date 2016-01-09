@@ -6,12 +6,12 @@
 package beam.scottygui.ChatHandler;
 
 import beam.scottygui.Alerts.AlertFrame;
-import beam.scottygui.Stores.CentralStore;
-import static beam.scottygui.Stores.CentralStore.ChatCache;
-import static beam.scottygui.Stores.CentralStore.UserName;
-import static beam.scottygui.Stores.CentralStore.chatArray;
-import static beam.scottygui.Stores.CentralStore.chatObject;
-import static beam.scottygui.Stores.CentralStore.cp;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.ChatCache;
+import static beam.scottygui.Stores.CS.UserName;
+import static beam.scottygui.Stores.CS.chatArray;
+import static beam.scottygui.Stores.CS.chatObject;
+import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.HTTP;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -41,8 +41,8 @@ public class ChatFormatter {
         //System.out.println(msg);
         JSONArray UserRoles = (JSONArray) msg.get("user_roles");
         List<String> Roles = new ArrayList();
-        if (!CentralStore.GUISettings.containsKey("showpurged")) {
-            CentralStore.GUISaveSettings("showpurged", "false");
+        if (!CS.GUISettings.containsKey("showpurged")) {
+            CS.GUISaveSettings("showpurged", "false");
         }
         for (Object t : UserRoles) {
             Roles.add(t.toString().toUpperCase());
@@ -81,7 +81,7 @@ public class ChatFormatter {
             fontcolor = "#2E64FE";
         }
         if (Roles.contains("SUBSCRIBER")) {
-            username = username + " <IMG SRC=" + CentralStore.SubBadge + ">";
+            username = username + " <IMG SRC=" + CS.SubBadge + ">";
         }
 
         String MSG = "";
@@ -119,11 +119,11 @@ public class ChatFormatter {
                 BufferedImage Emote = null;
                 try {
                     BufferedImage fullEmotes = null;
-                    if (CentralStore.EmoteMaps.containsKey(imgURL)) {
-                        fullEmotes = CentralStore.EmoteMaps.get(imgURL);
+                    if (CS.EmoteMaps.containsKey(imgURL)) {
+                        fullEmotes = CS.EmoteMaps.get(imgURL);
                     } else {
                         fullEmotes = ImageIO.read(new URL(imgURL));
-                        CentralStore.EmoteMaps.put(imgURL, fullEmotes);
+                        CS.EmoteMaps.put(imgURL, fullEmotes);
                     }
                     Emote = fullEmotes.getSubimage(X, Y, 22, 22);
                 } catch (IOException ex) {
@@ -132,18 +132,18 @@ public class ChatFormatter {
                 File temp;
                 String Path = null;
                 if (Emote != null) {
-                    if (!CentralStore.EmoticonPaths.containsKey(text)) {
+                    if (!CS.EmoticonPaths.containsKey(text)) {
                         try {
                             temp = File.createTempFile("emote", ".png");
                             ImageIO.write(Emote, "PNG", new FileOutputStream(temp));
                             Path = temp.getAbsolutePath();
-                            CentralStore.EmoticonPaths.put(text, Path);
+                            CS.EmoticonPaths.put(text, Path);
                             ////System.err.println(Path);
                         } catch (IOException ex) {
                             Logger.getLogger(ChatFormatter.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        Path = CentralStore.EmoticonPaths.get(text);
+                        Path = CS.EmoticonPaths.get(text);
                     }
                 }
                 String ShowEmote = "<IMG SRC=file:///" + Path.replaceAll("\"", "/") + " width=\"20\" height=\"20\" >";
@@ -218,7 +218,7 @@ public class ChatFormatter {
             String msgTXT = msgObj.get("msg").toString();
 
             if ((boolean) msgObj.get("purged")) {
-                if (Boolean.parseBoolean(CentralStore.GUIGetSetting("showpurged"))) {
+                if (Boolean.parseBoolean(CS.GUIGetSetting("showpurged"))) {
                     msgTXT = "<strike>" + msgTXT + "</strike>";
                     ChatCache = ChatCache + msgTXT + newline;
                     //System.err.println(msgObj.toJSONString());
@@ -230,10 +230,10 @@ public class ChatFormatter {
             ////System.err.println(msgObj.toJSONString());
         }
         ////System.err.println(ChatCache);
-        CentralStore.cp.ChatOutput.setText(html1 + ChatCache + html2);
-        CentralStore.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
+        CS.cp.ChatOutput.setText(html1 + ChatCache + html2);
+        CS.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
 
-        CentralStore.cp.ChatOutput.setCaretPosition(CentralStore.cp.ChatOutput.getDocument().getLength());
-        CentralStore.extchat.ExtChatOutput.setCaretPosition(CentralStore.extchat.ExtChatOutput.getDocument().getLength());
+        CS.cp.ChatOutput.setCaretPosition(CS.cp.ChatOutput.getDocument().getLength());
+        CS.extchat.ExtChatOutput.setCaretPosition(CS.extchat.ExtChatOutput.getDocument().getLength());
     }
 }
