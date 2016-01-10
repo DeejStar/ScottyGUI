@@ -156,7 +156,7 @@ public class ChatFormatter {
                 MSG = MSG + " " + URLLink;
             }
         }
-        String html1 = "<html>";
+        String html1 = "<html> <body bgcolor=\"black\">";
         String html2 = "</html>";
         String newline = "<br>";
         String[] SplitMSG = MSG.split(" ");
@@ -173,9 +173,10 @@ public class ChatFormatter {
                     @Override
                     public void run() {
                         try {
-                            try (InputStream fis = new URL("http://scottybot.x10host.com/files/ScottyGUI-Woosh.mp3").openStream()) {
+                            try (InputStream fis = getClass().getResourceAsStream("assets/Woosh.mp3")) {
                                 Player playMP3 = playMP3 = new Player(fis);
                                 playMP3.play();
+                                playMP3.close();
                             }
                         } catch (JavaLayerException ex) {
                             Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);

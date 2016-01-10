@@ -51,7 +51,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 48;
+    public static Integer CurVer = 49;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -280,7 +280,10 @@ public class CS {
         if (GUISettings.containsKey(setting)) {
             GUISettings.remove(setting);
         }
-        GUISettings.put(setting, value);
+        if (value != null) {
+            GUISettings.put(setting, value);
+            prop.setProperty("settings", GUISettings.toString());
+        }
         prop.setProperty("settings", GUISettings.toString());
         FileOutputStream output = null;
         try {
