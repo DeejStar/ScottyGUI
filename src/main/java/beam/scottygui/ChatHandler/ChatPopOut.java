@@ -22,6 +22,7 @@ public class ChatPopOut extends javax.swing.JFrame {
      * Creates new form ChatPopOut
      */
     public ChatPopOut() {
+
         initComponents();
         this.Viewers.setModel(ChatUserList);
 //        this.ExtChatOutput.setEditorKit(new HTMLEditorKit() {

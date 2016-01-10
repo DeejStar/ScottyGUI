@@ -26,6 +26,8 @@ import org.json.simple.parser.ParseException;
  */
 public class statuswindow extends javax.swing.JFrame {
 
+    String curGame = "";
+
     /**
      * Creates new form statuswindow
      */
@@ -45,6 +47,9 @@ public class statuswindow extends javax.swing.JFrame {
         gamelistbox = new javax.swing.JComboBox();
         save = new javax.swing.JButton();
         cancel = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
+        GSearch = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -54,13 +59,10 @@ public class statuswindow extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         StreamTitle.setColumns(20);
         StreamTitle.setRows(5);
         jScrollPane1.setViewportView(StreamTitle);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 580, 60));
 
         gamelistbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gamelistbox.addActionListener(new java.awt.event.ActionListener() {
@@ -68,7 +70,6 @@ public class statuswindow extends javax.swing.JFrame {
                 gamelistboxActionPerformed(evt);
             }
         });
-        getContentPane().add(gamelistbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 340, 30));
 
         save.setText("Save");
         save.addActionListener(new java.awt.event.ActionListener() {
@@ -76,7 +77,6 @@ public class statuswindow extends javax.swing.JFrame {
                 saveActionPerformed(evt);
             }
         });
-        getContentPane().add(save, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 140, 80, 30));
 
         cancel.setText("Cancel");
         cancel.addActionListener(new java.awt.event.ActionListener() {
@@ -84,7 +84,74 @@ public class statuswindow extends javax.swing.JFrame {
                 cancelActionPerformed(evt);
             }
         });
-        getContentPane().add(cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(335, 140, 70, 30));
+
+        GSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GSearchActionPerformed(evt);
+            }
+        });
+        GSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                GSearchKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                GSearchKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                GSearchKeyTyped(evt);
+            }
+        });
+
+        jLabel1.setText("Search");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filler1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(10, 10, 10)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(210, 210, 210)
+                            .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(35, 35, 35)
+                            .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(GSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(97, 97, 97)))
+                        .addComponent(gamelistbox, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(gamelistbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(GSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(save, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -126,6 +193,33 @@ public class statuswindow extends javax.swing.JFrame {
         this.setVisible(false);
         this.dispose();// TODO add your handling code here:
     }//GEN-LAST:event_cancelActionPerformed
+
+    private void GSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GSearchActionPerformed
+
+    }//GEN-LAST:event_GSearchActionPerformed
+
+    private void GSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_GSearchKeyTyped
+
+    private void GSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyPressed
+
+    }//GEN-LAST:event_GSearchKeyPressed
+
+    private void GSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyReleased
+        String Search = GSearch.getText().toUpperCase();
+        if (Search.isEmpty()) {
+            gamelistbox.setModel(CS.setgamelistmodel(null));
+        } else {
+            gamelistbox.setModel(CS.setgamelistmodel(Search));
+        }
+
+        try {
+            gamelistbox.setSelectedItem(curGame);
+        } catch (Exception ignore) {
+
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_GSearchKeyReleased
 
     /**
      * @param args the command line arguments
@@ -178,16 +272,20 @@ public class statuswindow extends javax.swing.JFrame {
         }
         JSONObject type = (JSONObject) chaninfo.get("type");
         String game = (String) type.get("name");
-        gamelistbox.setModel(CS.GameList);
+        curGame = game;
+        gamelistbox.setModel(CS.setgamelistmodel(null));
         gamelistbox.setSelectedItem(game);
         this.StreamTitle.setText(title);
 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField GSearch;
     private javax.swing.JTextArea StreamTitle;
     private javax.swing.JButton cancel;
+    private javax.swing.Box.Filler filler1;
     private static javax.swing.JComboBox gamelistbox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton save;
     // End of variables declaration//GEN-END:variables

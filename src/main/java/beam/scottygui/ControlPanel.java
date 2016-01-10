@@ -100,101 +100,105 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public boolean CheckNewVer() {
-        JSONObject VerCheck = null;
-        while (true) {
-            try {
-                VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
-                break;
-            } catch (ParseException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        //System.out.println(VerCheck.toString());
-        int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
-        if (NewVer > CurVer) {
-            int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
-
-            if (Yes == 0) {
-                int Attempts = 0;
-                while (Attempts < 5) {
-                    URL ToDownload = null;
-                    try {
-                        ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    String FileName = "./ScottyGUI.jar";
-                    downloadFromUrl download = new downloadFromUrl();
-                    try {
-                        download.downloadFromUrl(ToDownload, FileName);
-                        break;
-                    } catch (IOException ex) {
-                        Attempts++;
-                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        try {
+            JSONObject VerCheck = null;
+            while (true) {
+                try {
+                    VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
+                    break;
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (Attempts == 5) {
-                    JOptionPane.showMessageDialog(rootPane, "Unable to download, try again later");
-                } else {
-                    //Restart the program
-                    JOptionPane.showMessageDialog(rootPane, "Downloaded, Restarting ScottyGUI!");
-
-                    StringBuilder cmd = new StringBuilder();
-                    cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
-                    for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                        cmd.append(jvmArg + " ");
-                    }
-                    cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-
-                    try {
-                        //System.out.println(cmd.toString());
-                        Runtime.getRuntime().exec(cmd.toString());
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    System.exit(0);
-                    System.exit(0);
-                }
-
             }
-            return true;
+            //System.out.println(VerCheck.toString());
+            int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
+            if (NewVer > CurVer) {
+                int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
+
+                if (Yes == 0) {
+                    int Attempts = 0;
+                    while (Attempts < 5) {
+                        URL ToDownload = null;
+                        try {
+                            ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
+                        } catch (MalformedURLException ex) {
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        String FileName = "./ScottyGUI.jar";
+                        downloadFromUrl download = new downloadFromUrl();
+                        try {
+                            download.downloadFromUrl(ToDownload, FileName);
+                            break;
+                        } catch (IOException ex) {
+                            Attempts++;
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (Attempts == 5) {
+                        JOptionPane.showMessageDialog(rootPane, "Unable to download, try again later");
+                    } else {
+                        //Restart the program
+                        JOptionPane.showMessageDialog(rootPane, "Downloaded, Restarting ScottyGUI!");
+
+                        StringBuilder cmd = new StringBuilder();
+                        cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
+                        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+                            cmd.append(jvmArg + " ");
+                        }
+                        cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+
+                        try {
+                            //System.out.println(cmd.toString());
+                            Runtime.getRuntime().exec(cmd.toString());
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        System.exit(0);
+                        System.exit(0);
+                    }
+
+                }
+                return true;
+            }
+            return false;
+        } catch (Exception ignore) {
+            return false;
         }
-        return false;
     }
+        //    public void PopChatList() {
+    //        this.Viewers.setModel(ChatUserList);
+    //        new Thread("Update Viewer List") {
+    //            @Override
+    //            public void run() {
+    //                while (true) {
+    //                    //System.out.println("Populating Viewer List");
+    //                    JSONArray InitUserList = null;
+    //
+    //                    while (true) {
+    //                        try {
+    //                            InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
+    //                            break;
+    //                        } catch (ParseException ex) {
+    //                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+    //                        }
+    //                    }
+    //                    ChatUserList.clear();
+    //                    for (Object t : InitUserList) {
+    //                        JSONObject obj = (JSONObject) t;
+    //                        ChatUserList.add(obj.get("user_name").toString());
+    //                    }
+    //                    try {
+    //                        Thread.sleep(15000);
+    //                    } catch (InterruptedException ex) {
+    //                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+    //                    }
+    //                }
+    //            }
+    //        }.start();
+    //
+    //    }
 
-//    public void PopChatList() {
-//        this.Viewers.setModel(ChatUserList);
-//        new Thread("Update Viewer List") {
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    //System.out.println("Populating Viewer List");
-//                    JSONArray InitUserList = null;
-//
-//                    while (true) {
-//                        try {
-//                            InitUserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
-//                            break;
-//                        } catch (ParseException ex) {
-//                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                    }
-//                    ChatUserList.clear();
-//                    for (Object t : InitUserList) {
-//                        JSONObject obj = (JSONObject) t;
-//                        ChatUserList.add(obj.get("user_name").toString());
-//                    }
-//                    try {
-//                        Thread.sleep(15000);
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                }
-//            }
-//        }.start();
-//
-//    }
     public ControlPanel() {
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         GUILoadSettings();
@@ -568,10 +572,10 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 8, 70, -1));
+        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 200, -1));
 
         TopViewers.setText("0 Top Viewers");
-        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 90, -1));
+        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 190, -1));
 
         whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1390,7 +1394,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 StreamSetActionPerformed(evt);
             }
         });
-        getContentPane().add(StreamSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
+        getContentPane().add(StreamSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
 
         pack();
         setLocationRelativeTo(null);

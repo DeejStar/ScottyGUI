@@ -51,7 +51,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 47;
+    public static Integer CurVer = 48;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
     public static String AuthKey = null;
@@ -103,12 +103,23 @@ public class CS {
     public static JSONObject GameListJSON = new JSONObject();
     public static List<String> GamesPreSorted = new ArrayList();
 
-    public static void setgamelistmodel() {
-
-        Collections.sort(GamesPreSorted);
-        GameList = new DefaultComboBoxModel(GamesPreSorted.toArray(new String[GamesPreSorted.size()]));
-        ControlPanel.StreamSet.setEnabled(true);
-        ChatPopOut.StreamSet.setEnabled(true);
+    public static ComboBoxModel setgamelistmodel(String Query) {
+        if (Query == null) {
+            Collections.sort(GamesPreSorted);
+            ControlPanel.StreamSet.setEnabled(true);
+            ChatPopOut.StreamSet.setEnabled(true);
+            return new DefaultComboBoxModel(GamesPreSorted.toArray(new String[GamesPreSorted.size()]));
+        } else {
+            List<String> ToNarrow = new ArrayList();
+            for (Object T : GameListJSON.keySet()) {
+                String Name = T.toString().toUpperCase();
+                String QU = Query.toUpperCase();
+                if (Name.contains(QU)) {
+                    ToNarrow.add(T.toString());
+                }
+            }
+            return new DefaultComboBoxModel(ToNarrow.toArray(new String[ToNarrow.size()]));
+        }
     }
 
     public static void popGames() {
@@ -130,7 +141,7 @@ public class CS {
                         GamesPreSorted.add(Name);
                         GameListJSON.put(Name, ID);
                     }
-                    setgamelistmodel();
+                    setgamelistmodel(null);
                     break;
                 } catch (ParseException ex) {
                     Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);

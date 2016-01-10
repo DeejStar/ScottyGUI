@@ -74,6 +74,8 @@ public class Login extends javax.swing.JFrame {
         PassField = new javax.swing.JPasswordField();
         LoginField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -136,6 +138,8 @@ public class Login extends javax.swing.JFrame {
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(143, 157, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-7, 0, 310, -1));
+        getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
+        getContentPane().add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, 10));
 
         pack();
         setLocationRelativeTo(null);
@@ -287,6 +291,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField CodeField;
     private javax.swing.JTextField LoginField;
     private javax.swing.JPasswordField PassField;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
