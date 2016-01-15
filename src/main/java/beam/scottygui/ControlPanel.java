@@ -854,22 +854,17 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PSettings.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         PEnabled.setText("Points Enabled");
         PEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PEnabledActionPerformed(evt);
             }
         });
-        PSettings.add(PEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 12, -1, -1));
 
         jLabel8.setText("Points Name");
-        PSettings.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 116, -1));
 
         PointsName.setEditable(false);
         PointsName.setText("jTextField1");
-        PSettings.add(PointsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 82, 30));
 
         PRenBut.setText("Rename");
         PRenBut.addActionListener(new java.awt.event.ActionListener() {
@@ -877,7 +872,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PRenButActionPerformed(evt);
             }
         });
-        PSettings.add(PRenBut, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 85, 83, -1));
 
         EditPoints.setText("Edit");
         EditPoints.addActionListener(new java.awt.event.ActionListener() {
@@ -885,11 +879,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EditPointsActionPerformed(evt);
             }
         });
-        PSettings.add(EditPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 141, 83, -1));
 
         PWhenLive.setEditable(false);
         PWhenLive.setText("jTextField2");
-        PSettings.add(PWhenLive, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 82, -1));
 
         PWhenIdle.setEditable(false);
         PWhenIdle.setText("jTextField2");
@@ -898,11 +890,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PWhenIdleActionPerformed(evt);
             }
         });
-        PSettings.add(PWhenIdle, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, 102, -1));
 
         PStartPoints.setEditable(false);
         PStartPoints.setText("jTextField3");
-        PSettings.add(PStartPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 140, 70, -1));
 
         BHEnabled.setText("BankHeist Enabled");
         BHEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -910,7 +900,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 BHEnabledActionPerformed(evt);
             }
         });
-        PSettings.add(BHEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 210, -1, -1));
 
         REnabled.setText("Raffle Enabled");
         REnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -918,16 +907,12 @@ public final class ControlPanel extends javax.swing.JFrame {
                 REnabledActionPerformed(evt);
             }
         });
-        PSettings.add(REnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 210, -1, -1));
 
         jLabel9.setText("Points When Live");
-        PSettings.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, -1, -1));
 
         jLabel10.setText("Points When Not Live");
-        PSettings.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
 
         jLabel11.setText("Starting Points");
-        PSettings.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 120, -1, -1));
 
         RouletteEnable.setText("Roulette Enabled");
         RouletteEnable.addActionListener(new java.awt.event.ActionListener() {
@@ -935,17 +920,100 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RouletteEnableActionPerformed(evt);
             }
         });
-        PSettings.add(RouletteEnable, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
 
         jLabel17.setText("Points tick every 15 minutes");
-        PSettings.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 140, 20));
 
         PSubPoints.setEditable(false);
         PSubPoints.setText("jTextField3");
-        PSettings.add(PSubPoints, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, 70, -1));
 
         jLabel20.setText("Sub Bonus Points");
-        PSettings.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, -1, -1));
+
+        javax.swing.GroupLayout PSettingsLayout = new javax.swing.GroupLayout(PSettings);
+        PSettings.setLayout(PSettingsLayout);
+        PSettingsLayout.setHorizontalGroup(
+            PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PSettingsLayout.createSequentialGroup()
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(180, 180, 180)
+                        .addComponent(PEnabled))
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(PRenBut, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(BHEnabled)
+                        .addGap(5, 5, 5)
+                        .addComponent(RouletteEnable)
+                        .addGap(3, 3, 3)
+                        .addComponent(REnabled))
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PWhenLive))
+                        .addGap(28, 28, 28)
+                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PWhenIdle))
+                        .addGap(17, 17, 17)
+                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(PStartPoints)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(27, 27, 27)
+                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PSubPoints))))
+                .addGap(392, 392, 392))
+        );
+        PSettingsLayout.setVerticalGroup(
+            PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PSettingsLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(PEnabled)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel8)
+                .addGap(6, 6, 6)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(PRenBut))
+                    .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel20)
+                        .addComponent(jLabel10)))
+                .addGap(6, 6, 6)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PSettingsLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(EditPoints))
+                    .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(PSubPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(46, 46, 46)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BHEnabled)
+                    .addComponent(RouletteEnable)
+                    .addComponent(REnabled)))
+        );
 
         jPanel5.add(PSettings, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 471));
 
