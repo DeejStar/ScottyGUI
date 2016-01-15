@@ -9,6 +9,7 @@ import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.cp;
+import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -45,6 +46,8 @@ public class llEndPoint extends Endpoint {
         final String stopedStream = "chat:" + ChanID + ":StopStreaming";
         final String Followed = "channel:" + ChanID + ":followed";
         final String Updated = "channel:" + ChanID + ":update";
+        final String Subscribed = "channel:" + ChanID + ":subscribed";
+        final String Resubscribed = "channel:" + ChanID + ":resubscribed";
         Followers = CS.followerCache;
         Followers.clear();
         try {
@@ -86,12 +89,54 @@ public class llEndPoint extends Endpoint {
                     ////System.err.println(ChanID + " Stream False");
                     return;
                 }
+                if (Subscribed.equalsIgnoreCase(Slug) || Resubscribed.equalsIgnoreCase(Slug)) {
+                    CS.SubCount++;
+                    ControlPanel.SubsThisSession.setText(CS.SubCount + " subscribers this session.");
+                    new Thread("PutTheadName") {
+                        @Override
+                        public void run() {
+                            JSONObject ChanInfo = new JSONObject();
+                            String toParse = new HTTP().BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            while (true) {
+                                try {
+                                    ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));
+                                    break;
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            Long Subs = (Long) ChanInfo.get("numSubscribers");
+                            if (Subs == null) {
+                                Subs = 0L;
+                            }
+                            ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
+                        }
+                    }.start();
+                }
+
                 if (Followed.equalsIgnoreCase(Slug)) {
                     //int UseFollowers = 0;
                     boolean Followed = (boolean) objData.get("following");
                     JSONObject userData = (JSONObject) objData.get("user");
                     Long followerID = (Long) userData.get("id");
                     String followerName = userData.get("username").toString();
+                    new Thread("PutTheadName") {
+                        @Override
+                        public void run() {
+                            JSONObject ChanInfo = new JSONObject();
+                            String toParse = new HTTP().BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            while (true) {
+                                try {
+                                    ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));
+                                    break;
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            Long Followers = (Long) ChanInfo.get("numFollowers");
+                            ControlPanel.TotFollowers.setText("Total Followers: " + Followers);
+                        }
+                    }.start();
                     if (Followed) {
                         Followers.add(followerName);
                     } else {
@@ -104,7 +149,7 @@ public class llEndPoint extends Endpoint {
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
                         CS.FolCount++;
-                        ControlPanel.FolCounter.setText(CS.FolCount + " this session.");
+                        ControlPanel.FolCounter.setText(CS.FolCount + " followers this session.");
                     } else {
                         if (!followCache.contains(followerID)) {
                             followCache.add(followerID);
@@ -186,6 +231,8 @@ public class llEndPoint extends Endpoint {
         slug.add("channel:" + ChanID + ":status");
         slug.add("channel:" + ChanID + ":followed");
         slug.add("channel:" + ChanID + ":subscribed");
+        slug.add("channel:" + ChanID + ":subscribed");
+        slug.add("channel:" + ChanID + ":resubscribed");
         data.put("method", "put");
         data.put("headers", "");
         slugData.put("slug", slug);

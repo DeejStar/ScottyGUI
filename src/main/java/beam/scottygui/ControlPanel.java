@@ -223,7 +223,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
 
         RefreshAllSettings();
-
         PopFilterSettings();
         PopBadWords();
 
@@ -510,6 +509,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         SessionMsgCount = new javax.swing.JLabel();
         FolCounter = new javax.swing.JLabel();
         jButton9 = new javax.swing.JButton();
+        SubsThisSession = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -526,7 +527,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
         StreamSet = new javax.swing.JButton();
+        TotSubs = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        TotFollowers = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -568,6 +571,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ScottyGUI Ver. " + this.CurVer);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton6.setText("Chat");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -575,11 +579,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(423, 10, 100, -1));
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 200, -1));
 
         TopViewers.setText("0 Top Viewers");
+        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 14, 190, -1));
 
         whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1185,7 +1192,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(JoinAnnounce)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(LeaveAnnounce)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 900, 230));
@@ -1291,19 +1298,26 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         settingsTabs.addTab("Donator Stuff", DonatorPanel);
 
-        jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 17, -1, 520));
+        jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 970, 500));
 
         whitelistPane.addTab("Settings", jPanel4);
 
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         UChatters.setText("0 Unique Chatters This Session.");
+        jPanel7.add(UChatters, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 48, 238, -1));
 
         PercentRetainedViewers.setText("Not enough info yet for Retained Viewer Stats");
+        jPanel7.add(PercentRetainedViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 68, 238, -1));
 
         jLabel13.setText("<<< EXPERIMENTAL");
+        jPanel7.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(268, 68, -1, -1));
 
         SessionMsgCount.setText("0 Messages This Session");
+        jPanel7.add(SessionMsgCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 88, 238, -1));
 
         FolCounter.setText("No followers yet this session");
+        jPanel7.add(FolCounter, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 108, 290, -1));
 
         jButton9.setText("Reset Follower Counter");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -1311,42 +1325,18 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton9ActionPerformed(evt);
             }
         });
+        jPanel7.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 170, -1));
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(UChatters, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(PercentRetainedViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel13))
-                    .addComponent(SessionMsgCount, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(FolCounter, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(jButton9))))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(UChatters)
-                .addGap(6, 6, 6)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PercentRetainedViewers)
-                    .addComponent(jLabel13))
-                .addGap(6, 6, 6)
-                .addComponent(SessionMsgCount)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FolCounter)
-                    .addComponent(jButton9))
-                .addContainerGap())
-        );
+        SubsThisSession.setText("No subscribers yet this session");
+        jPanel7.add(SubsThisSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 128, -1, -1));
+
+        jToggleButton1.setText("Reset Sub Counter");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+        jPanel7.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 170, -1));
 
         whitelistPane.addTab("Statistics", jPanel7);
 
@@ -1449,7 +1439,10 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         whitelistPane.addTab("Whitelist", jPanel11);
 
+        getContentPane().add(whitelistPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 990, 530));
+
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 11, -1, 30));
 
         AlertPaneOpen.setText("Alert Pane");
         AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
@@ -1457,6 +1450,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AlertPaneOpenActionPerformed(evt);
             }
         });
+        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, 128, -1));
 
         RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1464,6 +1458,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RefreshAllActionPerformed(evt);
             }
         });
+        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 10, 160, -1));
 
         StreamSet.setText("Channel Name and Game");
         StreamSet.setActionCommand("Stream Title");
@@ -1473,49 +1468,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 StreamSetActionPerformed(evt);
             }
         });
+        getContentPane().add(StreamSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(StreamSet)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(10, 10, 10)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(CurViewers)
-                        .addGap(6, 6, 6)
-                        .addComponent(TopViewers))
-                    .addComponent(StreamSet)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton6)
-                    .addComponent(AlertPaneOpen)
-                    .addComponent(RefreshAll))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        TotSubs.setText("jLabel19");
+        getContentPane().add(TotSubs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 240, -1));
+        getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        TotFollowers.setText("0 Followers");
+        getContentPane().add(TotFollowers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 240, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -2307,6 +2267,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         ControlPanel.FolCounter.setText("No followers this session.");// TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
 
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        CS.SubCount = 0;
+        ControlPanel.SubsThisSession.setText("No subscribers this session.");// TODO add your handling code here:        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2536,6 +2501,24 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         PopFilterSettings();
         PopulateAllSettings();
+        JSONObject ChanInfo = new JSONObject();
+        String toParse = http.BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+        while (true) {
+            try {
+                ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));
+                break;
+            } catch (ParseException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        Long Followers = (Long) ChanInfo.get("numFollowers");
+        Long Subs = (Long) ChanInfo.get("numSubscribers");
+        if (Subs == null) {
+            Subs = 0L;
+        }
+        ControlPanel.TotFollowers.setText("Total Followers: " + Followers);
+        ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
+
     }
 
     public void PopFilterSettings() {
@@ -2697,12 +2680,15 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton ShowStoredKey;
     private javax.swing.JTextField StoredAuthKey;
     public static javax.swing.JButton StreamSet;
+    public static javax.swing.JLabel SubsThisSession;
     private javax.swing.JSlider SymPercent;
     private javax.swing.JLabel SymPercentDis;
     private javax.swing.JToggleButton SymbolsOnOff;
     private javax.swing.JLabel TimeoutLabel;
     private javax.swing.JSlider TimoutDuration;
     public javax.swing.JLabel TopViewers;
+    public static javax.swing.JLabel TotFollowers;
+    public static javax.swing.JLabel TotSubs;
     private javax.swing.JButton TwitterAlertMSG;
     public javax.swing.JLabel UChatters;
     public javax.swing.JList Viewers;
@@ -2765,6 +2751,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTabbedPane settingsTabs;
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
