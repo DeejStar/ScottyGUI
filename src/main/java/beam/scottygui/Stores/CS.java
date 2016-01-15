@@ -51,7 +51,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 50;
+    public static Integer CurVer = 51;
     public static Integer FolCount = 0;
     public static HTTP http = new HTTP();
     public static Long ChanID = null;
