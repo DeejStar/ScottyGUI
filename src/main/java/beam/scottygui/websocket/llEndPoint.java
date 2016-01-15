@@ -6,6 +6,7 @@
 package beam.scottygui.websocket;
 
 import beam.scottygui.Alerts.AlertFrame;
+import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.JSONUtil;
@@ -91,7 +92,6 @@ public class llEndPoint extends Endpoint {
                     JSONObject userData = (JSONObject) objData.get("user");
                     Long followerID = (Long) userData.get("id");
                     String followerName = userData.get("username").toString();
-
                     if (Followed) {
                         Followers.add(followerName);
                     } else {
@@ -103,6 +103,8 @@ public class llEndPoint extends Endpoint {
                         CS.addFollowerToArray(followerName);
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
+                        CS.FolCount++;
+                        ControlPanel.FolCounter.setText(CS.FolCount + " this session.");
                     } else {
                         if (!followCache.contains(followerID)) {
                             followCache.add(followerID);
