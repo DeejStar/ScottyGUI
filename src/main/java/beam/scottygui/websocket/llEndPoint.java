@@ -11,6 +11,8 @@ import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -96,7 +98,12 @@ public class llEndPoint extends Endpoint {
                         @Override
                         public void run() {
                             JSONObject ChanInfo = new JSONObject();
-                            String toParse = new HTTP().BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            String toParse = null;
+                            try {
+                                toParse = new HTTP().get("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                                Logger.getLogger(llEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             while (true) {
                                 try {
                                     ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));
@@ -106,9 +113,6 @@ public class llEndPoint extends Endpoint {
                                 }
                             }
                             Long Subs = (Long) ChanInfo.get("numSubscribers");
-                            if (Subs == null) {
-                                Subs = 0L;
-                            }
                             ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
                         }
                     }.start();
@@ -124,7 +128,12 @@ public class llEndPoint extends Endpoint {
                         @Override
                         public void run() {
                             JSONObject ChanInfo = new JSONObject();
-                            String toParse = new HTTP().BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            String toParse = null;
+                            try {
+                                toParse = new HTTP().get("https://beam.pro/api/v1/channels/" + CS.ChanID);
+                            } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                                Logger.getLogger(llEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             while (true) {
                                 try {
                                     ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));

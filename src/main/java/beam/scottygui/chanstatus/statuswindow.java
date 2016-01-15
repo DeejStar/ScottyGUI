@@ -259,7 +259,12 @@ public class statuswindow extends javax.swing.JFrame {
 
     void GetTitle() {
         HTTP http = new HTTP();
-        String toParse = http.BeamGet("https://beam.pro/api/v1/channels/" + CS.ChanID);
+        String toParse = null;
+        try {
+            toParse = http.get("https://beam.pro/api/v1/channels/" + CS.ChanID);
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(statuswindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JSONObject chaninfo = new JSONObject();
         try {
             chaninfo.putAll((JSONObject) new JSONParser().parse(toParse));

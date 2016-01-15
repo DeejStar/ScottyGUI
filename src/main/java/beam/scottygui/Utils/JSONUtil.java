@@ -101,7 +101,7 @@ public class JSONUtil {
                 }
                 result.addAll(toAdd);
                 page++;
-            } catch (ParseException ex) {
+            } catch (Exception ex) {
                 Random rand = new Random();
                 int n = rand.nextInt(5000) + 1;
                 sleep(n);

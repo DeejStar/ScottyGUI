@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,7 +52,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 53;
+    public static Integer CurVer = 55;
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
     public static HTTP http = new HTTP();
@@ -125,7 +126,12 @@ public class CS {
     }
 
     public static void popGames() {
-        String toParse = http.get("https://api.scottybot.net/getgamearray");
+        String toParse = null;
+        try {
+            toParse = http.get("https://api.scottybot.net/getgamearray");
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
         while (true) {
             if (toParse.equalsIgnoreCase("Populating, may take some time")) {
                 try {

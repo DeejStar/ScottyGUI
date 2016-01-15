@@ -160,9 +160,9 @@ public class WebSocket {
                 JSONObject data = null;
                 JSONArray UserList = null;
                 try {
-                    data = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + ChanID));
-                    UserList = (JSONArray) parser.parse(http.BeamGet("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
-                } catch (ParseException ex) {
+                    data = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + ChanID));
+                    UserList = (JSONArray) parser.parse(http.get("https://beam.pro/api/v1/chats/" + ChanID + "/users"));
+                } catch (Exception ex) {
                     Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 ChatUserList.clear();

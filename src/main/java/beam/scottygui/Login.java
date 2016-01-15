@@ -196,7 +196,7 @@ public class Login extends javax.swing.JFrame {
         try {
             obj = (JSONObject) parser.parse(ToParse);
             UserID = Long.parseLong(obj.get("id").toString());
-            JSONObject ChanObj = (JSONObject) parser.parse(http.BeamGet("https://beam.pro/api/v1/channels/" + Username));
+            JSONObject ChanObj = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + Username));
             ChanID = Long.parseLong(ChanObj.get("id").toString());
             //System.out.println(ChanObj);
             try {

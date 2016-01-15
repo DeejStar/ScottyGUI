@@ -135,6 +135,41 @@ public class HTTP {
 
     }
 
+    public String get(String URL) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        String toSend = "";
+        while (tried < 5) {
+            tried++;
+            try {
+                https://beam.pro/api/v1" + apiLoc;
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    HttpClientContext context = HttpClientContext.create();
+                    context.setCookieStore(CS.cookie);
+                    List<NameValuePair> urlParameters = new ArrayList();
+                    HttpGet request = new HttpGet(URL);
+                    HttpResponse response = client.execute(request, context);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    toSend = result.toString();
+//System.err.println(result.toString());
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+        return toSend;
+    }
+
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
 
         String url = "https://beam.pro/api/v1/users/login";
@@ -326,80 +361,6 @@ public class HTTP {
             System.exit(0);
         }
         this.getscottyReturnOnCrash.put(urlString, dataIn);
-        return dataIn;
-    }
-
-    public String BeamGet(String urlString) {
-        String dataIn = "";
-        int TimesToTry = 0;
-        while (TimesToTry < 10) {
-            try {
-                urlString = urlString.trim();
-                ////System.out.println(urlString);
-                URL url = new URL(urlString);
-                // ////System.out.println("DEBUG: Getting data from " + url.toString());
-                URLConnection conn = url.openConnection();
-                conn.setRequestProperty("Cookie", "sails.sid=" + CS.Cookie);
-                conn.setRequestProperty("User-Agent", "ScottyBot");
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                        conn.getInputStream()))) {
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        dataIn += inputLine;
-                    }
-                }
-                break;
-            } catch (IOException | OutOfMemoryError ex) {
-                TimesToTry++;
-                ////System.out.println(ex.getMessage());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-        if (TimesToTry == 10) {
-            JOptionPane.showMessageDialog(null, "Error communicating with server, try again later.");
-            return null;
-        }
-        return dataIn;
-    }
-
-    public String get(String urlString) {
-        String dataIn = "";
-        int TimesToTry = 0;
-        while (TimesToTry < 10) {
-            try {
-                urlString = urlString.trim();
-                ////System.out.println(urlString);
-                URL url = new URL(urlString);
-                // ////System.out.println("DEBUG: Getting data from " + url.toString());
-                URLConnection conn = url.openConnection();
-                conn.setRequestProperty("User-Agent", "ScottyBot");
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                        conn.getInputStream()))) {
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        dataIn += inputLine;
-                    }
-                }
-                ////System.err.println(urlString + " >>>>> " + dataIn);
-                break;
-            } catch (IOException | OutOfMemoryError ex) {
-                TimesToTry++;
-                ////System.out.println(ex.getMessage());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex1) {
-                    Logger.getLogger(HTTP.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-        if (TimesToTry == 10) {
-            JOptionPane.showMessageDialog(null, "Error communicating with server, try again later.");
-            return null;
-        }
         return dataIn;
     }
 }
