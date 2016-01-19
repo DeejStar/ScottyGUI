@@ -64,65 +64,24 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        jButton1 = new javax.swing.JButton();
+        CodeField = new javax.swing.JPasswordField();
+        PassField = new javax.swing.JPasswordField();
+        LoginField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        CodeField = new javax.swing.JPasswordField();
-        PassField = new javax.swing.JPasswordField();
-        LoginField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        jLabel3 = new javax.swing.JLabel();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel3.setText("Log in to Scottybot");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 10, -1, -1));
-
-        jLabel4.setText("using your beam info.");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
-
-        jLabel1.setText("Username");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 52, -1, -1));
-
-        jLabel2.setText("Password");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(57, 96, -1, -1));
-
-        jLabel5.setText("2-Factor (optional)");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 129, -1, -1));
-
-        CodeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CodeFieldActionPerformed(evt);
-            }
-        });
-        CodeField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                CodeFieldKeyPressed(evt);
-            }
-        });
-        jPanel1.add(CodeField, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 124, 110, -1));
-
-        PassField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                PassFieldKeyPressed(evt);
-            }
-        });
-        jPanel1.add(PassField, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 91, 110, -1));
-
-        LoginField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LoginFieldActionPerformed(evt);
-            }
-        });
-        jPanel1.add(LoginField, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 52, 110, -1));
+        getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
+        getContentPane().add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, 10));
 
         jButton1.setText("Login");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -135,11 +94,49 @@ public class Login extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(143, 157, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-7, 0, 310, -1));
-        getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
-        getContentPane().add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, 10));
+        CodeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CodeFieldActionPerformed(evt);
+            }
+        });
+        CodeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                CodeFieldKeyPressed(evt);
+            }
+        });
+        getContentPane().add(CodeField, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 110, -1));
+
+        PassField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PassFieldKeyPressed(evt);
+            }
+        });
+        getContentPane().add(PassField, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 110, -1));
+
+        LoginField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginFieldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(LoginField, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 110, -1));
+
+        jLabel4.setText("using your beam info.");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 40, -1, -1));
+
+        jLabel1.setText("Username");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, -1, -1));
+
+        jLabel2.setText("Password");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
+
+        jLabel5.setText("2-Factor (optional)");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
+
+        jLabel3.setText("Log in to Scottybot");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, -1, -1));
+        getContentPane().add(filler3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 290, 210));
 
         pack();
         setLocationRelativeTo(null);
@@ -225,7 +222,7 @@ public class Login extends javax.swing.JFrame {
         JSONObject AuthReturn = null;
         String URL = null;
         try {
-            URL = "https://api.scottybot.net/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
+            URL = CS.apiLoc + "/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -236,8 +233,26 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (AuthReturn.containsValue("Scottybot is not in your channel")) {
-            JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
-            return;
+            int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");
+            System.err.println("JOIN:" + Join);
+
+            if (Join == 0) {
+                try {
+                    String toParse = http.GetScotty(CS.apiLoc + "/joinchan?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword()));
+                    JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
+                    if (joinobj.containsKey("APIAuth")) {
+                        AuthReturn.clear();
+                        AuthReturn.put("AuthKeyv2", joinobj.get("APIAuth"));
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
+                    }
+                } catch (UnsupportedEncodingException | ParseException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
+                return;
+            }
         }
         AuthKey = (String) AuthReturn.get("AuthKeyv2");
         //AuthKey = AuthKey.replace("\"", "");
@@ -293,12 +308,12 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField PassField;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

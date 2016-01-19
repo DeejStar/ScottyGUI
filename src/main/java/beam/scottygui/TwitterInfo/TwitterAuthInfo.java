@@ -5,6 +5,7 @@
  */
 package beam.scottygui.TwitterInfo;
 
+import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.AuthKey;
 import beam.scottygui.Utils.HTTP;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +31,7 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
         JSONObject ToParse = new JSONObject();
         String authinfo = "";
         try {
-            String toSend = "https://api.scottybot.net/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
+            String toSend = CS.apiLoc + "/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
             //System.err.println(toSend);
             authinfo = new HTTP().GetScotty(toSend);
 
@@ -163,7 +164,7 @@ public class TwitterAuthInfo extends javax.swing.JFrame {
         }
         //System.err.println("Got here 5");
         try {
-            String ToSend = "https://api.scottybot.net/twitterauth/add?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&twitterauth=" + URLEncoder.encode(AuthInfo.toString(), "UTF-8");
+            String ToSend = CS.apiLoc + "/twitterauth/add?authkey=" + URLEncoder.encode(AuthKey, "UTF-8") + "&twitterauth=" + URLEncoder.encode(AuthInfo.toString(), "UTF-8");
             new HTTP().GetScotty(ToSend);
 
         } catch (UnsupportedEncodingException ex) {

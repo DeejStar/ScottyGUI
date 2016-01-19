@@ -52,7 +52,8 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 55;
+    public static Integer CurVer = 56;
+    public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
     public static HTTP http = new HTTP();
@@ -128,7 +129,7 @@ public class CS {
     public static void popGames() {
         String toParse = null;
         try {
-            toParse = http.get("https://api.scottybot.net/getgamearray");
+            toParse = http.get(CS.apiLoc + "/getgamearray");
         } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -314,7 +315,7 @@ public class CS {
         if (ChanSettings.size() > 0) {
             ChanSettings.clear();
         }
-        String toParse = http.GetScotty("https://api.scottybot.net/settings?authkey=" + AuthKey);
+        String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + AuthKey);
         //System.err.println(toParse);
         ChanSettings.putAll((JSONObject) parser.parse(toParse));
         //System.out.println(ChanSettings.toString());
