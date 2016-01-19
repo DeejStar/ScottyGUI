@@ -8,6 +8,7 @@ package beam.scottygui.Stores;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.ControlPanel;
+import beam.scottygui.PatchNotes;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.SortedListModel;
@@ -52,7 +53,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 56;
+    public static Integer CurVer = 57;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -258,6 +259,16 @@ public class CS {
             GUISettings.putAll((JSONObject) parser.parse(prop.getProperty("settings")));
         } catch (ParseException ex) {
             Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (GUISettings.containsKey("oldVer")) {
+            int oldVer = Integer.parseInt(GUISettings.get("oldVer").toString());
+            if (oldVer < CS.CurVer) {
+                CS.GUISaveSettings("oldVer", CS.CurVer.toString());
+                new PatchNotes().setVisible(true);
+            }
+        } else {
+            CS.GUISaveSettings("oldVer", CS.CurVer.toString());
+            new PatchNotes().setVisible(true);
         }
         if (GUISettings.containsKey("followerJSON")) {
             try {

@@ -135,6 +135,48 @@ public class HTTP {
 
     }
 
+    public String post(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        String toSend = "";
+        while (tried < 5) {
+            tried++;
+            try {
+
+                System.err.println(url);
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    HttpClientContext context = HttpClientContext.create();
+                    //context.setCookieStore(CS.cookie);
+                    List<NameValuePair> urlParameters = new ArrayList();
+                    for (Map.Entry<String, String> param : object.entrySet()) {
+                        urlParameters.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+
+                    }
+
+                    HttpPost request = new HttpPost(url);
+                    request.setEntity(new UrlEncodedFormEntity(urlParameters));
+                    HttpResponse response = client.execute(request, context);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    //System.err.println(result.toString());
+                    toSend = result.toString();
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+        return toSend;
+    }
+
     public String get(String URL) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
         int tried = 0;
         String toSend = "";

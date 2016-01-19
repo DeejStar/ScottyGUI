@@ -20,6 +20,9 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -215,7 +218,7 @@ public class Login extends javax.swing.JFrame {
                 String error = (String) obj.get("message");
                 JOptionPane.showMessageDialog(rootPane, "Error: " + error);
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Login failed or Scottybot not in channel.");
+                JOptionPane.showMessageDialog(rootPane, "Login failed.");
             }
             return;
         }
@@ -238,7 +241,12 @@ public class Login extends javax.swing.JFrame {
 
             if (Join == 0) {
                 try {
-                    String toParse = http.GetScotty(CS.apiLoc + "/joinchan?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword()));
+
+                    Map<String, String> toPost = new HashMap();
+                    toPost.put("username", Username);
+                    toPost.put("password", URLEncoder.encode(Password, "UTF-8"));
+                    toPost.put("code", new String(this.CodeField.getPassword()));
+                    String toParse = http.post(toPost, CS.apiLoc + "/joinchan");
                     JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
                     if (joinobj.containsKey("APIAuth")) {
                         AuthReturn.clear();
@@ -247,6 +255,10 @@ public class Login extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
                     }
                 } catch (UnsupportedEncodingException | ParseException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException | ClassNotFoundException | SQLException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
