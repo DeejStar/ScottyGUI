@@ -53,7 +53,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JColorChooser;
@@ -505,6 +507,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         ChatEnabled = new javax.swing.JCheckBox();
         ChuckEnabled = new javax.swing.JCheckBox();
         LeetSpeek = new javax.swing.JCheckBox();
+        setEmail = new javax.swing.JButton();
+        resendEmail = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         UChatters = new javax.swing.JLabel();
         PercentRetainedViewers = new javax.swing.JLabel();
@@ -1366,13 +1370,13 @@ public final class ControlPanel extends javax.swing.JFrame {
                             .addComponent(ShowStoredKey)
                             .addComponent(GenNewStoredKey)))
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(150, 150, 150)
+                        .addGap(156, 156, 156)
                         .addComponent(CUsernamePassword)
                         .addGap(7, 7, 7)
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ResetScottyName))))
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(SettingsPanelLayout.createSequentialGroup()
                 .addGap(209, 209, 209)
                 .addComponent(filler4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1386,6 +1390,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         YodaEnabled.setText("Yoda Enabled");
         YodaEnabled.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
+        YodaEnabled.setEnabled(false);
         YodaEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 YodaEnabledActionPerformed(evt);
@@ -1395,6 +1400,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ChatEnabled.setText("!Chat Enabled");
         ChatEnabled.setToolTipText("Type !chat and a message, it will respond to you \"intelligently\"");
+        ChatEnabled.setEnabled(false);
         ChatEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChatEnabledActionPerformed(evt);
@@ -1404,6 +1410,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         ChuckEnabled.setText("!Chuck Enabled");
         ChuckEnabled.setToolTipText("Enabled !chuck commands for jokes");
+        ChuckEnabled.setEnabled(false);
         ChuckEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChuckEnabledActionPerformed(evt);
@@ -1413,6 +1420,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         LeetSpeek.setText("L33t Enabled");
         LeetSpeek.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
+        LeetSpeek.setEnabled(false);
         LeetSpeek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LeetSpeekActionPerformed(evt);
@@ -1420,11 +1428,29 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         DonationPane.add(LeetSpeek, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, -1, -1));
 
+        setEmail.setText("Set your email address");
+        setEmail.setEnabled(false);
+        setEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setEmailActionPerformed(evt);
+            }
+        });
+        DonationPane.add(setEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, 180, -1));
+
+        resendEmail.setText("Resend verification email");
+        resendEmail.setEnabled(false);
+        resendEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resendEmailActionPerformed(evt);
+            }
+        });
+        DonationPane.add(resendEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 180, -1));
+
         DonatorPanel.add(DonationPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 470));
 
         settingsTabs.addTab("Donator Stuff", DonatorPanel);
 
-        jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 990, 500));
+        jPanel4.add(settingsTabs, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1010, 510));
 
         whitelistPane.addTab("Settings", jPanel4);
 
@@ -1596,8 +1622,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1004, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -1624,7 +1649,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 179, Short.MAX_VALUE))
+            .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1649,14 +1675,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                             .addComponent(RefreshAll))))
                 .addGap(1, 1, 1)
                 .addComponent(TotSubs)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGap(11, 11, 11)
+                .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(whitelistPane, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE))
         );
 
         pack();
@@ -2459,6 +2481,40 @@ public final class ControlPanel extends javax.swing.JFrame {
         ControlPanel.SubsThisSession.setText("No subscribers this session.");// TODO add your handling code here:        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
+    private void setEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setEmailActionPerformed
+        try {
+            Map<String, String> toSend = new HashMap();
+            String email = JOptionPane.showInputDialog("Please provide your email address.");
+            toSend.put("authkey", CS.AuthKey);
+            toSend.put("email", email);
+            String response = http.put(toSend, CS.apiLoc + "/setemail");
+            JSONObject obj = (JSONObject) parser.parse(response);
+            if (obj.containsKey("error")) {
+                JOptionPane.showMessageDialog(StreamSet, obj.get("error").toString());
+            } else {
+                JOptionPane.showMessageDialog(StreamSet, obj.get("result").toString() + ": " + obj.get("status").toString());
+            }
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_setEmailActionPerformed
+
+    private void resendEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resendEmailActionPerformed
+        try {
+            Map<String, String> toSend = new HashMap();
+            toSend.put("authkey", CS.AuthKey);
+            String response = http.post(toSend, CS.apiLoc + "/resendemail");
+            JSONObject obj = (JSONObject) parser.parse(response);
+            if (obj.containsKey("error")) {
+                JOptionPane.showMessageDialog(StreamSet, obj.get("error").toString());
+            } else {
+                JOptionPane.showMessageDialog(StreamSet, obj.get("sent").toString());
+            }
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_resendEmailActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2944,6 +3000,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JButton resendEmail;
+    private javax.swing.JButton setEmail;
     private javax.swing.JTabbedPane settingsTabs;
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;

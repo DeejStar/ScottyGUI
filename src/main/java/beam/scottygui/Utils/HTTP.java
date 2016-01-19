@@ -95,12 +95,12 @@ public class HTTP {
         }
     }
 
-    public void put(Map<String, String> object, String apiLoc) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+    public String put(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
         int tried = 0;
+        String toSend = "";
         while (tried < 5) {
             tried++;
             try {
-                String url = "https://beam.pro/api/v1" + apiLoc;
                 System.err.println(url);
                 try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
                     HttpClientContext context = HttpClientContext.create();
@@ -123,6 +123,7 @@ public class HTTP {
                         result.append(line);
                     }
                     //System.err.println(result.toString());
+                    toSend = result.toString();
                 }
                 break;
             } catch (Exception e) {
@@ -132,7 +133,7 @@ public class HTTP {
             }
 
         }
-
+        return toSend;
     }
 
     public String post(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {

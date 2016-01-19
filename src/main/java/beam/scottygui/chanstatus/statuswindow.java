@@ -174,7 +174,7 @@ public class statuswindow extends javax.swing.JFrame {
             toSend.put("typeId", ID.toString());
             System.err.println(toSend);
             try {
-                http.put(toSend, "/channels/" + CS.ChanID);
+                http.put(toSend, "https://beam.pro/api/v1/channels/" + CS.ChanID);
 
                 this.setVisible(false);
                 this.dispose();
