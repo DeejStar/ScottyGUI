@@ -308,50 +308,52 @@ public class Login extends javax.swing.JFrame {
             return;
         }
         JSONObject AuthReturn = null;
-        String URL = null;
-        try {
-            URL = CS.apiLoc + "/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            AuthReturn = (JSONObject) parser.parse(http.GetScotty(URL));
+        if (this.StreamerList.getSelectedIndex() == -1 || !this.ShowSList.isSelected()) {
 
-        } catch (ParseException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (AuthReturn.containsValue("Scottybot is not in your channel")) {
-            int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");
-            System.err.println("JOIN:" + Join);
+            String URL = null;
+            try {
+                URL = CS.apiLoc + "/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                AuthReturn = (JSONObject) parser.parse(http.GetScotty(URL));
 
-            if (Join == 0) {
-                try {
+            } catch (ParseException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (AuthReturn.containsValue("Scottybot is not in your channel")) {
+                int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");
+                System.err.println("JOIN:" + Join);
 
-                    Map<String, String> toPost = new HashMap();
-                    toPost.put("username", Username);
-                    toPost.put("password", URLEncoder.encode(Password, "UTF-8"));
-                    toPost.put("code", new String(this.CodeField.getPassword()));
-                    String toParse = http.post(toPost, CS.apiLoc + "/joinchan");
-                    JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
-                    if (joinobj.containsKey("APIAuth")) {
-                        AuthReturn.clear();
-                        AuthReturn.put("AuthKeyv2", joinobj.get("APIAuth"));
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
+                if (Join == 0) {
+                    try {
+
+                        Map<String, String> toPost = new HashMap();
+                        toPost.put("username", Username);
+                        toPost.put("password", URLEncoder.encode(Password, "UTF-8"));
+                        toPost.put("code", new String(this.CodeField.getPassword()));
+                        String toParse = http.post(toPost, CS.apiLoc + "/joinchan");
+                        JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
+                        if (joinobj.containsKey("APIAuth")) {
+                            AuthReturn.clear();
+                            AuthReturn.put("AuthKeyv2", joinobj.get("APIAuth"));
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
+                        }
+                    } catch (UnsupportedEncodingException | ParseException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException | ClassNotFoundException | SQLException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (UnsupportedEncodingException | ParseException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException | ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
+                    return;
                 }
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
-                return;
             }
         }
-
         if (!this.ShowSList.isSelected() || this.StreamerList.getSelectedIndex() == -1) {
             try {
                 ChanID = Long.parseLong(ChanObj.get("id").toString());
