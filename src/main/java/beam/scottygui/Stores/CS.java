@@ -53,7 +53,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 58;
+    public static Integer CurVer = 59;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -107,6 +107,77 @@ public class CS {
     public static String SubBadge = "";
     public static JSONObject GameListJSON = new JSONObject();
     public static List<String> GamesPreSorted = new ArrayList();
+
+    public static void AddModList(String Streamer, String uuid) {
+        JSONArray chanList = new JSONArray();
+        try {
+            chanList.addAll((JSONArray) parser.parse(CS.GUISettings.get("ModList").toString()));
+        } catch (ParseException ex) {
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JSONObject streamer = new JSONObject();
+        streamer.put("name", Streamer);
+        streamer.put("uuid", uuid);
+        chanList.add(streamer);
+        CS.GUISaveSettings("ModList", chanList.toJSONString());
+    }
+
+    public static void DelModList(String Streamer) {
+        JSONArray chanList = new JSONArray();
+        JSONArray toDel = new JSONArray();
+        try {
+            chanList.addAll((JSONArray) parser.parse(CS.GUISettings.get("ModList").toString()));
+        } catch (ParseException ex) {
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (Object t : chanList) {
+            JSONObject streamer = (JSONObject) t;
+            String name = (String) streamer.get("name");
+            if (name.equalsIgnoreCase(Streamer)) {
+                toDel.add(streamer);
+            }
+        }
+        chanList.removeAll(toDel);
+        CS.GUISaveSettings("ModList", chanList.toJSONString());
+    }
+
+    public static String getStreamerUUID(String Streamer) {
+        JSONArray ChanList = null;
+        try {
+            ChanList = (JSONArray) parser.parse(CS.GUISettings.get("ModList").toString());
+        } catch (ParseException ex) {
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (Object T : ChanList) {
+            JSONObject chan = (JSONObject) T;
+            String Name = chan.get("name").toString();
+            if (Name.equalsIgnoreCase(Streamer)) {
+                return chan.get("uuid").toString();
+            }
+        }
+        return null;
+    }
+
+    public static ComboBoxModel getModList() {
+        List<String> Names = new ArrayList();
+        CS.GUILoadSettings();
+        if (!GUISettings.containsKey("ModList")) {
+            JSONArray blank = new JSONArray();
+            CS.GUISaveSettings("ModList", blank.toJSONString());
+        }
+        JSONArray ChanList = null;
+        try {
+            ChanList = (JSONArray) parser.parse(CS.GUISettings.get("ModList").toString());
+        } catch (ParseException ex) {
+            Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (Object T : ChanList) {
+            JSONObject chan = (JSONObject) T;
+            String Name = chan.get("name").toString();
+            Names.add(Name);
+        }
+        return new DefaultComboBoxModel(Names.toArray());
+    }
 
     public static ComboBoxModel setgamelistmodel(String Query) {
         if (Query == null) {

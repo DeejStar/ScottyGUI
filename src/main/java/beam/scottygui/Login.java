@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -58,6 +59,7 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
+
     }
 
     /**
@@ -68,8 +70,7 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        jButton1 = new javax.swing.JButton();
+        Login = new javax.swing.JButton();
         CodeField = new javax.swing.JPasswordField();
         PassField = new javax.swing.JPasswordField();
         LoginField = new javax.swing.JTextField();
@@ -78,26 +79,30 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        streamlabel = new javax.swing.JLabel();
+        StreamerList = new javax.swing.JComboBox();
+        addstreamer = new javax.swing.JButton();
+        delstreamer = new javax.swing.JButton();
+        ShowSList = new javax.swing.JToggleButton();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
-        getContentPane().add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 290, 10));
 
-        jButton1.setText("Login");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        Login.setText("Login");
+        Login.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                LoginMouseClicked(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                LoginActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, -1, -1));
+        getContentPane().add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 180, -1, -1));
 
         CodeField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,6 +144,40 @@ public class Login extends javax.swing.JFrame {
 
         jLabel3.setText("Log in to Scottybot");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, -1, -1));
+
+        streamlabel.setText("Streamers (For Mods Of A Channel)");
+        streamlabel.setEnabled(false);
+        getContentPane().add(streamlabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 250, -1, -1));
+
+        StreamerList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        StreamerList.setEnabled(false);
+        getContentPane().add(StreamerList, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 260, -1));
+
+        addstreamer.setText("Add Streamer");
+        addstreamer.setEnabled(false);
+        addstreamer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addstreamerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(addstreamer, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, -1));
+
+        delstreamer.setText("Remove Streamer");
+        delstreamer.setEnabled(false);
+        delstreamer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delstreamerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delstreamer, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, -1, -1));
+
+        ShowSList.setText("Show Streamer List");
+        ShowSList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowSListActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ShowSList, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, -1, -1));
         getContentPane().add(filler3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 290, 210));
 
         pack();
@@ -149,13 +188,13 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_LoginFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
         Login();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_LoginActionPerformed
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void LoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LoginMouseClicked
 
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_LoginMouseClicked
 
     private void PassFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PassFieldKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -173,7 +212,54 @@ public class Login extends javax.swing.JFrame {
         }         // TODO add your handling code here:
     }//GEN-LAST:event_CodeFieldKeyPressed
 
+    private void ShowSListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowSListActionPerformed
+        if (this.ShowSList.isSelected()) {
+            this.StreamerList.setModel(CS.getModList());
+            this.streamlabel.setEnabled(true);
+            this.delstreamer.setEnabled(true);
+            this.addstreamer.setEnabled(true);
+            this.StreamerList.setEnabled(true);
+        } else {
+            this.streamlabel.setEnabled(false);
+            this.delstreamer.setEnabled(false);
+            this.addstreamer.setEnabled(false);
+            this.StreamerList.setEnabled(false);
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ShowSListActionPerformed
+
+    private void addstreamerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addstreamerActionPerformed
+        String Name = JOptionPane.showInputDialog("Please give the Streamers name.");
+        if (Name.isEmpty()) {
+            return;
+        }
+        String uuid = JOptionPane.showInputDialog("Please give the AuthKey provided by the streamer.");
+        if (uuid.isEmpty()) {
+            return;
+        }
+        try {
+            UUID toCheck = UUID.fromString(uuid);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "AuthKey does not appear to be correct, please confirm with streamer.");
+            return;
+        }
+        CS.AddModList(Name, uuid);
+        this.StreamerList.setModel(CS.getModList());
+    }//GEN-LAST:event_addstreamerActionPerformed
+
+    private void delstreamerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delstreamerActionPerformed
+        String Name = this.StreamerList.getSelectedItem().toString();
+        int yesno = JOptionPane.showConfirmDialog(rootPane, "Remove " + Name + " from the list?");
+        if (yesno == 0) {
+            CS.DelModList(Name);
+            this.StreamerList.setModel(CS.getModList());
+        }
+
+    }//GEN-LAST:event_delstreamerActionPerformed
+
     public void Login() {
+        JSONObject ChanObj = new JSONObject();
         Username = this.LoginField.getText();
         CS.UserName = Username;
         Password = new String(this.PassField.getPassword());
@@ -196,8 +282,7 @@ public class Login extends javax.swing.JFrame {
         try {
             obj = (JSONObject) parser.parse(ToParse);
             UserID = Long.parseLong(obj.get("id").toString());
-            JSONObject ChanObj = (JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + Username));
-            ChanID = Long.parseLong(ChanObj.get("id").toString());
+            ChanObj.putAll((JSONObject) parser.parse(http.get("https://beam.pro/api/v1/channels/" + Username)));
             //System.out.println(ChanObj);
             try {
                 if (ChanObj.containsKey("badge")) {
@@ -266,14 +351,31 @@ public class Login extends javax.swing.JFrame {
                 return;
             }
         }
-        AuthKey = (String) AuthReturn.get("AuthKeyv2");
-        //AuthKey = AuthKey.replace("\"", "");
-        try {
-            AuthKey = URLEncoder.encode(AuthKey, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        if (!this.ShowSList.isSelected() || this.StreamerList.getSelectedIndex() == -1) {
+            try {
+                ChanID = Long.parseLong(ChanObj.get("id").toString());
+                AuthKey = AuthReturn.get("AuthKeyv2").toString();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, "Issue getting info from API, try again or contact @MrPocketpac on twitter.");
+            }
+        } else {
+            try {
+                String Streamer = this.StreamerList.getSelectedItem().toString();
+                UUID CheckKey = UUID.fromString(CS.getStreamerUUID(Streamer));
+                CS.AuthKey = CheckKey.toString();
+                String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + CS.AuthKey.toString());
+                JSONObject chanObj = new JSONObject();
+                chanObj.putAll((JSONObject) parser.parse(toParse));
+                System.err.println(chanObj.toJSONString());
+                //System.exit(0);
+                CS.ChanID = Long.parseLong(chanObj.get("ChanID").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(rootPane, "Does not appear to be a proper UUID, please contact the streamer and verify.");
+                return;
+            }
+        }
         ControlPanel cp = new ControlPanel();
         cp.setVisible(true);
         this.dispose();
@@ -316,16 +418,20 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField CodeField;
+    private javax.swing.JButton Login;
     private javax.swing.JTextField LoginField;
     private javax.swing.JPasswordField PassField;
+    private javax.swing.JToggleButton ShowSList;
+    private javax.swing.JComboBox StreamerList;
+    private javax.swing.JButton addstreamer;
+    private javax.swing.JButton delstreamer;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel streamlabel;
     // End of variables declaration//GEN-END:variables
 }
