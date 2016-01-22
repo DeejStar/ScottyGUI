@@ -579,6 +579,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ScottyGUI Ver. " + this.CurVer);
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton6.setText("Chat");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -586,11 +587,14 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(446, 10, 100, -1));
 
         CurViewers.setText("Offline");
         CurViewers.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        getContentPane().add(CurViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 200, -1));
 
         TopViewers.setText("0 Top Viewers");
+        getContentPane().add(TopViewers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 16, 190, -1));
 
         whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1588,7 +1592,10 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         whitelistPane.addTab("Whitelist", jPanel11);
 
+        getContentPane().add(whitelistPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 1022, 538));
+
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 11, -1, 30));
 
         AlertPaneOpen.setText("Alert Pane");
         AlertPaneOpen.addActionListener(new java.awt.event.ActionListener() {
@@ -1596,6 +1603,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AlertPaneOpenActionPerformed(evt);
             }
         });
+        getContentPane().add(AlertPaneOpen, new org.netbeans.lib.awtextra.AbsoluteConstraints(553, 10, 128, -1));
 
         RefreshAll.setText("Refresh Settings");
         RefreshAll.addActionListener(new java.awt.event.ActionListener() {
@@ -1603,6 +1611,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 RefreshAllActionPerformed(evt);
             }
         });
+        getContentPane().add(RefreshAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(683, 10, 160, -1));
 
         StreamSet.setText("Channel Name and Game");
         StreamSet.setActionCommand("Stream Title");
@@ -1612,74 +1621,15 @@ public final class ControlPanel extends javax.swing.JFrame {
                 StreamSetActionPerformed(evt);
             }
         });
+        getContentPane().add(StreamSet, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, -1));
 
         TotSubs.setText("jLabel19");
+        getContentPane().add(TotSubs, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 51, 240, -1));
+        getContentPane().add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         TotFollowers.setText("0 Followers");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(StreamSet))
-                        .addGap(10, 10, 10)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 179, Short.MAX_VALUE))
-            .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(CurViewers)
-                        .addGap(0, 0, 0)
-                        .addComponent(TopViewers)
-                        .addGap(2, 2, 2)
-                        .addComponent(TotFollowers))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(StreamSet)
-                            .addComponent(jButton6)
-                            .addComponent(AlertPaneOpen)
-                            .addComponent(RefreshAll))))
-                .addGap(1, 1, 1)
-                .addComponent(TotSubs)
-                .addGap(11, 11, 11)
-                .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(whitelistPane, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE))
-        );
+        getContentPane().add(TotFollowers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 34, 240, -1));
+        getContentPane().add(filler3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 78, -1, -1));
 
         pack();
         setLocationRelativeTo(null);

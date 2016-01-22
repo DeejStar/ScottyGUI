@@ -53,7 +53,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 59;
+    public static Integer CurVer = 60;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;

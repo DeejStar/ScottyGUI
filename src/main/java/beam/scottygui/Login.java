@@ -380,6 +380,9 @@ public class Login extends javax.swing.JFrame {
         }
         ControlPanel cp = new ControlPanel();
         cp.setVisible(true);
+        if (this.ShowSList.isSelected()) {
+            ControlPanel.StreamSet.setVisible(false);
+        }
         this.dispose();
     }
 
