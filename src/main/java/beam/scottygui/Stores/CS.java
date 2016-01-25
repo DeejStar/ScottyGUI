@@ -41,6 +41,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.websocket.Endpoint;
 import javax.websocket.Session;
+import javazoom.jl.player.Player;
 import org.apache.http.client.CookieStore;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -53,7 +54,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 60;
+    public static Integer CurVer = 62;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -107,6 +108,9 @@ public class CS {
     public static String SubBadge = "";
     public static JSONObject GameListJSON = new JSONObject();
     public static List<String> GamesPreSorted = new ArrayList();
+    public static Player playMP3 = null;
+    public static boolean ModMode = false;
+    public static Session controlSes = null;
 
     public static void AddModList(String Streamer, String uuid) {
         JSONArray chanList = new JSONArray();

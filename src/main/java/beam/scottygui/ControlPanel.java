@@ -32,6 +32,7 @@ import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.chanstatus.statuswindow;
+import beam.scottygui.cmdSounds.cmdListView;
 import beam.scottygui.cmdcontrol.AddEditCMD;
 import beam.scottygui.cmdcontrol.DeletePermAdjust;
 import beam.scottygui.cmdcontrol.RepeatList;
@@ -205,6 +206,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         GUILoadSettings();
         initComponents();
+        if (CS.ModMode) {
+            this.cmdsoundbutton.setVisible(false);
+        }
+        ControlPanel.ControlStatus.setText("Connecting");
         DumpCurVer();
         CheckNewVer();
         CS.extchat = new ChatPopOut();
@@ -501,6 +506,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         PNotes = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        cmdsoundbutton = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -538,6 +544,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         TotFollowers = new javax.swing.JLabel();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
+        ControlStatus = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -1027,6 +1035,8 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         settingsTabs.addTab("Points", jPanel5);
 
+        SettingsPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         jLayeredPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLayeredPane1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1081,6 +1091,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jLayeredPane1.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 167, 160, -1));
 
+        SettingsPanel.add(jLayeredPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 265, 180, 200));
+
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1103,12 +1115,17 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jPanel6.add(showPChat, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
 
+        SettingsPanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 265, 150, 80));
+
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         FollowEnabled.setText("Follower Alert Enabled");
         FollowEnabled.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FollowEnabledActionPerformed(evt);
             }
         });
+        jPanel10.add(FollowEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 140, -1));
 
         EFollowMsg.setText("Edit Chat Follower Message");
         EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
@@ -1116,6 +1133,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 EFollowMsgActionPerformed(evt);
             }
         });
+        jPanel10.add(EFollowMsg, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 152, 180, -1));
 
         OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
         OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
@@ -1124,6 +1142,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 OnlyWhenLiveEnabledActionPerformed(evt);
             }
         });
+        jPanel10.add(OnlyWhenLiveEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 10, -1, -1));
 
         ClearCmdsEnabled.setText("Clear Commands Enabled");
         ClearCmdsEnabled.setToolTipText("When enabled, will clear all commands by Non-mods once ran. It will still act on those commands.");
@@ -1132,6 +1151,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ClearCmdsEnabledActionPerformed(evt);
             }
         });
+        jPanel10.add(ClearCmdsEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 10, -1, -1));
 
         PSubAlert.setText("Enable Subscriber Alert");
         PSubAlert.addActionListener(new java.awt.event.ActionListener() {
@@ -1139,6 +1159,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PSubAlertActionPerformed(evt);
             }
         });
+        jPanel10.add(PSubAlert, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 10, -1, -1));
 
         MeOutput.setText("Set /me Bot Output");
         MeOutput.addActionListener(new java.awt.event.ActionListener() {
@@ -1146,6 +1167,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 MeOutputActionPerformed(evt);
             }
         });
+        jPanel10.add(MeOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(519, 10, -1, -1));
 
         ESubMessage.setText("Edit New Subscriber Message");
         ESubMessage.addActionListener(new java.awt.event.ActionListener() {
@@ -1153,6 +1175,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ESubMessageActionPerformed(evt);
             }
         });
+        jPanel10.add(ESubMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 185, 180, -1));
 
         jButton7.setText("Set Twitter Auth Info");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -1160,6 +1183,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
+        jPanel10.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 152, 160, -1));
 
         TwitterAlertMSG.setText("Edit Auto Tweet Message");
         TwitterAlertMSG.addActionListener(new java.awt.event.ActionListener() {
@@ -1167,6 +1191,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 TwitterAlertMSGActionPerformed(evt);
             }
         });
+        jPanel10.add(TwitterAlertMSG, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 185, 160, -1));
 
         AutoTweet.setText("Enable Auto Tweet");
         AutoTweet.addActionListener(new java.awt.event.ActionListener() {
@@ -1174,6 +1199,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 AutoTweetActionPerformed(evt);
             }
         });
+        jPanel10.add(AutoTweet, new org.netbeans.lib.awtextra.AbsoluteConstraints(223, 41, -1, -1));
 
         JoinAnnounce.setText("Enable User Join Announce");
         JoinAnnounce.addActionListener(new java.awt.event.ActionListener() {
@@ -1181,6 +1207,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 JoinAnnounceActionPerformed(evt);
             }
         });
+        jPanel10.add(JoinAnnounce, new org.netbeans.lib.awtextra.AbsoluteConstraints(692, 172, -1, -1));
 
         LeaveAnnounce.setText("Enable User Leave Announce");
         LeaveAnnounce.addActionListener(new java.awt.event.ActionListener() {
@@ -1188,6 +1215,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 LeaveAnnounceActionPerformed(evt);
             }
         });
+        jPanel10.add(LeaveAnnounce, new org.netbeans.lib.awtextra.AbsoluteConstraints(692, 200, -1, -1));
 
         LinkTitle.setText("Enable Link Title Showing");
         LinkTitle.addActionListener(new java.awt.event.ActionListener() {
@@ -1195,75 +1223,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 LinkTitleActionPerformed(evt);
             }
         });
+        jPanel10.add(LinkTitle, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 41, -1, -1));
 
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(EFollowMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ESubMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TwitterAlertMSG, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(332, 332, 332)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LeaveAnnounce)
-                            .addComponent(JoinAnnounce)))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(FollowEnabled, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(OnlyWhenLiveEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ClearCmdsEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MeOutput)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PSubAlert))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(LinkTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(AutoTweet)))
-                .addGap(43, 43, 43))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(FollowEnabled)
-                    .addComponent(OnlyWhenLiveEnabled)
-                    .addComponent(ClearCmdsEnabled)
-                    .addComponent(MeOutput)
-                    .addComponent(PSubAlert))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LinkTitle)
-                    .addComponent(AutoTweet))
-                .addGap(87, 87, 87)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(EFollowMsg)
-                        .addGap(7, 7, 7)
-                        .addComponent(ESubMessage))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jButton7)
-                        .addGap(7, 7, 7)
-                        .addComponent(TwitterAlertMSG))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(JoinAnnounce)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LeaveAnnounce)))
-                .addContainerGap(11, Short.MAX_VALUE))
-        );
+        SettingsPanel.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
         CUsernamePassword.setText("Set Custom Bot Username/Password");
         CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
@@ -1271,6 +1233,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 CUsernamePasswordActionPerformed(evt);
             }
         });
+        SettingsPanel.add(CUsernamePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(722, 421, 249, -1));
 
         ResetScottyName.setText("Reset Bot Name Back To Scottybot");
         ResetScottyName.addActionListener(new java.awt.event.ActionListener() {
@@ -1278,9 +1241,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ResetScottyNameActionPerformed(evt);
             }
         });
+        SettingsPanel.add(ResetScottyName, new org.netbeans.lib.awtextra.AbsoluteConstraints(722, 454, 249, -1));
 
         StoredAuthKey.setEditable(false);
         StoredAuthKey.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        SettingsPanel.add(StoredAuthKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(412, 417, 300, -1));
 
         ShowStoredKey.setText("Show Key");
         ShowStoredKey.addActionListener(new java.awt.event.ActionListener() {
@@ -1288,6 +1253,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 ShowStoredKeyActionPerformed(evt);
             }
         });
+        SettingsPanel.add(ShowStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 450, -1, -1));
 
         GenNewStoredKey.setText("Generate New Key");
         GenNewStoredKey.addActionListener(new java.awt.event.ActionListener() {
@@ -1295,8 +1261,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                 GenNewStoredKeyActionPerformed(evt);
             }
         });
+        SettingsPanel.add(GenNewStoredKey, new org.netbeans.lib.awtextra.AbsoluteConstraints(561, 450, -1, -1));
 
         jLabel18.setText("Stored Auth Key (Usable and static)");
+        SettingsPanel.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(512, 395, -1, -1));
 
         jButton5.setText("Check Updates");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -1304,6 +1272,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        SettingsPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 450, 152, -1));
 
         PNotes.setText("Patch Notes");
         PNotes.addActionListener(new java.awt.event.ActionListener() {
@@ -1311,80 +1280,17 @@ public final class ControlPanel extends javax.swing.JFrame {
                 PNotesActionPerformed(evt);
             }
         });
+        SettingsPanel.add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 417, -1, -1));
+        SettingsPanel.add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 480, -1, -1));
+        SettingsPanel.add(filler4, new org.netbeans.lib.awtextra.AbsoluteConstraints(989, 209, 4, 273));
 
-        javax.swing.GroupLayout SettingsPanelLayout = new javax.swing.GroupLayout(SettingsPanel);
-        SettingsPanel.setLayout(SettingsPanelLayout);
-        SettingsPanelLayout.setHorizontalGroup(
-            SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(270, 270, 270)
-                                        .addComponent(jLabel18))
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(60, 60, 60)
-                                        .addComponent(PNotes)
-                                        .addGap(39, 39, 39)
-                                        .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(60, 60, 60)
-                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(28, 28, 28)
-                                        .addComponent(ShowStoredKey)
-                                        .addGap(21, 21, 21)
-                                        .addComponent(GenNewStoredKey)))
-                                .addGap(10, 10, 10)
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(filler4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        SettingsPanelLayout.setVerticalGroup(
-            SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel18)
-                        .addGap(6, 6, 6)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PNotes)
-                            .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5)
-                            .addComponent(ShowStoredKey)
-                            .addComponent(GenNewStoredKey)))
-                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(156, 156, 156)
-                        .addComponent(CUsernamePassword)
-                        .addGap(7, 7, 7)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ResetScottyName))))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                .addGap(209, 209, 209)
-                .addComponent(filler4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        cmdsoundbutton.setText("Command Sounds");
+        cmdsoundbutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdsoundbuttonActionPerformed(evt);
+            }
+        });
+        SettingsPanel.add(cmdsoundbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 357, 148, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 
@@ -1548,7 +1454,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 726, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1630,6 +1536,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         TotFollowers.setText("0 Followers");
         getContentPane().add(TotFollowers, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 34, 240, -1));
         getContentPane().add(filler3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 78, -1, -1));
+
+        ControlStatus.setBackground(new java.awt.Color(255, 0, 0));
+        ControlStatus.setEnabled(false);
+        getContentPane().add(ControlStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 30, 80, -1));
+
+        jLabel19.setText("Control and Sound Socket Status");
+        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 10, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -2465,6 +2378,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_resendEmailActionPerformed
 
+    private void cmdsoundbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdsoundbuttonActionPerformed
+        cmdListView showme = new cmdListView();
+        showme.setVisible(true);
+    }//GEN-LAST:event_cmdsoundbuttonActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2826,6 +2744,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox ChuckEnabled;
     private javax.swing.JCheckBox ClearCmdsEnabled;
     private javax.swing.JTextArea CmdInfo;
+    public static javax.swing.JTextField ControlStatus;
     public javax.swing.JLabel CurViewers;
     private javax.swing.JPanel DonationPane;
     private javax.swing.JPanel DonatorPanel;
@@ -2891,6 +2810,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
+    private javax.swing.JButton cmdsoundbutton;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
@@ -2917,6 +2837,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;

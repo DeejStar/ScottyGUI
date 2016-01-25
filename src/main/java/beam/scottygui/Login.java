@@ -14,6 +14,7 @@ import static beam.scottygui.Stores.CS.Username;
 import static beam.scottygui.Stores.CS.newline;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
+import beam.scottygui.websocket.ScottySocket;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -219,11 +220,13 @@ public class Login extends javax.swing.JFrame {
             this.delstreamer.setEnabled(true);
             this.addstreamer.setEnabled(true);
             this.StreamerList.setEnabled(true);
+            CS.ModMode = true;
         } else {
             this.streamlabel.setEnabled(false);
             this.delstreamer.setEnabled(false);
             this.addstreamer.setEnabled(false);
             this.StreamerList.setEnabled(false);
+            CS.ModMode = false;
         }
 
         // TODO add your handling code here:
@@ -383,7 +386,32 @@ public class Login extends javax.swing.JFrame {
         if (this.ShowSList.isSelected()) {
             ControlPanel.StreamSet.setVisible(false);
         }
+
         this.dispose();
+        ScottySocket sock = new ScottySocket();
+        //sock.connect();
+        new Thread("PutTheadName") {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        if (CS.controlSes == null) {
+                            new ScottySocket().connect();
+                        } else {
+                            if (CS.controlSes != null) {
+                                if (!CS.controlSes.isOpen()) {
+                                    new ScottySocket().connect();
+                                }
+                            }
+                        }
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+        }.start();
     }
 
     /**
