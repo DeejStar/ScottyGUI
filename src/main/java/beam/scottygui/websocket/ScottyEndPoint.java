@@ -34,7 +34,7 @@ public class ScottyEndPoint extends Endpoint {
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
         if (CS.controlSes != null) {
-            if (CS.session.isOpen() && CS.session != session) {
+            if (CS.controlSes.isOpen() && CS.controlSes != session) {
                 try {
                     session.close();
                 } catch (IOException ex) {
@@ -45,6 +45,7 @@ public class ScottyEndPoint extends Endpoint {
         JSONObject toAuth = new JSONObject();
         toAuth.put("authkey", CS.AuthKey);
         session.getAsyncRemote().sendText(toAuth.toJSONString());
+        System.out.println("Scotty control socket established");
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
