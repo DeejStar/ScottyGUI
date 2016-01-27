@@ -85,6 +85,7 @@ public final class ControlPanel extends javax.swing.JFrame {
      * Creates new form ControlPanel
      */
     public void DumpCurVer() {
+
         PrintStream VerPrint = null;
         try {
             VerPrint = new PrintStream(new FileOutputStream("CurVer.json"));
@@ -536,6 +537,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         showWhitelist = new javax.swing.JTextPane();
         jLabel16 = new javax.swing.JLabel();
+        jPanel12 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        PointsTable = new javax.swing.JTable();
+        GivePoints = new javax.swing.JButton();
+        delpoints = new javax.swing.JButton();
+        giveall = new javax.swing.JButton();
+        purgepoints = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
@@ -1329,7 +1337,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         DonationPane.add(ChuckEnabled, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         LeetSpeek.setText("L33t Enabled");
-        LeetSpeek.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
+        LeetSpeek.setToolTipText("d035 7h15 m4k3 y0u h4ppy d0n3f34r?");
         LeetSpeek.setEnabled(false);
         LeetSpeek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1497,6 +1505,102 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel11.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 210, -1, -1));
 
         whitelistPane.addTab("Whitelist", jPanel11);
+
+        PointsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Viewer", "Points"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        PointsTable.setAutoscrolls(false);
+        PointsTable.setColumnSelectionAllowed(true);
+        PointsTable.getTableHeader().setReorderingAllowed(false);
+        PointsTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                PointsTableKeyReleased(evt);
+            }
+        });
+        jScrollPane7.setViewportView(PointsTable);
+        PointsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        GivePoints.setText("Give Points");
+        GivePoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GivePointsActionPerformed(evt);
+            }
+        });
+
+        delpoints.setText("Remove Points");
+        delpoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delpointsActionPerformed(evt);
+            }
+        });
+
+        giveall.setText("Give All Points");
+        giveall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                giveallActionPerformed(evt);
+            }
+        });
+
+        purgepoints.setText("Purge All Points");
+        purgepoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                purgepointsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(GivePoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(delpoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(giveall, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(592, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(purgepoints))))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(GivePoints)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(delpoints)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(giveall)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(purgepoints))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        whitelistPane.addTab("Points", jPanel12);
 
         getContentPane().add(whitelistPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 1022, 538));
 
@@ -2383,6 +2487,95 @@ public final class ControlPanel extends javax.swing.JFrame {
         showme.setVisible(true);
     }//GEN-LAST:event_cmdsoundbuttonActionPerformed
 
+    private void GivePointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GivePointsActionPerformed
+        if (PointsTable.getSelectedColumn() == 1) {
+            return;
+        }
+        int Row = PointsTable.getSelectedRow();
+        int Col = PointsTable.getSelectedColumn();
+        Object name = PointsTable.getValueAt(Row, Col);
+        Long UID = Long.parseLong(new JSONUtil().GetUserID(name.toString()));
+        String PTP = "";
+        Long Points = 0L;
+        PTP = JOptionPane.showInputDialog("How many points to give to " + name + "?").trim();
+        if (PTP.isEmpty()) {
+            return;
+        }
+        try {
+            Points = Long.parseLong(PTP);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(StreamSet, "Whoops, appears this wasn't all numbers.");
+            return;
+        }
+        JSONObject req = new JSONObject();
+        req.put("request", "addpoints");
+        req.put("userid", UID);
+        req.put("points", Points);
+        CS.controlSes.getAsyncRemote().sendText(req.toJSONString());
+    }//GEN-LAST:event_GivePointsActionPerformed
+
+    private void delpointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delpointsActionPerformed
+        if (PointsTable.getSelectedColumn() == 1) {
+            return;
+        }
+        int Row = PointsTable.getSelectedRow();
+        int Col = PointsTable.getSelectedColumn();
+        Object name = PointsTable.getValueAt(Row, Col);
+        Long UID = Long.parseLong(new JSONUtil().GetUserID(name.toString()));
+        String PTP = "";
+        Long Points = 0L;
+        PTP = JOptionPane.showInputDialog("How many points to remove from " + name + "?").trim();
+        if (PTP.isEmpty()) {
+            return;
+        }
+        try {
+            Points = Long.parseLong(PTP);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(StreamSet, "Whoops, appears this wasn't all numbers.");
+            return;
+        }
+        JSONObject req = new JSONObject();
+        req.put("request", "delpoints");
+        req.put("userid", UID);
+        req.put("points", Points);
+        CS.controlSes.getAsyncRemote().sendText(req.toJSONString());    }//GEN-LAST:event_delpointsActionPerformed
+
+    private void PointsTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PointsTableKeyReleased
+
+    }//GEN-LAST:event_PointsTableKeyReleased
+
+    private void giveallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_giveallActionPerformed
+        String PTP = "";
+        Long Points = 0L;
+        PTP = JOptionPane.showInputDialog("How many points to give everyone?").trim();
+        if (PTP.isEmpty()) {
+            return;
+        }
+        try {
+            Points = Long.parseLong(PTP);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(StreamSet, "Whoops, appears this wasn't all numbers.");
+            return;
+        }
+        JSONObject req = new JSONObject();
+        req.put("request", "giveallpoints");
+        req.put("points", Points);
+        CS.controlSes.getAsyncRemote().sendText(req.toJSONString());
+        System.err.println(req);
+    }//GEN-LAST:event_giveallActionPerformed
+
+    private void purgepointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purgepointsActionPerformed
+        int check1 = JOptionPane.showConfirmDialog(StreamSet, "You realized you clicked the purge all points button, are you sure?".toUpperCase());
+        if (check1 == 0) {
+            int check2 = JOptionPane.showConfirmDialog(StreamSet, "Your really really sure? This is unreversable!");
+            if (check2 == 0) {
+                JSONObject req = new JSONObject();
+                req.put("request", "purgeallpoints");
+                CS.controlSes.getAsyncRemote().sendText(req.toJSONString());
+            }
+        }
+    }//GEN-LAST:event_purgepointsActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -2758,6 +2951,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton FollowSoundSet;
     private javax.swing.JButton FollowerMSGFont;
     private javax.swing.JButton GenNewStoredKey;
+    private javax.swing.JButton GivePoints;
     private javax.swing.JCheckBox JoinAnnounce;
     private javax.swing.JCheckBox LeaveAnnounce;
     private javax.swing.JCheckBox LeetSpeek;
@@ -2777,6 +2971,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextField PWhenLive;
     public javax.swing.JLabel PercentRetainedViewers;
     private javax.swing.JTextField PointsName;
+    public static javax.swing.JTable PointsTable;
     private javax.swing.JCheckBox QEnabled;
     private javax.swing.JTextArea QuotePanel;
     private javax.swing.JCheckBox REnabled;
@@ -2811,10 +3006,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
     private javax.swing.JButton cmdsoundbutton;
+    private javax.swing.JButton delpoints;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
+    private javax.swing.JButton giveall;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -2851,6 +3048,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
@@ -2870,7 +3068,9 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JButton purgepoints;
     private javax.swing.JButton resendEmail;
     private javax.swing.JButton setEmail;
     private javax.swing.JTabbedPane settingsTabs;

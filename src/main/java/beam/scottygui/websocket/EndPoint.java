@@ -87,6 +87,7 @@ public class EndPoint extends Endpoint {
                         break;
                     case "CHATMESSAGE":
                         MsgCounter++;
+                        System.err.println(message);
                         JSONObject ChatMessage = (JSONObject) msg.get("data");
                         cp.SessionMsgCount.setText(MsgCounter.toString() + " messages this session.");
                         String userid = ChatMessage.get("user_id").toString();

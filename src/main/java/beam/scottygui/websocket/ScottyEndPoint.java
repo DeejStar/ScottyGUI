@@ -6,6 +6,7 @@
 package beam.scottygui.websocket;
 
 import beam.scottygui.ControlPanel;
+import static beam.scottygui.ControlPanel.PointsTable;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.playMP3;
 import java.awt.Color;
@@ -13,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
@@ -55,6 +57,43 @@ public class ScottyEndPoint extends Endpoint {
                     ControlPanel.ControlStatus.setBackground(Color.GREEN);
                     ControlPanel.ControlStatus.setText("");
                     CS.controlSes = session;
+
+                    try {
+                        if (msgobj.containsKey("points")) {
+                            DefaultTableModel model = (DefaultTableModel) PointsTable.getModel();
+                            JSONObject points = (JSONObject) msgobj.get("points");
+                            if (points.isEmpty()) {
+                                model.setRowCount(0);
+                                PointsTable.revalidate();
+                            }
+                            JSONObject unames = (JSONObject) msgobj.get("unames");
+
+                            int rows = model.getRowCount();
+
+                            for (Object T : unames.keySet()) {
+                                int count = 1;
+                                Object user = unames.get(T);
+                                Object PTs = points.get(T);
+                                boolean updated = false;
+                                while (count <= rows) {
+                                    Object U = model.getValueAt(count - 1, 0);
+                                    if (U.equals(user)) {
+                                        model.setValueAt(PTs, count - 1, 1);
+                                        updated = true;
+                                        break;
+                                    }
+                                    count++;
+                                }
+                                if (!updated) {
+                                    model.addRow(new Object[]{user, PTs});
+                                }
+                                count = 1;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     if (CS.GUISettings.containsKey("cmdsounds") && msgobj.containsKey("command") && !CS.ModMode) {
                         String toParse = CS.GUISettings.get("cmdsounds").toString();
                         JSONObject cmdsounds = (JSONObject) parser.parse(toParse);

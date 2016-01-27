@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -76,6 +77,9 @@ public class ChatFormatter {
         } else if (Roles.contains("PREMIUM")) {
             username = "<font color=\"purple\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
             fontcolor = "purple";
+        } else if (Roles.contains("PRO")) {
+            username = "<font color=\"#D01DD3\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
+            fontcolor = "#D01DD3";
         } else if (Roles.contains("USER")) {
             username = "<font color=\"#2E64FE\" size=\"5\">" + msg.get("user_name").toString() + "</font>";
             fontcolor = "#2E64FE";
@@ -87,7 +91,7 @@ public class ChatFormatter {
         String MSG = "";
         JSONObject msgdatapre = (JSONObject) msg.get("message");
         JSONArray msgdata = (JSONArray) msgdatapre.get("message");
-        System.out.println(msgdatapre);
+        //System.out.println(msgdatapre);
         if (msgdatapre.containsKey("meta")) {
             JSONObject meta = (JSONObject) msgdatapre.get("meta");
             if (meta.containsKey("whisper")) {
@@ -97,18 +101,17 @@ public class ChatFormatter {
             }
         }
         if (Whisper) {
-            WhisperMSG = "<font color=\"" + fontcolor + "\" size=\"5\">Whisper from </font>";
+            WhisperMSG = "<i> <em> <strong> <font color=\"" + fontcolor + "\" size=\"5\">Whisper from </font> </i> </em> </strong>".toUpperCase();
         }
-        System.out.println("WHISPER : " + Whisper);
+        //System.out.println("WHISPER : " + Whisper);
         ////System.err.println(msgdata.toString());
         String msgID = msg.get("id").toString();
-
         for (Object t : msgdata) {
             JSONObject obj = (JSONObject) t;
             //System.out.println(obj.toString());
             String type = obj.get("type").toString();
             if ("TEXT".equals(type.toUpperCase())) {
-                MSG = MSG + " " + obj.get("data").toString();
+                MSG = MSG + " " + StringEscapeUtils.escapeHtml(obj.get("data").toString());
             } else if ("EMOTICON".equalsIgnoreCase(type)) {
                 String Pack = (String) obj.get("pack");
                 String imgURL = "https://beam.pro/_latest/emoticons/" + Pack + ".png";
@@ -217,10 +220,14 @@ public class ChatFormatter {
             JSONObject msgObj = (JSONObject) chatObject.get(ID);
             ////System.err.println(ID);
             String msgTXT = msgObj.get("msg").toString();
-
+            System.err.println(msgTXT);
             if ((boolean) msgObj.get("purged")) {
                 if (Boolean.parseBoolean(CS.GUIGetSetting("showpurged"))) {
-                    msgTXT = "<strike>" + msgTXT + "</strike>";
+                    try {
+                        msgTXT = "<strike>" + msgTXT + "</strike>";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ChatCache = ChatCache + msgTXT + newline;
                     //System.err.println(msgObj.toJSONString());
                 }
