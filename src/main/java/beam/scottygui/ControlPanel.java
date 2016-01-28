@@ -420,6 +420,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         RefreshCMDs = new javax.swing.JButton();
         comCost = new javax.swing.JButton();
+        cmdsoundbutton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -509,7 +510,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         PNotes = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        cmdsoundbutton = new javax.swing.JButton();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -662,6 +662,13 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        cmdsoundbutton.setText("Command Sounds");
+        cmdsoundbutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdsoundbuttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
@@ -677,7 +684,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(comCost, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(165, 165, 165)
+                        .addGap(5, 5, 5)
+                        .addComponent(cmdsoundbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addGap(15, 15, 15)
                         .addComponent(RepeatList))
@@ -698,7 +707,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGap(1, 1, 1)
                         .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2)
-                            .addComponent(comCost)))
+                            .addComponent(comCost)
+                            .addComponent(cmdsoundbutton)))
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel2))
@@ -1332,14 +1342,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         SettingsPanel.add(PNotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 417, -1, -1));
         SettingsPanel.add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 480, -1, -1));
         SettingsPanel.add(filler4, new org.netbeans.lib.awtextra.AbsoluteConstraints(989, 209, 4, 273));
-
-        cmdsoundbutton.setText("Command Sounds");
-        cmdsoundbutton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdsoundbuttonActionPerformed(evt);
-            }
-        });
-        SettingsPanel.add(cmdsoundbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 357, 148, -1));
 
         settingsTabs.addTab("Settings", SettingsPanel);
 

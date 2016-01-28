@@ -135,7 +135,7 @@ public class ScottyEndPoint extends Endpoint {
                                 }.start();
 
                             } catch (Exception ex) {
-                                //Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                ex.printStackTrace();
                             }
 
                         }
