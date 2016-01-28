@@ -93,6 +93,14 @@ public class ScottyEndPoint extends Endpoint {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    try {
+                        if (msgobj.containsKey("cmdcost")) {
+                            CS.cmdCosts.clear();
+                            CS.cmdCosts.putAll((JSONObject) new JSONParser().parse(msgobj.get("cmdcost").toString()));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     if (CS.GUISettings.containsKey("cmdsounds") && msgobj.containsKey("command") && !CS.ModMode) {
                         String toParse = CS.GUISettings.get("cmdsounds").toString();

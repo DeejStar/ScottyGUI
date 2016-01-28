@@ -54,7 +54,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 65;
+    public static Integer CurVer = 66;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -111,6 +111,7 @@ public class CS {
     public static Player playMP3 = null;
     public static boolean ModMode = false;
     public static Session controlSes = null;
+    public static JSONObject cmdCosts = new JSONObject();
 
     public static void AddModList(String Streamer, String uuid) {
         JSONArray chanList = new JSONArray();
