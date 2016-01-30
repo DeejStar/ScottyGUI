@@ -314,15 +314,14 @@ public class Login extends javax.swing.JFrame {
         if (this.StreamerList.getSelectedIndex() == -1 || !this.ShowSList.isSelected()) {
 
             String URL = null;
+            URL = CS.apiLoc + "/login";
             try {
-                URL = CS.apiLoc + "/login?username=" + Username + "&password=" + URLEncoder.encode(Password, "UTF-8") + "&code=" + new String(this.CodeField.getPassword());
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                AuthReturn = (JSONObject) parser.parse(http.GetScotty(URL));
-
-            } catch (ParseException ex) {
+                Map<String, String> toPost = new HashMap();
+                toPost.put("username", Username);
+                toPost.put("password", Password);
+                toPost.put("code", new String(this.CodeField.getPassword()));
+                AuthReturn = (JSONObject) parser.parse(http.post(toPost, URL));
+            } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (AuthReturn.containsValue("Scottybot is not in your channel")) {
