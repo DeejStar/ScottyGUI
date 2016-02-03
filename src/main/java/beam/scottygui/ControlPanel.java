@@ -30,7 +30,6 @@ import beam.scottygui.TwitterInfo.TwitterAuthInfo;
 import beam.scottygui.Utils.FontChooser;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
-import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.chanstatus.statuswindow;
 import beam.scottygui.cmdSounds.cmdListView;
 import beam.scottygui.cmdcontrol.AddEditCMD;
@@ -43,15 +42,11 @@ import beam.scottygui.websocket.WebSocket;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.management.ManagementFactory;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -103,74 +98,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.CurViewers.setText(curnum + " viewers");
     }
 
-    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-    public boolean CheckNewVer() {
-        try {
-            JSONObject VerCheck = null;
-            while (true) {
-                try {
-                    VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
-                    break;
-                } catch (ParseException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            //System.out.println(VerCheck.toString());
-            int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
-            if (NewVer > CurVer) {
-                int Yes = JOptionPane.showConfirmDialog(rootPane, "New version of ScottyGUI" + newline + "Would you like to download?");
-
-                if (Yes == 0) {
-                    int Attempts = 0;
-                    while (Attempts < 5) {
-                        URL ToDownload = null;
-                        try {
-                            ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
-                        } catch (MalformedURLException ex) {
-                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        String FileName = "./ScottyGUI.jar";
-                        downloadFromUrl download = new downloadFromUrl();
-                        try {
-                            download.downloadFromUrl(ToDownload, FileName);
-                            break;
-                        } catch (IOException ex) {
-                            Attempts++;
-                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    if (Attempts == 5) {
-                        JOptionPane.showMessageDialog(rootPane, "Unable to download, try again later");
-                    } else {
-                        //Restart the program
-                        JOptionPane.showMessageDialog(rootPane, "Downloaded, Restarting ScottyGUI!");
-
-                        StringBuilder cmd = new StringBuilder();
-                        cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
-                        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                            cmd.append(jvmArg + " ");
-                        }
-                        cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-
-                        try {
-                            //System.out.println(cmd.toString());
-                            Runtime.getRuntime().exec(cmd.toString());
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        System.exit(0);
-                        System.exit(0);
-                    }
-
-                }
-                return true;
-            }
-            return false;
-        } catch (Exception ignore) {
-            return false;
-        }
-    }
     //    public void PopChatList() {
     //        this.Viewers.setModel(ChatUserList);
     //        new Thread("Update Viewer List") {
@@ -203,7 +130,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     //        }.start();
     //
     //    }
-
     public ControlPanel() {
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         GUILoadSettings();
@@ -213,7 +139,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         ControlPanel.ControlStatus.setText("Connecting");
         DumpCurVer();
-        CheckNewVer();
         CS.extchat = new ChatPopOut();
         //Set chat window to auto-scroll
         DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
@@ -2199,7 +2124,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshCMDsActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        if (!this.CheckNewVer()) {
+        if (!CS.CheckNewVer()) {
             JOptionPane.showMessageDialog(rootPane, "No new updates.");
         }
     }//GEN-LAST:event_jButton5ActionPerformed

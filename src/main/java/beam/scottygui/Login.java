@@ -8,6 +8,7 @@ package beam.scottygui;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.AuthKey;
 import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.CheckNewVer;
 import static beam.scottygui.Stores.CS.Password;
 import static beam.scottygui.Stores.CS.UserID;
 import static beam.scottygui.Stores.CS.Username;
@@ -59,6 +60,7 @@ public class Login extends javax.swing.JFrame {
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        CheckNewVer();
         initComponents();
 
     }
@@ -315,14 +317,24 @@ public class Login extends javax.swing.JFrame {
 
             String URL = null;
             URL = CS.apiLoc + "/login";
-            try {
-                Map<String, String> toPost = new HashMap();
-                toPost.put("username", Username);
-                toPost.put("password", Password);
-                toPost.put("code", new String(this.CodeField.getPassword()));
-                AuthReturn = (JSONObject) parser.parse(http.post(toPost, URL));
-            } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            int cnt = 0;
+            boolean got = false;
+            while (cnt < 5) {
+                try {
+                    Map<String, String> toPost = new HashMap();
+                    toPost.put("username", Username);
+                    toPost.put("password", Password);
+                    toPost.put("code", new String(this.CodeField.getPassword()));
+                    AuthReturn = (JSONObject) parser.parse(http.post(toPost, URL));
+                    got = true;
+                    break;
+                } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    cnt++;
+                }
+            }
+            if (!got) {
+                JOptionPane.showMessageDialog(rootPane, "Had issue talking with API, contact @mrPocketpac on twitter");
             }
             if (AuthReturn.containsValue("Scottybot is not in your channel")) {
                 int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");

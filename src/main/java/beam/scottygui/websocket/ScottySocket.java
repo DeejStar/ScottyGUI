@@ -32,7 +32,6 @@ public class ScottySocket {
             public boolean onDisconnect(CloseReason closeReason) {
                 ControlPanel.ControlStatus.setBackground(Color.RED);
                 ControlPanel.ControlStatus.setText("Reconnecting");
-
                 return false;
             }
 

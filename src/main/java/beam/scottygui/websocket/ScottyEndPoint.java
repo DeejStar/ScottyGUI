@@ -53,93 +53,114 @@ public class ScottyEndPoint extends Endpoint {
             public void onMessage(String message) {
                 try {
                     System.out.println("Scotty control socket: " + message);
-                    JSONObject msgobj = (JSONObject) parser.parse(message);
+                    final JSONObject msgobj = (JSONObject) parser.parse(message);
                     ControlPanel.ControlStatus.setBackground(Color.GREEN);
                     ControlPanel.ControlStatus.setText("");
                     CS.controlSes = session;
 
-                    try {
-                        if (msgobj.containsKey("points")) {
-                            DefaultTableModel model = (DefaultTableModel) PointsTable.getModel();
-                            JSONObject points = (JSONObject) msgobj.get("points");
-                            if (points.isEmpty()) {
-                                model.setRowCount(0);
-                                PointsTable.revalidate();
-                            }
-                            JSONObject unames = (JSONObject) msgobj.get("unames");
-
-                            int rows = model.getRowCount();
-
-                            for (Object T : unames.keySet()) {
-                                int count = 1;
-                                Object user = unames.get(T);
-                                Object PTs = points.get(T);
-                                boolean updated = false;
-                                while (count <= rows) {
-                                    Object U = model.getValueAt(count - 1, 0);
-                                    if (U.equals(user)) {
-                                        model.setValueAt(PTs, count - 1, 1);
-                                        updated = true;
-                                        break;
-                                    }
-                                    count++;
-                                }
-                                if (!updated) {
-                                    model.addRow(new Object[]{user, PTs});
-                                }
-                                count = 1;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        if (msgobj.containsKey("cmdcost")) {
-                            CS.cmdCosts.clear();
-                            CS.cmdCosts.putAll((JSONObject) new JSONParser().parse(msgobj.get("cmdcost").toString()));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (CS.GUISettings.containsKey("cmdsounds") && msgobj.containsKey("command") && !CS.ModMode) {
-                        String toParse = CS.GUISettings.get("cmdsounds").toString();
-                        JSONObject cmdsounds = (JSONObject) parser.parse(toParse);
-                        String cmd = msgobj.get("command").toString();
-                        if (cmdsounds.containsKey(cmd)) {
-
-                            final FileInputStream fis;
+                    new Thread("PutTheadName") {
+                        @Override
+                        public void run() {
                             try {
-                                fis = new FileInputStream(cmdsounds.get(cmd).toString());
-                                new Thread("PutTheadName") {
-                                    @Override
-                                    public void run() {
-                                        if (playMP3 == null) {
-                                            try {
-                                                playMP3 = new Player(fis);
-                                                playMP3.play();
-                                            } catch (JavaLayerException ex) {
-                                                Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                                            }
-                                        } else {
-                                            if (playMP3.isComplete()) {
-                                                try {
-                                                    playMP3 = new Player(fis);
-                                                    playMP3.play();
-                                                } catch (JavaLayerException ex) {
-                                                    Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                                                }
-                                            }
-                                        }
+                                if (msgobj.containsKey("points")) {
+                                    DefaultTableModel model = (DefaultTableModel) PointsTable.getModel();
+                                    JSONObject points = (JSONObject) msgobj.get("points");
+                                    if (points.isEmpty()) {
+                                        model.setRowCount(0);
+                                        PointsTable.revalidate();
                                     }
-                                }.start();
+                                    JSONObject unames = (JSONObject) msgobj.get("unames");
 
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
+                                    int rows = model.getRowCount();
+
+                                    for (Object T : unames.keySet()) {
+                                        int count = 1;
+                                        Object user = unames.get(T);
+                                        Object PTs = points.get(T);
+                                        boolean updated = false;
+                                        while (count <= rows) {
+                                            Object U = model.getValueAt(count - 1, 0);
+                                            if (U.equals(user)) {
+                                                model.setValueAt(PTs, count - 1, 1);
+                                                updated = true;
+                                                break;
+                                            }
+                                            count++;
+                                        }
+                                        if (!updated) {
+                                            model.addRow(new Object[]{user, PTs});
+                                        }
+                                        count = 1;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                    new Thread("PutTheadName") {
+                        @Override
+                        public void run() {
+// Thread code goes here.
+
+                            try {
+                                if (msgobj.containsKey("cmdcost")) {
+                                    CS.cmdCosts.clear();
+                                    CS.cmdCosts.putAll((JSONObject) new JSONParser().parse(msgobj.get("cmdcost").toString()));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                    new Thread("PutTheadName") {
+                        @Override
+                        public void run() {
+                            if (CS.GUISettings.containsKey("cmdsounds") && msgobj.containsKey("command") && !CS.ModMode) {
+                                try {
+                                    String toParse = CS.GUISettings.get("cmdsounds").toString();
+                                    JSONObject cmdsounds = (JSONObject) parser.parse(toParse);
+                                    String cmd = msgobj.get("command").toString();
+                                    if (cmdsounds.containsKey(cmd)) {
+
+                                        final FileInputStream fis;
+                                        try {
+                                            fis = new FileInputStream(cmdsounds.get(cmd).toString());
+                                            new Thread("PutTheadName") {
+                                                @Override
+                                                public void run() {
+                                                    if (playMP3 == null) {
+                                                        try {
+                                                            playMP3 = new Player(fis);
+                                                            playMP3.play();
+                                                        } catch (JavaLayerException ex) {
+                                                            Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                                        }
+                                                    } else {
+                                                        if (playMP3.isComplete()) {
+                                                            try {
+                                                                playMP3 = new Player(fis);
+                                                                playMP3.play();
+                                                            } catch (JavaLayerException ex) {
+                                                                Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }.start();
+
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                        }
+
+                                    }
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
 
                         }
-                    }
+                    }.start();
                 } catch (ParseException ex) {
                     Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
                 }

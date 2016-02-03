@@ -13,6 +13,7 @@ import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
+import beam.scottygui.Utils.downloadFromUrl;
 import beam.scottygui.websocket.EndPoint;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -22,6 +23,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +58,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 68;
+    public static Integer CurVer = 70;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -112,6 +116,75 @@ public class CS {
     public static boolean ModMode = false;
     public static Session controlSes = null;
     public static JSONObject cmdCosts = new JSONObject();
+
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
+    public static boolean CheckNewVer() {
+        try {
+            JSONObject VerCheck = null;
+            while (true) {
+                try {
+                    VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
+                    break;
+                } catch (ParseException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            //System.out.println(VerCheck.toString());
+            int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
+            if (NewVer > CurVer) {
+                int Yes = JOptionPane.showConfirmDialog(null, "New version of ScottyGUI" + newline + "Would you like to download?");
+
+                if (Yes == 0) {
+                    int Attempts = 0;
+                    while (Attempts < 5) {
+                        URL ToDownload = null;
+                        try {
+                            ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
+                        } catch (MalformedURLException ex) {
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        String FileName = "./ScottyGUI.jar";
+                        downloadFromUrl download = new downloadFromUrl();
+                        try {
+                            download.downloadFromUrl(ToDownload, FileName);
+                            break;
+                        } catch (IOException ex) {
+                            Attempts++;
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (Attempts == 5) {
+                        JOptionPane.showMessageDialog(null, "Unable to download, try again later");
+                    } else {
+                        //Restart the program
+                        JOptionPane.showMessageDialog(null, "Downloaded, Restarting ScottyGUI!");
+
+                        StringBuilder cmd = new StringBuilder();
+                        cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
+                        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+                            cmd.append(jvmArg + " ");
+                        }
+                        cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+
+                        try {
+                            //System.out.println(cmd.toString());
+                            Runtime.getRuntime().exec(cmd.toString());
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        System.exit(0);
+                        System.exit(0);
+                    }
+
+                }
+                return true;
+            }
+            return false;
+        } catch (Exception ignore) {
+            return false;
+        }
+    }
 
     public static void AddModList(String Streamer, String uuid) {
         JSONArray chanList = new JSONArray();
