@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -114,7 +115,13 @@ public class ChatFormatter {
                 MSG = MSG + " " + StringEscapeUtils.escapeHtml(obj.get("data").toString());
             } else if ("EMOTICON".equalsIgnoreCase(type)) {
                 String Pack = (String) obj.get("pack");
-                String imgURL = "https://beam.pro/_latest/emoticons/" + Pack + ".png";
+                UrlValidator urlValidator = new UrlValidator();
+                String imgURL = "";
+                if (urlValidator.isValid(Pack)) {
+                    imgURL = Pack;
+                } else {
+                    imgURL = "https://beam.pro/_latest/emoticons/" + Pack + ".png";
+                }
                 JSONObject Coords = (JSONObject) obj.get("coords");
                 String text = obj.get("text").toString();
                 int X = Integer.parseInt(Coords.get("x").toString());
@@ -125,7 +132,7 @@ public class ChatFormatter {
                     if (CS.EmoteMaps.containsKey(imgURL)) {
                         fullEmotes = CS.EmoteMaps.get(imgURL);
                     } else {
-                        fullEmotes = ImageIO.read(new URL(imgURL));
+                        fullEmotes = ImageIO.read(new URL(imgURL).openStream());
                         CS.EmoteMaps.put(imgURL, fullEmotes);
                     }
                     Emote = fullEmotes.getSubimage(X, Y, 22, 22);
