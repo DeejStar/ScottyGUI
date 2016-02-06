@@ -53,6 +53,10 @@ public class ScottyEndPoint extends Endpoint {
             public void onMessage(String message) {
                 try {
                     System.out.println("Scotty control socket: " + message);
+                    if ("3".equals(message)) {
+                        CS.CCCheck = (15 * 1000) + System.currentTimeMillis();
+                        return;
+                    }
                     final JSONObject msgobj = (JSONObject) parser.parse(message);
                     ControlPanel.ControlStatus.setBackground(Color.GREEN);
                     ControlPanel.ControlStatus.setText("");

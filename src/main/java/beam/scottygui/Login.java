@@ -412,16 +412,46 @@ public class Login extends javax.swing.JFrame {
                             if (CS.controlSes != null) {
                                 if (!CS.controlSes.isOpen()) {
                                     new ScottySocket().connect();
+                                } else {
+                                    CS.controlSes.getAsyncRemote().sendText("2");
+                                    System.err.println("Sent ping");
                                 }
                             }
                         }
-                        Thread.sleep(10000);
-                    } catch (InterruptedException ex) {
+
+                    } catch (Exception ex) {
                         Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                 }
             }
+        }.start();
+        new Thread("PutTheadName") {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        if (!CS.CSisGood()) {
+                            CS.controlSes.close();
+                        }
+                    } catch (Exception e) {
+
+                    } finally {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+
         }.start();
     }
 
@@ -439,16 +469,21 @@ public class Login extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

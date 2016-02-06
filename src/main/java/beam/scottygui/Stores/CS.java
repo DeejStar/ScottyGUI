@@ -58,7 +58,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 70;
+    public static Integer CurVer = 71;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -116,6 +116,27 @@ public class CS {
     public static boolean ModMode = false;
     public static Session controlSes = null;
     public static JSONObject cmdCosts = new JSONObject();
+    public static Long CCCheck = 0L;
+
+    public static boolean CSisGood() {
+
+        Long time = CCCheck;
+        if (time == 0L) {
+            Long newCD = (30 * 1000) + System.currentTimeMillis();
+            CCCheck = newCD;
+            return true;
+        }
+//System.err.println(time + " : " + System.currentTimeMillis());
+        if (time > System.currentTimeMillis()) {
+            return true;
+        } else {
+            Long newCD = (15 * 1000) + System.currentTimeMillis();
+            CCCheck = newCD;
+            System.err.println("appears dead");
+            return false;
+        }
+
+    }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public static boolean CheckNewVer() {
