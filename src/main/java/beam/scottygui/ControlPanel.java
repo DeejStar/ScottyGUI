@@ -471,6 +471,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         delpoints = new javax.swing.JButton();
         giveall = new javax.swing.JButton();
         purgepoints = new javax.swing.JButton();
+        jPanel17 = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        smchat = new javax.swing.JTable();
+        relaymsg = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
         RefreshAll = new javax.swing.JButton();
@@ -1474,6 +1478,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         whitelistPane.addTab("Whitelist", jPanel11);
 
+        PointsTable.setAutoCreateRowSorter(true);
         PointsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -1482,9 +1487,16 @@ public final class ControlPanel extends javax.swing.JFrame {
                 "Viewer", "Points"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Long.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -1569,6 +1581,60 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
 
         whitelistPane.addTab("Points", jPanel12);
+
+        smchat.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Steamer and Mod Chat"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        smchat.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        smchat.setFocusable(false);
+        jScrollPane8.setViewportView(smchat);
+
+        relaymsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                relaymsgActionPerformed(evt);
+            }
+        });
+        relaymsg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                relaymsgKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+        jPanel17.setLayout(jPanel17Layout);
+        jPanel17Layout.setHorizontalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
+                    .addComponent(relaymsg))
+                .addContainerGap())
+        );
+        jPanel17Layout.setVerticalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel17Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(relaymsg, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        whitelistPane.addTab("Streamer/Mod Chat", jPanel17);
 
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -2607,6 +2673,29 @@ public final class ControlPanel extends javax.swing.JFrame {
         cost.setVisible(true);
     }//GEN-LAST:event_comCostActionPerformed
 
+    private void relaymsgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_relaymsgKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            String msg = this.relaymsg.getText();
+            if (msg.isEmpty()) {
+                return;
+            }
+            Long UID = CS.UserID;
+            JSONObject relay = new JSONObject();
+            JSONObject obj = new JSONObject();
+            obj.put("userid", UID);
+            obj.put("message", msg);
+            relay.put("relay", obj);
+            CS.lastrelay = msg;
+            relaymsg.setText("");
+            CS.controlSes.getAsyncRemote().sendObject(relay);
+        }
+    }//GEN-LAST:event_relaymsgKeyReleased
+
+    private void relaymsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relaymsgActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_relaymsgActionPerformed
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -3085,6 +3174,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
+    private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -3101,13 +3191,16 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton purgepoints;
+    private javax.swing.JTextField relaymsg;
     private javax.swing.JButton resendEmail;
     private javax.swing.JButton setEmail;
     private javax.swing.JTabbedPane settingsTabs;
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
+    public static javax.swing.JTable smchat;
     private javax.swing.JTabbedPane whitelistPane;
     // End of variables declaration//GEN-END:variables
 }

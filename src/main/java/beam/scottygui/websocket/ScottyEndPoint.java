@@ -96,6 +96,22 @@ public class ScottyEndPoint extends Endpoint {
                                         }
                                         count = 1;
                                     }
+                                } else if (msgobj.containsKey("relay")) {
+                                    JSONObject msg = (JSONObject) msgobj.get("relay");
+                                    String uname = (String) msg.get("user");
+                                    String message = (String) msg.get("msg");
+                                    if (message.isEmpty()) {
+                                        return;
+                                    }
+                                    DefaultTableModel model = (DefaultTableModel) ControlPanel.smchat.getModel();
+                                    while (model.getRowCount() > 100) {
+                                        model.removeRow(1);
+                                    }
+                                    model.addRow(new Object[]{uname + ": " + message});
+                                    ControlPanel.smchat.changeSelection(model.getRowCount() - 1, 0, false, false);
+                                    ControlPanel.smchat.getSelectionModel().clearSelection();
+                                    return;
+
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

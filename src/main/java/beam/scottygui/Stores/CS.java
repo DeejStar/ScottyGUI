@@ -58,7 +58,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 72;
+    public static Integer CurVer = 73;
     public static String apiLoc = "https://api.scottybot.net";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
@@ -117,6 +117,7 @@ public class CS {
     public static Session controlSes = null;
     public static JSONObject cmdCosts = new JSONObject();
     public static Long CCCheck = 0L;
+    public static String lastrelay = "";
 
     public static boolean CSisGood() {
 
