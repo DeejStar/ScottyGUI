@@ -74,12 +74,10 @@ public final class delquote extends javax.swing.JFrame {
         QToDelList = new javax.swing.JList();
         QDel = new javax.swing.JButton();
         QDelCancel = new javax.swing.JButton();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         QToDelList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -88,15 +86,12 @@ public final class delquote extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(QToDelList);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 21, 528, 170));
-
         QDel.setText("Delete Selected");
         QDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QDelActionPerformed(evt);
             }
         });
-        getContentPane().add(QDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 204, -1, -1));
 
         QDelCancel.setText("Cancel");
         QDelCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -104,8 +99,32 @@ public final class delquote extends javax.swing.JFrame {
                 QDelCancelActionPerformed(evt);
             }
         });
-        getContentPane().add(QDelCancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(385, 204, -1, -1));
-        getContentPane().add(filler2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 590, 260));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(QDel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 337, Short.MAX_VALUE)
+                        .addComponent(QDelCancel))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(QDel)
+                    .addComponent(QDelCancel))
+                .addGap(7, 7, 7))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -185,7 +204,6 @@ public final class delquote extends javax.swing.JFrame {
     private javax.swing.JButton QDelCancel;
     private javax.swing.JList QToDelList;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
