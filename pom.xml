@@ -176,7 +176,13 @@
             <classifier>swing</classifier>
         </dependency>
 
-       
+ 
+  <dependency>
+    <groupId>io.socket</groupId>
+    <artifactId>socket.io-client</artifactId>
+    <version>0.7.0</version>
+  </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -207,6 +213,12 @@
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.5.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.3.0</version>
             <type>jar</type>
         </dependency>
     </dependencies>

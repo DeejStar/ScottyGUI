@@ -398,6 +398,8 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         PSubPoints = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
+        PPM = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
         SettingsPanel = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         FollowSoundSet = new javax.swing.JButton();
@@ -1066,6 +1068,11 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel20.setText("Sub Bonus Points");
 
+        PPM.setEditable(false);
+        PPM.setText("jTextField1");
+
+        jLabel21.setText("Points Per MSG");
+
         javax.swing.GroupLayout PSettingsLayout = new javax.swing.GroupLayout(PSettings);
         PSettings.setLayout(PSettingsLayout);
         PSettingsLayout.setHorizontalGroup(
@@ -1112,7 +1119,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(8, 8, 8)
                                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(392, 392, 392))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PPM))
+                .addGap(266, 266, 266))
         );
         PSettingsLayout.setVerticalGroup(
             PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1138,24 +1149,23 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel11)
                         .addComponent(jLabel20)
-                        .addComponent(jLabel10)))
+                        .addComponent(jLabel10)
+                        .addComponent(jLabel21)))
+                .addGap(3, 3, 3)
                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PSettingsLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(PSubPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(53, 53, 53)
-                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BHEnabled)
-                            .addComponent(RouletteEnable)
-                            .addComponent(REnabled)))
-                    .addGroup(PSettingsLayout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(EditPoints)))
+                    .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(PWhenLive, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(EditPoints))
+                    .addComponent(PWhenIdle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(PSubPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PStartPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PPM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(50, 50, 50)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BHEnabled)
+                    .addComponent(RouletteEnable)
+                    .addComponent(REnabled))
                 .addContainerGap(234, Short.MAX_VALUE))
         );
 
@@ -2384,11 +2394,13 @@ public final class ControlPanel extends javax.swing.JFrame {
             String notidle = this.PWhenLive.getText();
             String StartPoints = this.PStartPoints.getText();
             String SubBonus = this.PSubPoints.getText();
+            String pointsper = this.PPM.getText();
             try {
                 Integer.parseInt(idle);
                 Integer.parseInt(notidle);
                 Integer.parseInt(StartPoints);
                 Integer.parseInt(SubBonus);
+                Integer.parseInt(pointsper);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
                 return;
@@ -2398,11 +2410,14 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PWhenLive.setEditable(false);
             this.PStartPoints.setEditable(false);
             this.PSubPoints.setEditable(false);
+            this.PPM.setEditable(false);
             try {
                 http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
                 http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
                 http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
                 http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subbonus&value=" + URLEncoder.encode(SubBonus, "UTF-8"));
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=pointspermsg&value=" + URLEncoder.encode(pointsper, "UTF-8"));
+
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2413,6 +2428,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.PWhenLive.setEditable(true);
             this.PStartPoints.setEditable(true);
             this.PSubPoints.setEditable(true);
+            this.PPM.setEditable(true);
         }
     }//GEN-LAST:event_EditPointsActionPerformed
 
@@ -3199,6 +3215,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
         this.PStartPoints.setText(GetSettings().get("startpoints").toString());
         this.PSubPoints.setText(GetSettings().get("subbonus").toString());
+        this.PPM.setText(GetSettings().get("PointsPerMsg").toString());
 
         if ("1".equals(GetSettings().get("UseBankheist"))) {
             this.BHEnabled.setSelected(true);
@@ -3520,6 +3537,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox OnlyWhenLiveEnabled;
     private javax.swing.JCheckBox PEnabled;
     private javax.swing.JButton PNotes;
+    private javax.swing.JTextField PPM;
     private javax.swing.JButton PRenBut;
     private javax.swing.JPanel PSettings;
     private javax.swing.JTextField PStartPoints;
@@ -3596,6 +3614,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

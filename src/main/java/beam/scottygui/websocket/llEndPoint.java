@@ -39,6 +39,7 @@ public class llEndPoint extends Endpoint {
 
     @Override
     public void onOpen(final Session session, EndpointConfig config) {
+
         Thread.currentThread().setName(ChanID + "Liveload watcher");
         if (CS.FollowerQueue == null) {
             CS.FollowerQueue = new FollowLooper();
@@ -159,11 +160,9 @@ public class llEndPoint extends Endpoint {
                         NewFollowers.add(followerName);
                         CS.FolCount++;
                         ControlPanel.FolCounter.setText(CS.FolCount + " followers this session.");
-                    } else {
-                        if (!followCache.contains(followerID)) {
-                            followCache.add(followerID);
-                            return;
-                        }
+                    } else if (!followCache.contains(followerID)) {
+                        followCache.add(followerID);
+                        return;
                     }
 
                 }
