@@ -7,12 +7,13 @@ package beam.scottygui.cmdcontrol;
 
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
-import static beam.scottygui.Stores.CS.AuthKey;
 import static beam.scottygui.Stores.CS.cp;
 import static beam.scottygui.Stores.CS.newline;
 import beam.scottygui.Utils.HTTP;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -52,6 +53,9 @@ public class AddEditCMD extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         permlevel = new javax.swing.JList();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        SR = new javax.swing.JList<>();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -83,6 +87,7 @@ public class AddEditCMD extends javax.swing.JFrame {
         jLabel2.setText("Command Output");
 
         jLabel1.setText("!Command");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         permlevel.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Streamer", "Mod", "Everyone" };
@@ -94,62 +99,84 @@ public class AddEditCMD extends javax.swing.JFrame {
 
         jLabel3.setText("Perm Level");
 
+        SR.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Full", "Hide Text", "Hide Text and Cost", "Hide All But CMD", "Dont Show On Site" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(SR);
+
+        jLabel4.setText("Site Display Restriction");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(output, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(output, javax.swing.GroupLayout.PREFERRED_SIZE, 741, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(330, 330, 330)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(280, 280, 280)
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jButton3)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(370, 370, 370)
-                                        .addComponent(jLabel2))
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(cmd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                        .addComponent(jLabel2)
+                                                        .addGap(20, 20, 20))))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(56, 56, 56)
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(351, 351, 351)
-                                        .addComponent(cmd, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(82, 82, 82))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(76, 76, 76)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(130, 130, 130)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addGap(49, 49, 49))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel3)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane2)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))))
+                        .addGap(0, 91, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addGap(25, 25, 25))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(71, 71, 71))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)))))
+                .addGap(30, 30, 30)
                 .addComponent(output, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -173,8 +200,13 @@ public class AddEditCMD extends javax.swing.JFrame {
         try {
             boolean copout = "".equals(this.permlevel.getSelectedValue().toString());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "You didn't pick a permissions level");
-            return;
+            permlevel.setSelectedIndex(0);
+        }
+        try {
+            boolean copout = "".equals(this.SR.getSelectedValue().toString());
+        } catch (Exception e) {
+            SR.setSelectedIndex(0);
+
         }
 
         if (!"!".equalsIgnoreCase(CheckIf) || "".equals(this.cmd.getText()) || "".equals(this.output.getText()) || "".equals(this.permlevel.getSelectedValue().toString())) {
@@ -182,6 +214,8 @@ public class AddEditCMD extends javax.swing.JFrame {
             return;
         }
         String ModLevel = this.permlevel.getSelectedValue().toString().toUpperCase();
+
+        int SiteR = SR.getSelectedIndex();
 
         int PermLevel = 0;
         switch (ModLevel) {
@@ -196,12 +230,32 @@ public class AddEditCMD extends javax.swing.JFrame {
                 break;
         }
         String Submit = null;
-        try {
-            Submit = CS.apiLoc + "/commands/add?authkey=" + AuthKey.trim() + "&cmd=" + URLEncoder.encode(this.cmd.getText().trim(), "UTF-8") + "&text=" + URLEncoder.encode(this.output.getText().trim(), "UTF-8") + "&permlevel=" + PermLevel;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
+//        try {
+        //           Submit = CS.apiLoc + "/commands/add?authkey=" + AuthKey.trim() + "&cmd=" + URLEncoder.encode(this.cmd.getText().trim(), "UTF-8") + "&text=" + URLEncoder.encode(this.output.getText().trim(), "UTF-8") + "&permlevel=" + PermLevel;
+        //      } catch (UnsupportedEncodingException ex) {
+        //         Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
+        //    }
+        Map<String, String> toPut = new HashMap();
+        toPut.put("authkey", CS.AuthKey);
+        toPut.put("cmd", cmd.getText().trim());
+        toPut.put("text", output.getText().trim());
+        toPut.put("permlevel", "" + PermLevel);
+        toPut.put("siterestrict", "" + SR.getSelectedIndex());
+        System.err.println(toPut);
+        int CNT = 0;
+        while (CNT < 5) {
+            try {
+                http.put(toPut, CS.apiLoc + "/commands/add");
+                break;
+            } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
+                CNT++;
+            }
         }
-        http.GetScotty(Submit.trim());
+        if (CNT == 5) {
+            JOptionPane.showMessageDialog(rootPane, "Error adding command, try again later");
+        }
+        //http.GetScotty(Submit.trim());
         this.dispose();
         while (true) {
             try {
@@ -268,6 +322,7 @@ public class AddEditCMD extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> SR;
     private javax.swing.JTextField cmd;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -275,8 +330,10 @@ public class AddEditCMD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField output;
     private javax.swing.JList permlevel;
     // End of variables declaration//GEN-END:variables
