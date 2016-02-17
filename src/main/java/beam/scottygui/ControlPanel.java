@@ -340,7 +340,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         CmdInfo = new javax.swing.JTextArea();
         RepeatList = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         RefreshCMDs = new javax.swing.JButton();
@@ -351,7 +350,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         QuotePanel = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         QEnabled = new javax.swing.JCheckBox();
         NumOfQuotes = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
@@ -486,7 +484,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         TotFollowers = new javax.swing.JLabel();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         ControlStatus = new javax.swing.JTextField();
-        jLabel19 = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -561,8 +558,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Auto-Refreshes every 5 minutes.");
-
         jButton2.setText("Reset/Permlevel/Delete CMD");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -604,7 +599,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addComponent(RefreshCMDs)
@@ -616,28 +611,22 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(comCost, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmdsoundbutton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(RepeatList, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(RepeatList, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 133, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(RepeatList)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(RefreshCMDs)
-                            .addComponent(jButton2)
-                            .addComponent(comCost)
-                            .addComponent(cmdsoundbutton))))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(RefreshCMDs)
+                    .addComponent(jButton2)
+                    .addComponent(comCost)
+                    .addComponent(cmdsoundbutton)
+                    .addComponent(RepeatList))
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -668,8 +657,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-
-        jLabel3.setText("Auto-Refreshes every 5 minutes.");
 
         QEnabled.setText("Quotes Enabled");
         QEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -711,10 +698,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(QEnabled)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)
-                        .addContainerGap(354, Short.MAX_VALUE))))
+                        .addContainerGap(423, Short.MAX_VALUE))))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -725,7 +710,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(NumOfQuotes)
                     .addComponent(QEnabled)
-                    .addComponent(jLabel3)
                     .addComponent(jButton4))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -919,7 +903,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(RemoveBadWord, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -972,7 +956,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(RemoveBadWord)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -1099,7 +1083,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(25, 25, 25)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                                     .addComponent(PWhenLive))
                                 .addGap(28, 28, 28)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1123,7 +1107,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(PPM))
-                .addGap(266, 266, 266))
+                .addGap(53, 53, 53))
         );
         PSettingsLayout.setVerticalGroup(
             PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1166,7 +1150,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(BHEnabled)
                     .addComponent(RouletteEnable)
                     .addComponent(REnabled))
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addContainerGap(247, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -1721,13 +1705,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(settingsTabs)
-                .addContainerGap())
+            .addComponent(settingsTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 1047, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(settingsTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(settingsTabs)
         );
 
         whitelistPane.addTab("Settings", jPanel4);
@@ -1758,28 +1740,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE)
-            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                    .addGap(0, 18, Short.MAX_VALUE)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, 993, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 477, Short.MAX_VALUE))
-            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                    .addContainerGap(480, Short.MAX_VALUE)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(455, Short.MAX_VALUE)))
-        );
-
         Viewers.setBackground(new java.awt.Color(0, 0, 0));
         Viewers.setForeground(new java.awt.Color(255, 255, 255));
         Viewers.setModel(new javax.swing.AbstractListModel() {
@@ -1796,27 +1756,47 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(Viewers);
 
-        jLabel14.setText("Double click name to purge");
+        jLabel14.setText("Double click to purge");
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 827, Short.MAX_VALUE)
+                    .addComponent(ChatSend))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel13Layout.createSequentialGroup()
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(0, 452, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6))
-                .addContainerGap())
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 5, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel14))
         );
 
         whitelistPane.addTab("Chat", jPanel8);
@@ -1834,17 +1814,21 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(186, 186, 186)
-                .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel16)
+                .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(210, 210, 210)
-                .addComponent(jLabel16))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel11Layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addComponent(jLabel16)))
+                .addGap(9, 9, 9))
         );
 
         whitelistPane.addTab("Whitelist", jPanel11);
@@ -1921,33 +1905,29 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(GivePoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(delpoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(giveall, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(783, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(purgepoints))))
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(GivePoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(delpoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(giveall, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(purgepoints))
+                .addContainerGap(595, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(GivePoints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(delpoints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(giveall)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(33, 33, 33)
+                        .addComponent(GivePoints)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delpoints)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(giveall)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(purgepoints))
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -1991,7 +1971,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 1203, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 1023, Short.MAX_VALUE)
                     .addComponent(relaymsg))
                 .addContainerGap())
         );
@@ -2056,7 +2036,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
                             .addGap(30, 30, 30)
                             .addComponent(jButton9))))
-                .addContainerGap(702, Short.MAX_VALUE))
+                .addContainerGap(522, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2113,47 +2093,43 @@ public final class ControlPanel extends javax.swing.JFrame {
         ControlStatus.setBackground(new java.awt.Color(255, 0, 0));
         ControlStatus.setEnabled(false);
 
-        jLabel19.setText("Control and Sound Socket Status");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(whitelistPane)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(StreamSet)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(10, 10, 10)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel19)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(1010, 1010, 1010)
-                        .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(StreamSet)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(37, 37, 37)
+                                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(10, 10, 10)
+                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(7, 7, 7)
+                                .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2)
+                                .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(42, Short.MAX_VALUE))
+            .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2175,17 +2151,15 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jButton6)
                             .addComponent(AlertPaneOpen)
-                            .addComponent(RefreshAll)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel19)
-                                .addGap(4, 4, 4)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(RefreshAll)
                                 .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(1, 1, 1)
+                .addGap(9, 9, 9)
                 .addComponent(TotSubs)
                 .addGap(11, 11, 11)
                 .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 538, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 550, Short.MAX_VALUE))
         );
 
         pack();
@@ -2366,104 +2340,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
         }
     }//GEN-LAST:event_FollowEnabledActionPerformed
-
-    private void REnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REnabledActionPerformed
-        if (this.REnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=0");
-        }
-    }//GEN-LAST:event_REnabledActionPerformed
-
-    private void BHEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BHEnabledActionPerformed
-        if (this.BHEnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=0");
-        }
-    }//GEN-LAST:event_BHEnabledActionPerformed
-
-    private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PWhenIdleActionPerformed
-
-    private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
-
-        if (this.PWhenLive.isEditable()) {
-            String idle = this.PWhenIdle.getText();
-            String notidle = this.PWhenLive.getText();
-            String StartPoints = this.PStartPoints.getText();
-            String SubBonus = this.PSubPoints.getText();
-            String pointsper = this.PPM.getText();
-            try {
-                Integer.parseInt(idle);
-                Integer.parseInt(notidle);
-                Integer.parseInt(StartPoints);
-                Integer.parseInt(SubBonus);
-                Integer.parseInt(pointsper);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
-                return;
-            }
-
-            this.PWhenIdle.setEditable(false);
-            this.PWhenLive.setEditable(false);
-            this.PStartPoints.setEditable(false);
-            this.PSubPoints.setEditable(false);
-            this.PPM.setEditable(false);
-            try {
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subbonus&value=" + URLEncoder.encode(SubBonus, "UTF-8"));
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=pointspermsg&value=" + URLEncoder.encode(pointsper, "UTF-8"));
-
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            this.EditPoints.setText("Edit");
-        } else {
-            this.EditPoints.setText("Save");
-            this.PWhenIdle.setEditable(true);
-            this.PWhenLive.setEditable(true);
-            this.PStartPoints.setEditable(true);
-            this.PSubPoints.setEditable(true);
-            this.PPM.setEditable(true);
-        }
-    }//GEN-LAST:event_EditPointsActionPerformed
-
-    private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
-        if (this.PEnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
-            Component[] ToEnable = this.PSettings.getComponents();
-            for (Component t : ToEnable) {
-                t.setEnabled(true);
-            }
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
-            Component[] ToEnable = this.PSettings.getComponents();
-            for (Component t : ToEnable) {
-                t.setEnabled(false);
-            }
-            this.PEnabled.setEnabled(true);
-        }
-    }//GEN-LAST:event_PEnabledActionPerformed
-
-    private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
-        if (this.PointsName.isEditable()) {
-            this.PointsName.setEditable(false);
-            this.PRenBut.setText("Rename");
-            try {
-                String pname = this.PointsName.getText().replace("!", "");
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PointsName&value=" + URLEncoder.encode(pname, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            this.PointsName.setEditable(true);
-            this.PRenBut.setText("Save");
-        }
-    }//GEN-LAST:event_PRenButActionPerformed
 
     private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
 
@@ -2712,39 +2588,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_WooshMeEnabledActionPerformed
-
-    private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
-                ChatSend.setText("");
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_ChatSendKeyPressed
-
-    private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ChatSendActionPerformed
-
-    private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
-        if (evt.getClickCount() == 2) {
-            try {
-                session.getBasicRemote().sendText(CS.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_ViewersMouseClicked
-
-    private void RouletteEnableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RouletteEnableActionPerformed
-        if (this.RouletteEnable.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=0");
-        }
-    }//GEN-LAST:event_RouletteEnableActionPerformed
 
     private void PNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PNotesActionPerformed
         PatchNotes pnoteswindow = new PatchNotes();
@@ -3149,6 +2992,137 @@ public final class ControlPanel extends javax.swing.JFrame {
         RepeatList rl = new RepeatList();
         rl.setVisible(true);
     }//GEN-LAST:event_RepeatListActionPerformed
+
+    private void RouletteEnableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RouletteEnableActionPerformed
+        if (this.RouletteEnable.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRoulette&value=0");
+        }
+    }//GEN-LAST:event_RouletteEnableActionPerformed
+
+    private void REnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_REnabledActionPerformed
+        if (this.REnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseRaffle&value=0");
+        }
+    }//GEN-LAST:event_REnabledActionPerformed
+
+    private void BHEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BHEnabledActionPerformed
+        if (this.BHEnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseBankheist&value=0");
+        }
+    }//GEN-LAST:event_BHEnabledActionPerformed
+
+    private void PWhenIdleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWhenIdleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PWhenIdleActionPerformed
+
+    private void EditPointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPointsActionPerformed
+
+        if (this.PWhenLive.isEditable()) {
+            String idle = this.PWhenIdle.getText();
+            String notidle = this.PWhenLive.getText();
+            String StartPoints = this.PStartPoints.getText();
+            String SubBonus = this.PSubPoints.getText();
+            String pointsper = this.PPM.getText();
+            try {
+                Integer.parseInt(idle);
+                Integer.parseInt(notidle);
+                Integer.parseInt(StartPoints);
+                Integer.parseInt(SubBonus);
+                Integer.parseInt(pointsper);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, "An entry is not numeric.");
+                return;
+            }
+
+            this.PWhenIdle.setEditable(false);
+            this.PWhenLive.setEditable(false);
+            this.PStartPoints.setEditable(false);
+            this.PSubPoints.setEditable(false);
+            this.PPM.setEditable(false);
+            try {
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=idlepoints&value=" + URLEncoder.encode(idle, "UTF-8"));
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=notidlepoints&value=" + URLEncoder.encode(notidle, "UTF-8"));
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=startpoints&value=" + URLEncoder.encode(StartPoints, "UTF-8"));
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subbonus&value=" + URLEncoder.encode(SubBonus, "UTF-8"));
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=pointspermsg&value=" + URLEncoder.encode(pointsper, "UTF-8"));
+
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.EditPoints.setText("Edit");
+        } else {
+            this.EditPoints.setText("Save");
+            this.PWhenIdle.setEditable(true);
+            this.PWhenLive.setEditable(true);
+            this.PStartPoints.setEditable(true);
+            this.PSubPoints.setEditable(true);
+            this.PPM.setEditable(true);
+        }
+    }//GEN-LAST:event_EditPointsActionPerformed
+
+    private void PRenButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PRenButActionPerformed
+        if (this.PointsName.isEditable()) {
+            this.PointsName.setEditable(false);
+            this.PRenBut.setText("Rename");
+            try {
+                String pname = this.PointsName.getText().replace("!", "");
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PointsName&value=" + URLEncoder.encode(pname, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.PointsName.setEditable(true);
+            this.PRenBut.setText("Save");
+        }
+    }//GEN-LAST:event_PRenButActionPerformed
+
+    private void PEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PEnabledActionPerformed
+        if (this.PEnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=Points&value=1");
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(true);
+            }
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=Points&value=0");
+            Component[] ToEnable = this.PSettings.getComponents();
+            for (Component t : ToEnable) {
+                t.setEnabled(false);
+            }
+            this.PEnabled.setEnabled(true);
+        }
+    }//GEN-LAST:event_PEnabledActionPerformed
+
+    private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
+        if (evt.getClickCount() == 2) {
+            try {
+                session.getBasicRemote().sendText(CS.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ViewersMouseClicked
+
+    private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try {
+                CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                ChatSend.setText("");
+            } catch (IOException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_ChatSendKeyPressed
+
+    private void ChatSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatSendActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ChatSendActionPerformed
 
     private void PopWhiteList() {
         JSONObject whitelist = null;
@@ -3611,11 +3585,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
