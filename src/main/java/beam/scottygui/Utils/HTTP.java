@@ -32,6 +32,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -59,39 +60,37 @@ public class HTTP {
 
         if (CS.isgdCache.containsKey(longUrl)) {
             return CS.isgdCache.get(longUrl);
-        } else {
-            if (CS.IsGdNextCheck < System.currentTimeMillis()) {
-                String URL_SHORTENER_URL = "http://is.gd/create.php?format=simple&url=";
-                try {
-                    URL obj = new URL(URL_SHORTENER_URL + longUrl);
-                    //System.out.println("URL = >> " + obj);
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        } else if (CS.IsGdNextCheck < System.currentTimeMillis()) {
+            String URL_SHORTENER_URL = "http://is.gd/create.php?format=simple&url=";
+            try {
+                URL obj = new URL(URL_SHORTENER_URL + longUrl);
+                //System.out.println("URL = >> " + obj);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                    // optional default is GET
-                    con.setRequestMethod("GET");
+                // optional default is GET
+                con.setRequestMethod("GET");
 
-                    //add request header
-                    con.setRequestProperty("User-Agent", "ScottyBot");
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuilder response = new StringBuilder();
+                //add request header
+                con.setRequestProperty("User-Agent", "ScottyBot");
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
 
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-
-                    //print result
-                    CS.isgdCache.put(longUrl, response.toString());
-                    return response.toString();
-                } catch (IOException e) {
-                    CS.IsGdNextCheck = System.currentTimeMillis() + 120000;
-                    return longUrl;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
-            } else {
+                in.close();
+
+                //print result
+                CS.isgdCache.put(longUrl, response.toString());
+                return response.toString();
+            } catch (IOException e) {
+                CS.IsGdNextCheck = System.currentTimeMillis() + 120000;
                 return longUrl;
             }
+        } else {
+            return longUrl;
         }
     }
 
@@ -134,6 +133,25 @@ public class HTTP {
 
         }
         return toSend;
+    }
+
+    public void deleteCustRanks() throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        while (tried < 5) {
+            tried++;
+            try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                HttpClientContext context = HttpClientContext.create();
+                HttpDelete request = new HttpDelete(CS.apiLoc + "/rankscheme/reset?authkey=" + URLEncoder.encode(CS.AuthKey, "UTF-8"));
+                HttpResponse response = client.execute(request, context);
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+
     }
 
     public String post(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {

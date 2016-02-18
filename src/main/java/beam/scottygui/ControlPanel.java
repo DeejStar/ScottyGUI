@@ -50,6 +50,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,10 @@ import java.util.logging.Logger;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -443,6 +447,15 @@ public final class ControlPanel extends javax.swing.JFrame {
         LeetSpeek = new javax.swing.JCheckBox();
         setEmail = new javax.swing.JButton();
         resendEmail = new javax.swing.JButton();
+        jPanel18 = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        CustRankTable = new javax.swing.JTable();
+        CustRankSave = new javax.swing.JButton();
+        UndoRankChanges = new javax.swing.JButton();
+        ResetRanksScottyDefaults = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -977,6 +990,24 @@ public final class ControlPanel extends javax.swing.JFrame {
         whitelistPane.addTab("Filtering", jPanel3);
 
         settingsTabs.setToolTipText("");
+        settingsTabs.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                settingsTabsFocusGained(evt);
+            }
+        });
+        settingsTabs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                settingsTabsMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                settingsTabsMouseClicked(evt);
+            }
+        });
+        settingsTabs.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                settingsTabsKeyReleased(evt);
+            }
+        });
 
         PEnabled.setText("Points Enabled");
         PEnabled.addActionListener(new java.awt.event.ActionListener() {
@@ -1083,7 +1114,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(25, 25, 25)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                                     .addComponent(PWhenLive))
                                 .addGap(28, 28, 28)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1407,20 +1438,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(LinkTitle))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(FollowEnabled, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)
-                        .addComponent(OnlyWhenLiveEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ClearCmdsEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MeOutput)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(PSubAlert))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(ESubMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
@@ -1435,23 +1452,36 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addGap(216, 216, 216)
                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(JoinAnnounce)
-                                    .addComponent(LeaveAnnounce))))))
-                .addContainerGap(154, Short.MAX_VALUE))
+                                    .addComponent(LeaveAnnounce)))))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LinkTitle)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addComponent(FollowEnabled, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(OnlyWhenLiveEnabled)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ClearCmdsEnabled)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(MeOutput)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PSubAlert)))))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FollowEnabled)
-                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(OnlyWhenLiveEnabled)
-                        .addComponent(ClearCmdsEnabled)
-                        .addComponent(MeOutput)
-                        .addComponent(PSubAlert)))
-                .addGap(8, 8, 8)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(OnlyWhenLiveEnabled)
+                    .addComponent(ClearCmdsEnabled)
+                    .addComponent(MeOutput)
+                    .addComponent(PSubAlert)
+                    .addComponent(FollowEnabled))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(LinkTitle)
-                .addGap(63, 63, 63)
+                .addGap(67, 67, 67)
                 .addComponent(AutoTweet)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
@@ -1525,7 +1555,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                         .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1551,8 +1580,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(79, 79, 79)
                 .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         SettingsPanelLayout.setVerticalGroup(
@@ -1700,6 +1730,117 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
 
         settingsTabs.addTab("Donator Stuff", DonatorPanel);
+
+        CustRankTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, ""},
+                {null, null}
+            },
+            new String [] {
+                "Hours", "Rank Text"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        CustRankTable.setColumnSelectionAllowed(true);
+        CustRankTable.getTableHeader().setReorderingAllowed(false);
+        CustRankTable.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                CustRankTableFocusLost(evt);
+            }
+        });
+        jScrollPane9.setViewportView(CustRankTable);
+        CustRankTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (CustRankTable.getColumnModel().getColumnCount() > 0) {
+            CustRankTable.getColumnModel().getColumn(0).setMinWidth(150);
+            CustRankTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+            CustRankTable.getColumnModel().getColumn(0).setMaxWidth(150);
+        }
+
+        CustRankSave.setText("Save");
+        CustRankSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CustRankSaveActionPerformed(evt);
+            }
+        });
+
+        UndoRankChanges.setText("Undo/Refresh");
+        UndoRankChanges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UndoRankChangesActionPerformed(evt);
+            }
+        });
+
+        ResetRanksScottyDefaults.setText("Reset to Defaults");
+        ResetRanksScottyDefaults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetRanksScottyDefaultsActionPerformed(evt);
+            }
+        });
+
+        jButton10.setText("Add Row");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        jButton11.setText("Delete Row");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Use (_hours_) variable to show hours (Case Sensetive)");
+
+        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
+        jPanel18.setLayout(jPanel18Layout);
+        jPanel18Layout.setHorizontalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel18Layout.createSequentialGroup()
+                        .addComponent(UndoRankChanges)
+                        .addGap(18, 18, 18)
+                        .addComponent(CustRankSave)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton11)
+                        .addGap(408, 408, 408)
+                        .addComponent(ResetRanksScottyDefaults, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addGap(278, 278, 278)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CustRankSave)
+                    .addComponent(UndoRankChanges)
+                    .addComponent(ResetRanksScottyDefaults)
+                    .addComponent(jButton10)
+                    .addComponent(jButton11))
+                .addContainerGap())
+        );
+
+        settingsTabs.addTab("Custom Ranks", jPanel18);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -3124,6 +3265,160 @@ public final class ControlPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ChatSendActionPerformed
 
+    private void settingsTabsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_settingsTabsKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_settingsTabsKeyReleased
+
+    private void settingsTabsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseClicked
+
+    }//GEN-LAST:event_settingsTabsMouseClicked
+
+    private void settingsTabsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseReleased
+
+    }//GEN-LAST:event_settingsTabsMouseReleased
+
+    private void UndoRankChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRankChangesActionPerformed
+        this.PopCustRanks();
+    }//GEN-LAST:event_UndoRankChangesActionPerformed
+
+    private void CustRankSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustRankSaveActionPerformed
+        if (CustRankTable.isEditing()) {
+            CustRankTable.getCellEditor().stopCellEditing();
+        }
+        JSONObject toSave = new JSONObject();
+        int rows = this.CustRankTable.getRowCount();
+        rows = rows - 1;
+        int counted = 0;
+        while (counted <= rows) {
+            try {
+                String hours = this.CustRankTable.getValueAt(counted, 0).toString();
+                String Rank = this.CustRankTable.getValueAt(counted, 1).toString();
+
+                if (!Rank.isEmpty()) {
+                    toSave.put(hours, Rank);
+                }
+            } catch (Exception copout) {
+
+            }
+            counted++;
+        }
+        Map<String, String> toPut = new HashMap();
+        toPut.put("jsonranks", toSave.toJSONString());
+        toPut.put("authkey", CS.AuthKey);
+        try {
+            http.put(toPut, CS.apiLoc + "/rankscheme/set");
+            //System.err.println(toPut);
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(AlertPaneOpen, "Error Saving, try again in a few moments.");
+            return;
+        }
+        this.PopCustRanks();
+
+    }//GEN-LAST:event_CustRankSaveActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        DefaultTableModel CRModel = (DefaultTableModel) this.CustRankTable.getModel();
+        int row = CustRankTable.getSelectedRow();
+        if (row != -1) {
+            int rows = CRModel.getRowCount() - 1;
+            DefaultTableModel newModel = new DefaultTableModel();
+            newModel.addColumn(CRModel.getColumnName(0));
+            newModel.addColumn(CRModel.getColumnName(1));
+            int cnt = 0;
+            boolean added = false;
+            while (cnt <= rows) {
+                if (cnt == row && !added) {
+                    newModel.addRow(new Object[]{null, ""});
+                    added = true;
+                } else {
+                    try {
+                        Long hours = (Long) CRModel.getValueAt(cnt, 0);
+                        String rank = CRModel.getValueAt(cnt, 1).toString();
+                        newModel.addRow(new Object[]{hours, rank});
+                    } catch (Exception e) {
+                        newModel.addRow(new Object[]{null, ""});
+                    }
+
+                    cnt++;
+                }
+            }
+            this.CustRankTable.setModel(newModel);
+            if (CustRankTable.getColumnModel().getColumnCount() > 0) {
+                CustRankTable.getColumnModel().getColumn(0).setMinWidth(150);
+                CustRankTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+                CustRankTable.getColumnModel().getColumn(0).setMaxWidth(150);
+            }
+            //CustRankTable.getColumn(0).setPreferredWidth(150);
+        } else {
+
+            CRModel.setRowCount(CRModel.getRowCount() + 1);
+        }
+
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        try {
+            int toDel = this.CustRankTable.getSelectedRow();
+            DefaultTableModel CRModel = (DefaultTableModel) this.CustRankTable.getModel();
+            CRModel.removeRow(toDel);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(AlertPaneOpen, "No Row Selected.");
+        }
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void ResetRanksScottyDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetRanksScottyDefaultsActionPerformed
+        int check1 = JOptionPane.showConfirmDialog(AlertPaneOpen, "Are you sure you wish to reset, this can not be undone!");
+        if (check1 == 0) {
+            int check2 = JOptionPane.showConfirmDialog(AlertPaneOpen, "Really? For Truly?");
+            if (check2 != 0) {
+                return;
+            }
+        } else {
+            return;
+        }
+        try {
+            http.deleteCustRanks();
+            this.PopCustRanks();
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(AlertPaneOpen, "Unable to reset, try again in a few minutes or contact Pocketpac");
+        }
+    }//GEN-LAST:event_ResetRanksScottyDefaultsActionPerformed
+
+    private void CustRankTableFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CustRankTableFocusLost
+
+    }//GEN-LAST:event_CustRankTableFocusLost
+
+    private void settingsTabsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_settingsTabsFocusGained
+
+    }//GEN-LAST:event_settingsTabsFocusGained
+
+    private void PopCustRanks() {
+        JSONObject custRanks = new JSONObject();
+        try {
+            String toParse = http.get(CS.apiLoc + "/rankscheme?chanid=" + ChanID);
+            custRanks.putAll((JSONObject) parser.parse(toParse));
+            List<Long> Hours = new ArrayList();
+            for (Object T : custRanks.keySet()) {
+                Hours.add(Long.parseLong(T.toString()));
+            }
+            Collections.sort(Hours);
+            Collections.reverse(Hours);
+            DefaultTableModel CRModel = (DefaultTableModel) this.CustRankTable.getModel();
+            CRModel.setRowCount(0);
+            for (Long T : Hours) {
+                String Rank = custRanks.get(T.toString()).toString();
+                CRModel.addRow(new Object[]{T, Rank});
+            }
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+        this.CustRankTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
+
+    }
+
     private void PopWhiteList() {
         JSONObject whitelist = null;
         try {
@@ -3173,6 +3468,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.showWhitelist.setText(ToDisplay);
 
     }
+    boolean custrankpop = false;
 
     private void PopulateAllSettings() {
         String PName = GetSettings().get("PointsName").toString();
@@ -3319,6 +3615,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
 
         this.PopWhiteList();
+        if (!custrankpop) {
+            this.PopCustRanks();
+            custrankpop = true;
+        }
 
     }
 
@@ -3488,6 +3788,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextArea CmdInfo;
     public static javax.swing.JTextField ControlStatus;
     public javax.swing.JLabel CurViewers;
+    private javax.swing.JButton CustRankSave;
+    private javax.swing.JTable CustRankTable;
     private javax.swing.JPanel DonationPane;
     private javax.swing.JPanel DonatorPanel;
     private javax.swing.JButton EFollowMsg;
@@ -3530,6 +3832,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton RemoveBadWord;
     private javax.swing.JButton RepeatList;
     private javax.swing.JToggleButton RepeatOnOff;
+    private javax.swing.JButton ResetRanksScottyDefaults;
     private javax.swing.JButton ResetScottyName;
     private javax.swing.JCheckBox RouletteEnable;
     public javax.swing.JLabel SessionMsgCount;
@@ -3550,6 +3853,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public static javax.swing.JLabel TotSubs;
     private javax.swing.JButton TwitterAlertMSG;
     public javax.swing.JLabel UChatters;
+    private javax.swing.JButton UndoRankChanges;
     public javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
@@ -3564,6 +3868,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler4;
     private javax.swing.JButton giveall;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -3585,6 +3891,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel4;
@@ -3603,6 +3910,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -3620,6 +3928,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton purgepoints;
     private javax.swing.JTextField relaymsg;

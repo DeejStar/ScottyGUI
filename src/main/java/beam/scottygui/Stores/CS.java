@@ -59,8 +59,8 @@ import org.json.simple.parser.ParseException;
 public class CS {
 
     public static Integer CurVer = 77;
-    //public static String apiLoc = "https://api.scottybot.net";
-    public static String apiLoc = "http://localhost:8080";
+    public static String apiLoc = "https://api.scottybot.net";
+    //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
     public static HTTP http = new HTTP();
