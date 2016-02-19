@@ -26,7 +26,7 @@ public class ScottySocket {
 
     public void connect() {
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
-            private int counter = 0;
+            int counter = 0;
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
@@ -53,7 +53,7 @@ public class ScottySocket {
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
         try {
             //new HTTP().GetAuth();
-            client.connectToServer(new ScottyEndPoint(), cec, new URI("ws://websocket.scottybot.net:8026/websocket/control"));
+            client.connectToServer(new ScottyEndPoint(), cec, new URI("wss://api.scottybot.net/websocket/control"));
         } catch (URISyntaxException | DeploymentException | IOException ex) {
             Logger.getLogger(ScottySocket.class.getName()).log(Level.SEVERE, null, ex);
         }

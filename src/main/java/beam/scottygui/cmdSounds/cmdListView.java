@@ -34,6 +34,13 @@ public class cmdListView extends javax.swing.JFrame {
 
     public cmdListView() {
         initComponents();
+        if (CS.GUISettings.containsKey("multisound")) {
+            int multi = Integer.parseInt(CS.GUISettings.get("multisound").toString());
+            this.stackaudio.setSelected(multi == 1);
+        } else {
+            CS.GUISaveSettings("multisound", "0");
+            this.stackaudio.setSelected(false);
+        }
         if (CS.GUISettings.containsKey("cmdsounds")) {
             try {
                 cmdSounds.putAll((JSONObject) new JSONParser().parse(CS.GUISettings.get("cmdsounds").toString()));
@@ -89,6 +96,7 @@ public class cmdListView extends javax.swing.JFrame {
         removeSound = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        stackaudio = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -129,6 +137,13 @@ public class cmdListView extends javax.swing.JFrame {
 
         jLabel1.setText("Command List");
 
+        stackaudio.setText("Enable Stacking Sounds");
+        stackaudio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stackaudioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,8 +158,9 @@ public class cmdListView extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(removeSound, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(66, Short.MAX_VALUE))
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(stackaudio))))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,7 +174,9 @@ public class cmdListView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeSound)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3))
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(stackaudio))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -216,6 +234,14 @@ public class cmdListView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_CMDListMouseReleased
 
+    private void stackaudioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stackaudioActionPerformed
+        if (stackaudio.isSelected()) {
+            CS.GUISaveSettings("multisound", "1");
+        } else {
+            CS.GUISaveSettings("multisound", "0");
+        }
+    }//GEN-LAST:event_stackaudioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -258,5 +284,6 @@ public class cmdListView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton removeSound;
+    private javax.swing.JCheckBox stackaudio;
     // End of variables declaration//GEN-END:variables
 }

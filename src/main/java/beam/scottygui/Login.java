@@ -480,14 +480,12 @@ public class Login extends javax.swing.JFrame {
                     try {
                         if (CS.controlSes == null) {
                             new ScottySocket().connect();
-                        } else {
-                            if (CS.controlSes != null) {
-                                if (!CS.controlSes.isOpen()) {
-                                    new ScottySocket().connect();
-                                } else {
-                                    CS.controlSes.getAsyncRemote().sendText("2");
-                                    System.err.println("Sent ping");
-                                }
+                        } else if (CS.controlSes != null) {
+                            if (!CS.controlSes.isOpen()) {
+                                new ScottySocket().connect();
+                            } else {
+                                CS.controlSes.getAsyncRemote().sendText("2");
+                                System.err.println("Sent ping");
                             }
                         }
 
@@ -495,7 +493,7 @@ public class Login extends javax.swing.JFrame {
                         Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(CS.CSPing);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                         }

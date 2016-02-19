@@ -61,7 +61,9 @@ public class ScottyEndPoint extends Endpoint {
                     ControlPanel.ControlStatus.setBackground(Color.GREEN);
                     ControlPanel.ControlStatus.setText("");
                     CS.controlSes = session;
-
+                    if (msgobj.containsKey("ping_in_milli")) {
+                        CS.CSPing = (Long) msgobj.get("ping_in_milli");
+                    }
                     new Thread("PutTheadName") {
                         @Override
                         public void run() {
@@ -142,28 +144,42 @@ public class ScottyEndPoint extends Endpoint {
                                     JSONObject cmdsounds = (JSONObject) parser.parse(toParse);
                                     String cmd = msgobj.get("command").toString();
                                     if (cmdsounds.containsKey(cmd)) {
-
                                         final FileInputStream fis;
                                         try {
                                             fis = new FileInputStream(cmdsounds.get(cmd).toString());
                                             new Thread("PutTheadName") {
                                                 @Override
                                                 public void run() {
-                                                    if (playMP3 == null) {
+                                                    int multi = 0;
+                                                    if (CS.GUISettings.containsKey("multisound")) {
+                                                        multi = Integer.parseInt(CS.GUISettings.get("multisound").toString());
+                                                    } else {
+                                                        CS.GUISaveSettings("multisound", "0");
+                                                    }
+                                                    if (multi == 1) {
+                                                        try {
+                                                            playMP3 = new Player(fis);
+                                                        } catch (JavaLayerException ex) {
+                                                            Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                                        }
+                                                        try {
+                                                            playMP3.play();
+                                                        } catch (JavaLayerException ex) {
+                                                            Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                                                        }
+                                                    } else if (playMP3 == null) {
                                                         try {
                                                             playMP3 = new Player(fis);
                                                             playMP3.play();
                                                         } catch (JavaLayerException ex) {
                                                             Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
                                                         }
-                                                    } else {
-                                                        if (playMP3.isComplete()) {
-                                                            try {
-                                                                playMP3 = new Player(fis);
-                                                                playMP3.play();
-                                                            } catch (JavaLayerException ex) {
-                                                                Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
-                                                            }
+                                                    } else if (playMP3.isComplete()) {
+                                                        try {
+                                                            playMP3 = new Player(fis);
+                                                            playMP3.play();
+                                                        } catch (JavaLayerException ex) {
+                                                            Logger.getLogger(ScottyEndPoint.class.getName()).log(Level.SEVERE, null, ex);
                                                         }
                                                     }
                                                 }

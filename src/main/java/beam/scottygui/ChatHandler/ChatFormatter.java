@@ -208,7 +208,7 @@ public class ChatFormatter {
             chatPrep = "<b>" + username + "</b>" + "<font color=\"white\" size=\"5\">: " + MSG + "</font>";
         }
         chatPrep = WhisperMSG + chatPrep;
-        System.out.println(chatPrep);
+
         String toRem = "";
         while (chatArray.size() > 100) {
             toRem = (String) chatArray.get(0);
@@ -227,7 +227,7 @@ public class ChatFormatter {
             JSONObject msgObj = (JSONObject) chatObject.get(ID);
             ////System.err.println(ID);
             String msgTXT = msgObj.get("msg").toString();
-            System.err.println(msgTXT);
+
             if ((boolean) msgObj.get("purged")) {
                 if (Boolean.parseBoolean(CS.GUIGetSetting("showpurged"))) {
                     try {
