@@ -64,6 +64,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
+import javax.websocket.EncodeException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -169,13 +170,17 @@ public final class ControlPanel extends javax.swing.JFrame {
             @Override
             public void run() {
                 while (true) {
-                    if (llSocket != null) {
-                        llSocket.getAsyncRemote().sendText("2");
-                    }
                     try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        if (llSocket != null) {
+                            llSocket.getAsyncRemote().sendText("2");
+                        }
+                    } catch (Exception e) {
+                    } finally {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
@@ -464,6 +469,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         Viewers = new javax.swing.JList();
         jLabel14 = new javax.swing.JLabel();
+        YouBot = new javax.swing.JToggleButton();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         showWhitelist = new javax.swing.JTextPane();
@@ -1899,6 +1905,14 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         jLabel14.setText("Double click to purge");
 
+        YouBot.setText("You");
+        YouBot.setToolTipText("Switch between chatting as you or the bot.");
+        YouBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                YouBotActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
@@ -1906,8 +1920,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 827, Short.MAX_VALUE)
-                    .addComponent(ChatSend))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 827, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addComponent(ChatSend)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(YouBot)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6)
@@ -1923,8 +1940,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addGap(0, 452, Short.MAX_VALUE))
+                    .addComponent(jLabel14)
+                    .addComponent(YouBot))
+                .addGap(0, 446, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -3253,10 +3271,15 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
-                CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                if (!sendasbot) {
+                    CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                } else {
+                    JSONObject bethebot = new JSONObject();
+                    bethebot.put("bethebot", ChatSend.getText().trim());
+                    CS.controlSes.getBasicRemote().sendObject(bethebot);
+                }
                 ChatSend.setText("");
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | EncodeException ex) {
             }
         }
     }//GEN-LAST:event_ChatSendKeyPressed
@@ -3392,6 +3415,16 @@ public final class ControlPanel extends javax.swing.JFrame {
     private void settingsTabsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_settingsTabsFocusGained
 
     }//GEN-LAST:event_settingsTabsFocusGained
+    boolean sendasbot = false;
+    private void YouBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YouBotActionPerformed
+        if (YouBot.isSelected()) {
+            YouBot.setText("Bot");
+            this.sendasbot = true;
+        } else {
+            YouBot.setText("You");
+            this.sendasbot = false;
+        }
+    }//GEN-LAST:event_YouBotActionPerformed
 
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
@@ -3857,6 +3890,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
+    private javax.swing.JToggleButton YouBot;
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
     private javax.swing.JButton cmdsoundbutton;

@@ -59,8 +59,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="ChatSend" pref="837" max="32767" attributes="0"/>
                   <Component id="jScrollPane2" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="ChatSend" pref="774" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="YouBot" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -82,6 +86,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="ChatSend" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="StreamSet" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="YouBot" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -174,6 +179,15 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="YouBot">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="You"/>
+        <Property name="toolTipText" type="java.lang.String" value="Switch between chatting as you or the bot."/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="YouBotActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

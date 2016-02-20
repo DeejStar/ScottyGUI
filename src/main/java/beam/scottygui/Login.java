@@ -488,12 +488,11 @@ public class Login extends javax.swing.JFrame {
                                 System.err.println("Sent ping");
                             }
                         }
-
                     } catch (Exception ex) {
                         Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         try {
-                            Thread.sleep(CS.CSPing);
+                            Thread.sleep(5000);
                         } catch (InterruptedException ex) {
                             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                         }

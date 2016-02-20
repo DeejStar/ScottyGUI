@@ -15,12 +15,16 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.websocket.EncodeException;
+import org.json.simple.JSONObject;
 
 public class ChatPopOut extends javax.swing.JFrame {
 
     /**
      * Creates new form ChatPopOut
      */
+    boolean sendasbot = false;
+
     public ChatPopOut() {
 
         initComponents();
@@ -96,6 +100,7 @@ public class ChatPopOut extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         ExtChatOutput = new javax.swing.JTextPane();
         StreamSet = new javax.swing.JButton();
+        YouBot = new javax.swing.JToggleButton();
 
         ChatOutput.setEditable(false);
         ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -152,14 +157,25 @@ public class ChatPopOut extends javax.swing.JFrame {
             }
         });
 
+        YouBot.setText("You");
+        YouBot.setToolTipText("Switch between chatting as you or the bot.");
+        YouBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                YouBotActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ChatSend, javax.swing.GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(YouBot)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(StreamSet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -175,7 +191,8 @@ public class ChatPopOut extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(StreamSet))
+                    .addComponent(StreamSet)
+                    .addComponent(YouBot))
                 .addContainerGap())
         );
 
@@ -200,10 +217,15 @@ public class ChatPopOut extends javax.swing.JFrame {
     private void ChatSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ChatSendKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
-                CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                if (!sendasbot) {
+                    CS.session.getBasicRemote().sendText(SendMSG(ChatSend.getText().trim()));
+                } else {
+                    JSONObject bethebot = new JSONObject();
+                    bethebot.put("bethebot", ChatSend.getText().trim());
+                    CS.controlSes.getBasicRemote().sendObject(bethebot);
+                }
                 ChatSend.setText("");
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | EncodeException ex) {
             }
         }
     }//GEN-LAST:event_ChatSendKeyPressed
@@ -211,6 +233,16 @@ public class ChatPopOut extends javax.swing.JFrame {
     private void StreamSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StreamSetActionPerformed
         new statuswindow().setVisible(true);
     }//GEN-LAST:event_StreamSetActionPerformed
+
+    private void YouBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YouBotActionPerformed
+        if (YouBot.isSelected()) {
+            YouBot.setText("Bot");
+            this.sendasbot = true;
+        } else {
+            YouBot.setText("You");
+            this.sendasbot = false;
+        }
+    }//GEN-LAST:event_YouBotActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,6 +285,7 @@ public class ChatPopOut extends javax.swing.JFrame {
     public javax.swing.JTextPane ExtChatOutput;
     public static javax.swing.JButton StreamSet;
     public javax.swing.JList Viewers;
+    private javax.swing.JToggleButton YouBot;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
