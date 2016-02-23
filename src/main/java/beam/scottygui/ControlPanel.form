@@ -132,7 +132,7 @@
               </Group>
               <EmptySpace pref="42" max="32767" attributes="0"/>
           </Group>
-          <Component id="whitelistPane" pref="0" max="32767" attributes="0"/>
+          <Component id="YouTube" pref="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -169,7 +169,7 @@
               <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
               <Component id="filler3" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="whitelistPane" pref="550" max="32767" attributes="0"/>
+              <Component id="YouTube" pref="550" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -200,9 +200,9 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Container class="javax.swing.JTabbedPane" name="whitelistPane">
+    <Container class="javax.swing.JTabbedPane" name="YouTube">
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="whitelistPaneMouseClicked"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="YouTubeMouseClicked"/>
       </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -2564,7 +2564,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Channel Name and Game"/>
         <Property name="actionCommand" type="java.lang.String" value="Stream Title"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StreamSetActionPerformed"/>

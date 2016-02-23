@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -58,7 +57,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 81;
+    public static Integer CurVer = 82;
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -117,29 +116,8 @@ public class CS {
     public static boolean ModMode = false;
     public static Session controlSes = null;
     public static JSONObject cmdCosts = new JSONObject();
-    public static Long CCCheck = 0L;
     public static String lastrelay = "";
     public static Long CSPing = 1500L;
-
-    public static boolean CSisGood() {
-
-        Long time = CCCheck;
-        if (time == 0L) {
-            Long newCD = (30 * 1000) + System.currentTimeMillis();
-            CCCheck = newCD;
-            return true;
-        }
-//System.err.println(time + " : " + System.currentTimeMillis());
-        if (time > System.currentTimeMillis()) {
-            return true;
-        } else {
-            Long newCD = (15 * 1000) + System.currentTimeMillis();
-            CCCheck = newCD;
-            System.err.println("appears dead");
-            return false;
-        }
-
-    }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public static boolean CheckNewVer() {
@@ -282,60 +260,42 @@ public class CS {
     }
 
     public static ComboBoxModel setgamelistmodel(String Query) {
-        if (Query == null) {
-            Collections.sort(GamesPreSorted);
-            ControlPanel.StreamSet.setEnabled(true);
-            ChatPopOut.StreamSet.setEnabled(true);
-            return new DefaultComboBoxModel(GamesPreSorted.toArray(new String[GamesPreSorted.size()]));
-        } else {
-            List<String> ToNarrow = new ArrayList();
-            for (Object T : GameListJSON.keySet()) {
-                String Name = T.toString().toUpperCase();
-                String QU = Query.toUpperCase();
-                if (Name.contains(QU)) {
-                    ToNarrow.add(T.toString());
-                }
+
+        Collections.sort(GamesPreSorted);
+        List<String> ToNarrow = new ArrayList();
+        for (Object T : GameListJSON.keySet()) {
+            String Name = T.toString().toUpperCase();
+            String QU = Query.toUpperCase();
+            if (Name.contains(QU)) {
+                ToNarrow.add(T.toString());
             }
-            return new DefaultComboBoxModel(ToNarrow.toArray(new String[ToNarrow.size()]));
         }
+        return new DefaultComboBoxModel(ToNarrow.toArray(new String[ToNarrow.size()]));
+
     }
 
-    public static void popGames() {
-        String toParse = null;
+    public static ComboBoxModel popGames(String toParse, String query) {
+
         try {
-            toParse = http.get(CS.apiLoc + "/getgamearray");
-        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            JSONArray toLoop = (JSONArray) new JSONParser().parse(toParse);
+            for (Object t : toLoop) {
+                JSONObject Game = (JSONObject) t;
+                Long ID = (Long) Game.get("id");
+                String Name = (String) Game.get("name");
+                GamesPreSorted.add(Name);
+                GameListJSON.put(Name, ID);
+            }
+
+        } catch (ParseException ex) {
             Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        while (true) {
-            if (toParse.equalsIgnoreCase("Populating, may take some time")) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                try {
-                    JSONArray toLoop = (JSONArray) new JSONParser().parse(toParse);
-                    for (Object t : toLoop) {
-                        JSONObject Game = (JSONObject) t;
-                        Long ID = (Long) Game.get("id");
-                        String Name = (String) Game.get("name");
-                        GamesPreSorted.add(Name);
-                        GameListJSON.put(Name, ID);
-                    }
-                    setgamelistmodel(null);
-                    break;
-                } catch (ParseException ex) {
-                    Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException ex1) {
-                        Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                }
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ex1) {
+                Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
+
+        return CS.setgamelistmodel(query);
     }
 
     public static int getgameID(String game) {

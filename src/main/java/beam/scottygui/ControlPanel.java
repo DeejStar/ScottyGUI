@@ -249,13 +249,6 @@ public final class ControlPanel extends javax.swing.JFrame {
 
             }
         }.start();
-        new Thread("PopGameList") {
-            @Override
-            public void run() {
-// Thread code goes here.
-                CS.popGames();
-            }
-        }.start();
 
         Viewers.setModel(ChatUserList);
         //this.PopChatList();
@@ -343,7 +336,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         CurViewers = new javax.swing.JLabel();
         TopViewers = new javax.swing.JLabel();
-        whitelistPane = new javax.swing.JTabbedPane();
+        YouTube = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -557,9 +550,9 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         TopViewers.setText("0 Top Viewers");
 
-        whitelistPane.addMouseListener(new java.awt.event.MouseAdapter() {
+        YouTube.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                whitelistPaneMouseClicked(evt);
+                YouTubeMouseClicked(evt);
             }
         });
 
@@ -661,7 +654,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        whitelistPane.addTab("Commands", jPanel1);
+        YouTube.addTab("Commands", jPanel1);
 
         QuotePanel.setEditable(false);
         QuotePanel.setColumns(20);
@@ -747,7 +740,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        whitelistPane.addTab("Quotes", jPanel2);
+        YouTube.addTab("Quotes", jPanel2);
 
         LinksOnOff.setText("Links Switch");
         LinksOnOff.addActionListener(new java.awt.event.ActionListener() {
@@ -993,7 +986,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        whitelistPane.addTab("Filtering", jPanel3);
+        YouTube.addTab("Filtering", jPanel3);
 
         settingsTabs.setToolTipText("");
         settingsTabs.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1859,7 +1852,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addComponent(settingsTabs)
         );
 
-        whitelistPane.addTab("Settings", jPanel4);
+        YouTube.addTab("Settings", jPanel4);
 
         ChatOutput.setEditable(false);
         ChatOutput.setBackground(new java.awt.Color(0, 0, 0));
@@ -1958,7 +1951,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        whitelistPane.addTab("Chat", jPanel8);
+        YouTube.addTab("Chat", jPanel8);
 
         showWhitelist.setEditable(false);
         showWhitelist.setDoubleBuffered(true);
@@ -1990,7 +1983,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGap(9, 9, 9))
         );
 
-        whitelistPane.addTab("Whitelist", jPanel11);
+        YouTube.addTab("Whitelist", jPanel11);
 
         PointsTable.setAutoCreateRowSorter(true);
         PointsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -2090,7 +2083,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        whitelistPane.addTab("Points", jPanel12);
+        YouTube.addTab("Points", jPanel12);
 
         smchat.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -2144,7 +2137,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        whitelistPane.addTab("Streamer/Mod Chat", jPanel17);
+        YouTube.addTab("Streamer/Mod Chat", jPanel17);
 
         UChatters.setText("0 Unique Chatters This Session.");
 
@@ -2218,7 +2211,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(jToggleButton1))
         );
 
-        whitelistPane.addTab("Statistics", jPanel7);
+        YouTube.addTab("Statistics", jPanel7);
 
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -2238,7 +2231,6 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         StreamSet.setText("Channel Name and Game");
         StreamSet.setActionCommand("Stream Title");
-        StreamSet.setEnabled(false);
         StreamSet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 StreamSetActionPerformed(evt);
@@ -2288,7 +2280,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(42, Short.MAX_VALUE))
-            .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(YouTube, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2318,7 +2310,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGap(11, 11, 11)
                 .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(whitelistPane, javax.swing.GroupLayout.PREFERRED_SIZE, 550, Short.MAX_VALUE))
+                .addComponent(YouTube, javax.swing.GroupLayout.PREFERRED_SIZE, 550, Short.MAX_VALUE))
         );
 
         pack();
@@ -2329,7 +2321,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         RefreshAllSettings();
     }//GEN-LAST:event_RefreshAllActionPerformed
 
-    private void whitelistPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_whitelistPaneMouseClicked
+    private void YouTubeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_YouTubeMouseClicked
         //        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
         //        switch (tab.toLowerCase()) {
         //            case "commands": {
@@ -2352,7 +2344,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         //                this.PopFilterSettings();
         //                break;
         //        }
-    }//GEN-LAST:event_whitelistPaneMouseClicked
+    }//GEN-LAST:event_YouTubeMouseClicked
 
     public void PopGuiSettings() {
         if (!CS.GUISettings.containsKey("WooshME")) {
@@ -3891,6 +3883,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JToggleButton YouBot;
+    private javax.swing.JTabbedPane YouTube;
     private javax.swing.JButton addbadword;
     private javax.swing.JButton addquotebutton;
     private javax.swing.JButton cmdsoundbutton;
@@ -3972,6 +3965,5 @@ public final class ControlPanel extends javax.swing.JFrame {
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
     public static javax.swing.JTable smchat;
-    private javax.swing.JTabbedPane whitelistPane;
     // End of variables declaration//GEN-END:variables
 }

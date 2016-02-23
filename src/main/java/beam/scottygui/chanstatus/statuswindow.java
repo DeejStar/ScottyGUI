@@ -9,6 +9,7 @@ import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import beam.scottygui.Utils.HTTP;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class statuswindow extends javax.swing.JFrame {
         StreamTitle.setRows(5);
         jScrollPane1.setViewportView(StreamTitle);
 
-        gamelistbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gamelistbox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Begin Search" }));
         gamelistbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gamelistboxActionPerformed(evt);
@@ -91,14 +92,14 @@ public class statuswindow extends javax.swing.JFrame {
             }
         });
         GSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                GSearchKeyTyped(evt);
+            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 GSearchKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 GSearchKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                GSearchKeyTyped(evt);
             }
         });
 
@@ -197,28 +198,44 @@ public class statuswindow extends javax.swing.JFrame {
     private void GSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GSearchActionPerformed
 
     }//GEN-LAST:event_GSearchActionPerformed
+    long toWait = 1 * 1000 + System.currentTimeMillis();
 
     private void GSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyTyped
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_GSearchKeyTyped
 
     private void GSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyPressed
 
     }//GEN-LAST:event_GSearchKeyPressed
-
+    boolean searching = false;
     private void GSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_GSearchKeyReleased
-        String Search = GSearch.getText().toUpperCase();
-        if (Search.isEmpty()) {
-            gamelistbox.setModel(CS.setgamelistmodel(null));
-        } else {
-            gamelistbox.setModel(CS.setgamelistmodel(Search));
+
+        toWait = 1000 + System.currentTimeMillis();
+
+        if (!searching) {
+            searching = true;
+            new Thread("PutTheadName") {
+                @Override
+                public void run() {
+                    while (toWait > System.currentTimeMillis()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(statuswindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    searching = false;
+                    try {
+                        String Search = GSearch.getText().toUpperCase();
+                        String toParse = new HTTP().get("https://beam.pro/api/v1/types?query=" + URLEncoder.encode(Search, "UTF-8") + "&fields=id,name&limit=100");
+                        gamelistbox.setModel(CS.popGames(toParse, Search));
+                    } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                        Logger.getLogger(statuswindow.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.start();
         }
 
-        try {
-            gamelistbox.setSelectedItem(curGame);
-        } catch (Exception ignore) {
-
-        }        // TODO add your handling code here:
     }//GEN-LAST:event_GSearchKeyReleased
 
     /**

@@ -472,56 +472,7 @@ public class Login extends javax.swing.JFrame {
 
         this.dispose();
         ScottySocket sock = new ScottySocket();
-        //sock.connect();
-        new Thread("PutTheadName") {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        if (CS.controlSes == null) {
-                            new ScottySocket().connect();
-                        } else if (CS.controlSes != null) {
-                            if (!CS.controlSes.isOpen()) {
-                                new ScottySocket().connect();
-                            } else {
-                                CS.controlSes.getAsyncRemote().sendText("2");
-                                System.err.println("Sent ping");
-                            }
-                        }
-                    } catch (Exception ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-
-                }
-            }
-        }.start();
-        new Thread("PutTheadName") {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        if (!CS.CSisGood()) {
-                            CS.controlSes.close();
-                        }
-                    } catch (Exception e) {
-
-                    } finally {
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-
-        }.start();
+        sock.connect();
     }
 
     /**

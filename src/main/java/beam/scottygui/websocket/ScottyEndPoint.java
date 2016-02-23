@@ -21,6 +21,7 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.glassfish.tyrus.core.TyrusSession;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -53,16 +54,14 @@ public class ScottyEndPoint extends Endpoint {
             public void onMessage(String message) {
                 try {
                     System.out.println("Scotty control socket: " + message);
-                    if ("3".equals(message)) {
-                        CS.CCCheck = (15 * 1000) + System.currentTimeMillis();
-                        return;
-                    }
                     final JSONObject msgobj = (JSONObject) parser.parse(message);
                     ControlPanel.ControlStatus.setBackground(Color.GREEN);
                     ControlPanel.ControlStatus.setText("");
                     CS.controlSes = session;
                     if (msgobj.containsKey("ping_in_milli")) {
-                        CS.CSPing = (Long) msgobj.get("ping_in_milli");
+                        Long Ping = (Long) msgobj.get("ping_in_milli");
+                        TyrusSession tses = (TyrusSession) session;
+                        tses.setHeartbeatInterval(Ping);
                     }
                     new Thread("PutTheadName") {
                         @Override
