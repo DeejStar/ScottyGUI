@@ -9,11 +9,13 @@ import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.PatchNotes;
+import beam.scottygui.Utils.Download;
+import static beam.scottygui.Utils.Download.COMPLETE;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.SortedListModel;
 import beam.scottygui.Utils.WritePropertiesFile;
-import beam.scottygui.Utils.downloadFromUrl;
+import beam.scottygui.downprogress;
 import beam.scottygui.websocket.EndPoint;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -26,6 +28,8 @@ import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -119,6 +123,40 @@ public class CS {
     public static String lastrelay = "";
     public static Long CSPing = 1500L;
 
+    public static String getCheckSum() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+        String datafile = "./ScottyGUI.jar";
+
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        FileInputStream fis = new FileInputStream(datafile);
+        byte[] dataBytes = new byte[1024];
+
+        int nread = 0;
+
+        while ((nread = fis.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, nread);
+        };
+
+        byte[] mdbytes = md.digest();
+
+        //convert the byte to hex format
+        StringBuilder sb = new StringBuilder("");
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        System.out.println("Digest(in hex format):: " + sb.toString());
+        return sb.toString();
+    }
+
+    public static boolean checksumMatch(String checksum) throws NoSuchAlgorithmException, IOException {
+        String good = CS.getCheckSum();
+        return checksum.equals(good);
+
+    }
+
+    static boolean redownload = false;
+    static boolean done = false;
+
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public static boolean CheckNewVer() {
         try {
@@ -134,9 +172,12 @@ public class CS {
             //System.out.println(VerCheck.toString());
             int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
             if (NewVer > CurVer) {
-                int Yes = JOptionPane.showConfirmDialog(null, "New version of ScottyGUI" + newline + "Would you like to download?");
+                int Yes = 22;
+                if (!redownload) {
+                    Yes = JOptionPane.showConfirmDialog(null, "New version of ScottyGUI" + newline + "Would you like to download?");
+                }
 
-                if (Yes == 0) {
+                if (Yes == 0 || redownload) {
                     int Attempts = 0;
                     while (Attempts < 5) {
                         URL ToDownload = null;
@@ -146,13 +187,32 @@ public class CS {
                             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         String FileName = "./ScottyGUI.jar";
-                        downloadFromUrl download = new downloadFromUrl();
-                        try {
-                            download.downloadFromUrl(ToDownload, FileName);
+                        //Download download = new Download();
+                        final Download download = new Download(ToDownload);
+                        done = false;
+                        download.download();
+                        downprogress dlp = new downprogress();
+                        dlp.setVisible(true);
+                        dlp.setEnabled(true);
+
+                        while (download.getStatus() != COMPLETE) {
+                            try {
+                                dlp.DLProgress.setValue(Math.round(download.getProgress()));
+                                Thread.sleep(100);
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                        done = true;
+                        dlp.setVisible(false);
+                        while (!done) {
+                            Thread.sleep(100);
+                        }
+                        if (download.getStatus() == COMPLETE) {
                             break;
-                        } catch (IOException ex) {
+                        } else {
                             Attempts++;
-                            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     if (Attempts == 5) {
@@ -172,10 +232,8 @@ public class CS {
                             //System.out.println(cmd.toString());
                             Runtime.getRuntime().exec(cmd.toString());
                         } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            JOptionPane.showMessageDialog(extchat, "Unable to restart automatically, please do so manually.");
                         }
-                        System.exit(0);
                         System.exit(0);
                     }
 

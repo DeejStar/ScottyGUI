@@ -2,6 +2,9 @@ package beam.scottygui;
 
 import beam.scottygui.Stores.CS;
 import beam.scottygui.websocket.WebSocket;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -15,7 +18,13 @@ public class MainApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        PrintStream Errorout = null;
+        try {
+            Errorout = new PrintStream(new FileOutputStream("ErrorLog.Log", true));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.setErr(Errorout);
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Metal".equals(info.getName())) {

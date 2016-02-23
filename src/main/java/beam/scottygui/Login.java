@@ -340,20 +340,16 @@ public class Login extends javax.swing.JFrame {
         Username = this.LoginField.getText();
         CS.UserName = Username;
         Password = new String(this.PassField.getPassword());
-//        if (!"".equalsIgnoreCase(Username));
-//
-//        for (char t : this.PassField.getPassword()) {
-//            Password = Password + t;
-//        }
-//        Password = Password.replace(", ", "");
-        //System.out.println(Username + ":" + Password);
+
         JSONParser parser = new JSONParser();
         String ToParse = "";
         try {
             ToParse = http.Login(Username, Password, new String(this.CodeField.getPassword()));
 // TODO add your handling code here:
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Error talking to Beam, try again later.");
+            ex.printStackTrace(System.err);
+            return;
         }
         JSONObject obj = null;
         try {

@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,6 +85,8 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     /**
      * Creates new form ControlPanel
+     *
+     * @return
      */
     public void DumpCurVer() {
 
@@ -95,6 +98,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
         JSONObject curver = new JSONObject();
         curver.put("CurVer", CurVer.toString());
+        try {
+            curver.put("checksum", CS.getCheckSum());
+        } catch (NoSuchAlgorithmException | IOException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         VerPrint.print(curver.toString());
         VerPrint.close();
     }
