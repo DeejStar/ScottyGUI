@@ -16,12 +16,10 @@ import static beam.scottygui.Stores.CS.ChatUserList;
 import static beam.scottygui.Stores.CS.GUILoadSettings;
 import static beam.scottygui.Stores.CS.GUISaveSettings;
 import static beam.scottygui.Stores.CS.GetSettings;
-import static beam.scottygui.Stores.CS.RefreshSettings;
 import static beam.scottygui.Stores.CS.SendMSG;
 import static beam.scottygui.Stores.CS.Username;
 import static beam.scottygui.Stores.CS.chatArray;
 import static beam.scottygui.Stores.CS.chatObject;
-import static beam.scottygui.Stores.CS.cp;
 import static beam.scottygui.Stores.CS.extchat;
 import static beam.scottygui.Stores.CS.llSocket;
 import static beam.scottygui.Stores.CS.newline;
@@ -144,9 +142,10 @@ public final class ControlPanel extends javax.swing.JFrame {
     //
     //    }
     public ControlPanel() {
-        this.setTitle("ScottyGUI Ver. " + this.CurVer);
-        GUILoadSettings();
+
         initComponents();
+        GUILoadSettings();
+        this.setTitle("ScottyGUI Ver. " + this.CurVer);
         if (CS.ModMode) {
             this.cmdsoundbutton.setVisible(false);
         }
@@ -156,8 +155,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         //Set chat window to auto-scroll
         DefaultCaret caret = (DefaultCaret) this.ChatOutput.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-        cp = this;
         try {
             PopCmdText();
         } catch (ParseException ex) {
@@ -169,9 +166,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        RefreshAllSettings();
-        PopFilterSettings();
         PopBadWords();
 
         new Thread("LiveLoad Thread Pinger") {
@@ -235,18 +229,18 @@ public final class ControlPanel extends javax.swing.JFrame {
                             }
                         }
                     }.start();
-                    new Thread("Populate Settings") {
-                        @Override
-                        public void run() {
-                            try {
-                                RefreshAllSettings();
-                                PopBadWords();
-                            } catch (Exception ex) {
-                                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
-                        }
-                    }.start();
+//                    new Thread("Populate Settings") {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                RefreshAllSettings();
+//                                PopBadWords();
+//                            } catch (Exception ex) {
+//                                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+//                            }
+//
+//                        }
+//                    }.start();
 
                     try {
                         Thread.sleep(5 * 60 * 1000);
@@ -276,8 +270,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     public void PopQuoteList() throws ParseException {
-        JSONObject QList = null;
-        QList = (JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/quotes?authkey=" + AuthKey));
+        JSONObject QList = (JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/quotes?authkey=" + AuthKey));
         String output = "";
         int NumOfQuotes = 0;
         for (Object t : QList.keySet()) {
@@ -298,11 +291,11 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     public void PopCmdText() throws ParseException {
-        JSONObject CmdOutput = null;
-        CmdOutput = (JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/commands?authkey=" + AuthKey));
-
-        //System.out.println(CmdOutput.toString());
-        JSONArray T = (JSONArray) CmdOutput.get("Commands");
+        JSONObject CmdOutput = new JSONObject();
+        CmdOutput.putAll((JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/commands?authkey=" + AuthKey)));
+        JSONArray T = new JSONArray();
+        System.out.println(CmdOutput.toString());
+        T.addAll((JSONArray) CmdOutput.get("Commands"));
         String out = "";
         for (Object t : T) {
             JSONObject obj = (JSONObject) t;
@@ -497,13 +490,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jPanel9 = new javax.swing.JPanel();
         AlertPaneOpen = new javax.swing.JButton();
-        RefreshAll = new javax.swing.JButton();
         StreamSet = new javax.swing.JButton();
         TotSubs = new javax.swing.JLabel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         TotFollowers = new javax.swing.JLabel();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         ControlStatus = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -2230,13 +2223,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        RefreshAll.setText("Refresh Settings");
-        RefreshAll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RefreshAllActionPerformed(evt);
-            }
-        });
-
         StreamSet.setText("Channel Name and Game");
         StreamSet.setActionCommand("Stream Title");
         StreamSet.addActionListener(new java.awt.event.ActionListener() {
@@ -2252,43 +2238,46 @@ public final class ControlPanel extends javax.swing.JFrame {
         ControlStatus.setBackground(new java.awt.Color(255, 0, 0));
         ControlStatus.setEnabled(false);
 
+        jLabel3.setText("Control Socket Status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(YouTube, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(1010, 1010, 1010)
-                        .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(StreamSet)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(10, 10, 10)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(StreamSet)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(37, 37, 37)
-                                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(10, 10, 10)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(7, 7, 7)
-                                .addComponent(AlertPaneOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(2, 2, 2)
-                                .addComponent(RefreshAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(1010, 1010, 1010)
+                                .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(42, Short.MAX_VALUE))
-            .addComponent(YouTube, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(0, 30, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2309,10 +2298,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addGap(1, 1, 1)
                                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jButton6)
-                            .addComponent(AlertPaneOpen)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(RefreshAll)
-                                .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(AlertPaneOpen)
+                                .addComponent(ControlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3)))))
                 .addGap(9, 9, 9)
                 .addComponent(TotSubs)
                 .addGap(11, 11, 11)
@@ -2324,10 +2313,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void RefreshAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshAllActionPerformed
-        RefreshAllSettings();
-    }//GEN-LAST:event_RefreshAllActionPerformed
 
     private void YouTubeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_YouTubeMouseClicked
         //        String tab = (ControlTab.getTitleAt(ControlTab.getSelectedIndex()));
@@ -2940,9 +2925,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useurl&value=0");
         }
     }//GEN-LAST:event_LinkTitleActionPerformed
-
+    statuswindow sw = new statuswindow();
     private void StreamSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StreamSetActionPerformed
-        new statuswindow().setVisible(true);
+        sw.setcurgame();
+        sw.setVisible(true);
     }//GEN-LAST:event_StreamSetActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -3677,14 +3663,15 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     }
 
-    public void RefreshAllSettings() {
-        try {
-            RefreshSettings();
-
-        } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class
-                    .getName()).log(Level.SEVERE, null, ex);
+    public void socketRefreshSettings() {
+        PopFilterSettings();
+        PopulateAllSettings();
+        if (!this.isVisible()) {
+            this.setVisible(true);
         }
+    }
+
+    public void RefreshAllSettings() {
         PopFilterSettings();
         PopulateAllSettings();
         JSONObject ChanInfo = new JSONObject();
@@ -3712,7 +3699,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public void PopFilterSettings() {
 
         JSONObject FSettings = GetSettings();
-
+        System.out.println("FSETTINGS " + FSettings);
         if ("1".equals(FSettings.get("UseFilter").toString())) {
             this.FOnOff.setSelected(true);
             this.FOnOff.setText("All Filtering Enabled");
@@ -3860,7 +3847,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox QEnabled;
     private javax.swing.JTextArea QuotePanel;
     private javax.swing.JCheckBox REnabled;
-    private javax.swing.JButton RefreshAll;
     private javax.swing.JButton RefreshCMDs;
     private javax.swing.JButton RemoveBadWord;
     private javax.swing.JButton RepeatList;
@@ -3929,6 +3915,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

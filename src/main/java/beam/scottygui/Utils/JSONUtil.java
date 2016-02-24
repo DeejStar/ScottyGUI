@@ -17,7 +17,12 @@
  */
 package beam.scottygui.Utils;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import static java.lang.Thread.sleep;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -83,6 +88,19 @@ public class JSONUtil {
         }
 
         return UserList;
+    }
+
+    public String getcurGame(Long ChanID) throws UnsupportedEncodingException, ProtocolException, MalformedURLException, SQLException {
+        try {
+            String toParse = http.get("https://beam.pro/api/v1/channels/" + ChanID);
+            JSONObject obj = (JSONObject) new JSONParser().parse(toParse);
+            JSONObject type = new JSONObject();
+            type.putAll((JSONObject) obj.get("type"));
+            return type.get("name").toString();
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public List<String> GetLastFollowers(Long ChanID) throws InterruptedException {

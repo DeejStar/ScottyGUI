@@ -7,7 +7,9 @@ package beam.scottygui.chanstatus;
 
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.ChanID;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.Utils.JSONUtil;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
@@ -34,6 +36,7 @@ public class statuswindow extends javax.swing.JFrame {
      */
     public statuswindow() {
         initComponents();
+
     }
 
     /**
@@ -55,9 +58,24 @@ public class statuswindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setResizable(false);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+        addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                formPropertyChange(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
+            }
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
             }
         });
 
@@ -176,7 +194,6 @@ public class statuswindow extends javax.swing.JFrame {
             System.err.println(toSend);
             try {
                 http.put(toSend, "https://beam.pro/api/v1/channels/" + CS.ChanID);
-
                 this.setVisible(false);
                 this.dispose();
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
@@ -187,7 +204,7 @@ public class statuswindow extends javax.swing.JFrame {
     }//GEN-LAST:event_saveActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.GetTitle();
+
     }//GEN-LAST:event_formWindowOpened
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
@@ -237,6 +254,43 @@ public class statuswindow extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_GSearchKeyReleased
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+
+    }//GEN-LAST:event_formWindowActivated
+
+    private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
+
+    }//GEN-LAST:event_formPropertyChange
+
+    public void setcurgame() {
+        GetTitle();
+        int cnt = 0;
+        while (cnt < 5) {
+            try {
+                String query = "";
+                if (GSearch.getText().isEmpty() || GSearch.getText().equals("")) {
+                    query = new JSONUtil().getcurGame(ChanID);
+                } else {
+                    query = GSearch.getText().trim();
+                }
+                String url = "https://beam.pro/api/v1/types?query=" + URLEncoder.encode(query, "UTF-8") + "&fields=id,name&limit=100";
+
+                String toParse = new HTTP().get(url);
+                System.out.println(url);
+                gamelistbox.setModel(CS.popGames(toParse, query));
+                gamelistbox.setSelectedItem(query);
+                break;
+
+            } catch (SQLException | IOException | ParseException | InterruptedException | ClassNotFoundException ex) {
+                Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
+                cnt++;
+            }
+        }
+    }
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+
+    }//GEN-LAST:event_formWindowGainedFocus
 
     /**
      * @param args the command line arguments

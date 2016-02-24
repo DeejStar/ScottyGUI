@@ -20,7 +20,7 @@ public class MainApp {
     public static void main(String[] args) {
         PrintStream Errorout = null;
         try {
-            Errorout = new PrintStream(new FileOutputStream("ErrorLog.Log", true));
+            Errorout = new PrintStream(new FileOutputStream("ErrorLog.Log", false));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }

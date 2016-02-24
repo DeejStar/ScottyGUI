@@ -11,6 +11,7 @@ import beam.scottygui.ControlPanel;
 import beam.scottygui.PatchNotes;
 import beam.scottygui.Utils.Download;
 import static beam.scottygui.Utils.Download.COMPLETE;
+import static beam.scottygui.Utils.Download.DOWNLOADING;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import beam.scottygui.Utils.SortedListModel;
@@ -36,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -61,9 +63,9 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 82;
-    public static String apiLoc = "https://api.scottybot.net/api";
-    //public static String apiLoc = "http://localhost:8080";
+    public static Integer CurVer = 83;
+    //public static String apiLoc = "https://api.scottybot.net/api";
+    public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
     public static HTTP http = new HTTP();
@@ -123,19 +125,16 @@ public class CS {
     public static String lastrelay = "";
     public static Long CSPing = 1500L;
 
+    @SuppressWarnings("empty-statement")
     public static String getCheckSum() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
         String datafile = "./ScottyGUI.jar";
-
-        MessageDigest md = MessageDigest.getInstance("SHA1");
+        MessageDigest md = MessageDigest.getInstance("MD5");
         FileInputStream fis = new FileInputStream(datafile);
         byte[] dataBytes = new byte[1024];
-
         int nread = 0;
-
         while ((nread = fis.read(dataBytes)) != -1) {
             md.update(dataBytes, 0, nread);
         };
-
         byte[] mdbytes = md.digest();
 
         //convert the byte to hex format
@@ -149,8 +148,9 @@ public class CS {
     }
 
     public static boolean checksumMatch(String checksum) throws NoSuchAlgorithmException, IOException {
-        String good = CS.getCheckSum();
-        return checksum.equals(good);
+        String good = CS.getCheckSum().trim();
+        System.out.println("New " + checksum + " : Checked " + good);
+        return checksum.equals(good.trim());
 
     }
 
@@ -171,31 +171,36 @@ public class CS {
             }
             //System.out.println(VerCheck.toString());
             int NewVer = Integer.parseInt(VerCheck.get("CurVer").toString());
+            String CheckSum = VerCheck.get("checksum").toString();
+
             if (NewVer > CurVer) {
                 int Yes = 22;
                 if (!redownload) {
                     Yes = JOptionPane.showConfirmDialog(null, "New version of ScottyGUI" + newline + "Would you like to download?");
                 }
-
+                downprogress dlp = new downprogress();
+                String FileName = "./ScottyGUI.jar";
                 if (Yes == 0 || redownload) {
                     int Attempts = 0;
                     while (Attempts < 5) {
+                        File f = new File(FileName);
+
+                        // tries to delete a non-existing file
+                        f.delete();
                         URL ToDownload = null;
                         try {
                             ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        String FileName = "./ScottyGUI.jar";
+
                         //Download download = new Download();
                         final Download download = new Download(ToDownload);
                         done = false;
                         download.download();
-                        downprogress dlp = new downprogress();
                         dlp.setVisible(true);
                         dlp.setEnabled(true);
-
-                        while (download.getStatus() != COMPLETE) {
+                        while (download.getStatus() == DOWNLOADING) {
                             try {
                                 dlp.DLProgress.setValue(Math.round(download.getProgress()));
                                 Thread.sleep(100);
@@ -210,15 +215,21 @@ public class CS {
                             Thread.sleep(100);
                         }
                         if (download.getStatus() == COMPLETE) {
+                            if (!CS.checksumMatch(CheckSum)) {
+                                JOptionPane.showMessageDialog(null, "Checksum mismatch, redownloading.");
+                                redownload = true;
+                            }
                             break;
+
                         } else {
                             Attempts++;
                         }
                     }
                     if (Attempts == 5) {
+                        redownload = false;
                         JOptionPane.showMessageDialog(null, "Unable to download, try again later");
                     } else {
-                        //Restart the program
+                        redownload = false;
                         JOptionPane.showMessageDialog(null, "Downloaded, Restarting ScottyGUI!");
 
                         StringBuilder cmd = new StringBuilder();
@@ -510,16 +521,14 @@ public class CS {
     }
 
     public static JSONObject GetSettings() {
+        Map<String, Object> settings = new TreeMap(String.CASE_INSENSITIVE_ORDER);
+
         return ChanSettings;
     }
 
-    public static void RefreshSettings() throws ParseException {
-        if (ChanSettings.size() > 0) {
-            ChanSettings.clear();
-        }
-        String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + AuthKey);
-        //System.err.println(toParse);
-        ChanSettings.putAll((JSONObject) parser.parse(toParse));
+    public static void RefreshSettings(JSONObject obj) throws ParseException {
+        ChanSettings.putAll(obj);
+        CS.cp.socketRefreshSettings();
         //System.out.println(ChanSettings.toString());
     }
 

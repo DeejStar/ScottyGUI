@@ -55,13 +55,27 @@ public class ScottyEndPoint extends Endpoint {
                 try {
                     System.out.println("Scotty control socket: " + message);
                     final JSONObject msgobj = (JSONObject) parser.parse(message);
-                    ControlPanel.ControlStatus.setBackground(Color.GREEN);
-                    ControlPanel.ControlStatus.setText("");
+                    try {
+                        ControlPanel.ControlStatus.setBackground(Color.GREEN);
+                        ControlPanel.ControlStatus.setText("");
+                    } catch (Exception e) {
+
+                    }
                     CS.controlSes = session;
                     if (msgobj.containsKey("ping_in_milli")) {
                         Long Ping = (Long) msgobj.get("ping_in_milli");
                         TyrusSession tses = (TyrusSession) session;
                         tses.setHeartbeatInterval(Ping);
+                    }
+                    try {
+                        if (msgobj.containsKey("settings")) {
+                            //System.err.println("SETTINGS TO PARSE " + msgobj);
+                            String toParse = msgobj.get("settings").toString();
+                            // System.err.println("TO PARSE " + toParse);
+                            CS.RefreshSettings((JSONObject) new JSONParser().parse(toParse));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     new Thread("PutTheadName") {
                         @Override

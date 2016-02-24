@@ -53,7 +53,8 @@ public class ScottySocket {
         client.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
         try {
             //new HTTP().GetAuth();
-            client.connectToServer(new ScottyEndPoint(), cec, new URI("wss://api.scottybot.net/websocket/control"));
+//            client.connectToServer(new ScottyEndPoint(), cec, new URI("wss://api.scottybot.net/websocket/control"));
+            client.connectToServer(new ScottyEndPoint(), cec, new URI("ws://localhost:8026/websocket/control"));
         } catch (URISyntaxException | DeploymentException | IOException ex) {
             Logger.getLogger(ScottySocket.class.getName()).log(Level.SEVERE, null, ex);
         }
