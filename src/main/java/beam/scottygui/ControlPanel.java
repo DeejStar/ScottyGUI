@@ -13,7 +13,6 @@ import static beam.scottygui.Stores.CS.BadWordsList;
 import static beam.scottygui.Stores.CS.ChanID;
 import static beam.scottygui.Stores.CS.ChatCache;
 import static beam.scottygui.Stores.CS.ChatUserList;
-import static beam.scottygui.Stores.CS.GUILoadSettings;
 import static beam.scottygui.Stores.CS.GUISaveSettings;
 import static beam.scottygui.Stores.CS.GetSettings;
 import static beam.scottygui.Stores.CS.SendMSG;
@@ -144,7 +143,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
 
         initComponents();
-        GUILoadSettings();
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         if (CS.ModMode) {
             this.cmdsoundbutton.setVisible(false);

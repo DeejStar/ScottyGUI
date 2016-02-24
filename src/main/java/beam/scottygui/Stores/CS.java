@@ -64,8 +64,8 @@ import org.json.simple.parser.ParseException;
 public class CS {
 
     public static Integer CurVer = 83;
-    //public static String apiLoc = "https://api.scottybot.net/api";
-    public static String apiLoc = "http://localhost:8080";
+    public static String apiLoc = "https://api.scottybot.net/api";
+    //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
     public static Integer SubCount = 0;
     public static HTTP http = new HTTP();
@@ -216,8 +216,8 @@ public class CS {
                         }
                         if (download.getStatus() == COMPLETE) {
                             if (!CS.checksumMatch(CheckSum)) {
-                                JOptionPane.showMessageDialog(null, "Checksum mismatch, redownloading.");
-                                redownload = true;
+                                //System.err.println("Checksum did not match downloaded = " CheckSum)
+                                //redownload = true;
                             }
                             break;
 

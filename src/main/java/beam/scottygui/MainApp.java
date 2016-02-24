@@ -1,6 +1,7 @@
 package beam.scottygui;
 
 import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.GUILoadSettings;
 import beam.scottygui.websocket.WebSocket;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,6 +41,7 @@ public class MainApp {
                 // not worth my time
             }
         }
+        GUILoadSettings();
         Login login = new Login();
         login.setVisible(true);
         new Thread("PutTheadName") {
