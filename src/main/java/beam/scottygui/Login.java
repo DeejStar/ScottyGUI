@@ -6,8 +6,6 @@
 package beam.scottygui;
 
 import beam.scottygui.Stores.CS;
-import static beam.scottygui.Stores.CS.AuthKey;
-import static beam.scottygui.Stores.CS.ChanID;
 import static beam.scottygui.Stores.CS.CheckNewVer;
 import static beam.scottygui.Stores.CS.Password;
 import static beam.scottygui.Stores.CS.UserID;
@@ -30,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -270,7 +269,7 @@ public class Login extends javax.swing.JFrame {
                                 .addComponent(PassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2)))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Login)
                             .addComponent(RemMe))
                         .addGap(25, 25, 25)))
@@ -389,9 +388,10 @@ public class Login extends javax.swing.JFrame {
             Login();
         }         // TODO add your handling code here:
     }//GEN-LAST:event_LoginFieldKeyPressed
+    JSONObject ChanObj = new JSONObject();
 
     public void Login() {
-        JSONObject ChanObj = new JSONObject();
+        ChanObj.clear();
         Username = this.LoginField.getText();
         CS.UserName = Username;
         Password = new String(this.PassField.getPassword());
@@ -435,86 +435,27 @@ public class Login extends javax.swing.JFrame {
             }
             return;
         }
-        JSONObject AuthReturn = null;
-        if (this.StreamerList.getSelectedIndex() == -1 || !this.ShowSList.isSelected()) {
-
-            String URL = null;
-            URL = CS.apiLoc + "/login";
-            int cnt = 0;
-            boolean got = false;
-            while (cnt < 5) {
-                try {
-                    Map<String, String> toPost = new HashMap();
-                    toPost.put("username", Username);
-                    toPost.put("password", Password);
-                    toPost.put("code", new String(this.CodeField.getPassword()));
-                    AuthReturn = (JSONObject) parser.parse(http.post(toPost, URL));
-                    got = true;
-                    break;
-                } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    cnt++;
-                }
-            }
-            if (!got) {
-                JOptionPane.showMessageDialog(rootPane, "Had issue talking with API, contact @mrPocketpac on twitter");
-            }
-            if (AuthReturn.containsValue("Scottybot is not in your channel")) {
-                int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");
-                System.err.println("JOIN:" + Join);
-
-                if (Join == 0) {
-                    try {
-
-                        Map<String, String> toPost = new HashMap();
-                        toPost.put("username", Username);
-                        toPost.put("password", URLEncoder.encode(Password, "UTF-8"));
-                        toPost.put("code", new String(this.CodeField.getPassword()));
-                        String toParse = http.post(toPost, CS.apiLoc + "/joinchan");
-                        JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
-                        if (joinobj.containsKey("APIAuth")) {
-                            AuthReturn.clear();
-                            AuthReturn.put("AuthKeyv2", joinobj.get("APIAuth"));
-                        } else {
-                            JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
-                        }
-                    } catch (UnsupportedEncodingException | ParseException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InterruptedException | ClassNotFoundException | SQLException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
+        if (!this.ShowSList.isSelected() && this.StreamerList.getSelectedIndex() != -1) {
+            if (CS.GUISettings.containsKey(Username.toLowerCase())) {
+                String authkey = CS.GUIGetSetting(Username.toLowerCase());
+                boolean worked = this.AuthLogin(authkey);
+                if (!worked) {
                     return;
                 }
-            }
-        }
-        if (!this.ShowSList.isSelected() || this.StreamerList.getSelectedIndex() == -1) {
-            try {
-                ChanID = Long.parseLong(ChanObj.get("id").toString());
-                AuthKey = AuthReturn.get("AuthKeyv2").toString();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "Issue getting info from API, try again or contact @MrPocketpac on twitter.");
+            } else {
+                System.out.println("Attempting to log in");
+                this.LoginScotty();
             }
         } else {
-            try {
-                String Streamer = this.StreamerList.getSelectedItem().toString();
-                UUID CheckKey = UUID.fromString(CS.getStreamerUUID(Streamer));
-                CS.AuthKey = CheckKey.toString();
-                String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + CS.AuthKey.toString());
-                JSONObject chanObj = new JSONObject();
-                chanObj.putAll((JSONObject) parser.parse(toParse));
-                System.err.println(chanObj.toJSONString());
-                //System.exit(0);
-                CS.ChanID = Long.parseLong(chanObj.get("ChanID").toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(rootPane, "Does not appear to be a proper UUID, please contact the streamer and verify.");
+            String Streamer = this.StreamerList.getSelectedItem().toString();
+            UUID CheckKey = UUID.fromString(CS.getStreamerUUID(Streamer));
+            CS.AuthKey = CheckKey.toString();
+            boolean worked = this.AuthLogin(CS.AuthKey);
+            if (!worked) {
                 return;
             }
         }
+
         final ControlPanel cp = new ControlPanel();
         CS.cp = cp;
 
@@ -525,6 +466,101 @@ public class Login extends javax.swing.JFrame {
         this.dispose();
         ScottySocket sock = new ScottySocket();
         sock.connect();
+    }
+    boolean secondtry = false;
+
+    public void LoginScotty() {
+        JSONObject AuthReturn = null;
+        String URL = CS.apiLoc + "/login";
+        System.out.println(URL);
+        int cnt = 0;
+        boolean got = false;
+        while (cnt < 5) {
+            try {
+                Map<String, String> toPost = new HashMap();
+                toPost.put("username", Username);
+                toPost.put("password", Password);
+                toPost.put("code", new String(this.CodeField.getPassword()));
+                AuthReturn = (JSONObject) JSONValue.parse(http.post(toPost, URL));
+                got = true;
+                break;
+            } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                cnt++;
+            }
+        }
+        if (!got) {
+            JOptionPane.showMessageDialog(rootPane, "Had issue talking with API, contact @mrPocketpac on twitter");
+        }
+        if (AuthReturn.containsValue("Scottybot is not in your channel")) {
+            int Join = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, add to your channel?");
+            System.err.println("JOIN:" + Join);
+            if (Join == 0) {
+                try {
+                    Map<String, String> toPost = new HashMap();
+                    toPost.put("username", Username);
+                    toPost.put("password", URLEncoder.encode(Password, "UTF-8"));
+                    toPost.put("code", new String(this.CodeField.getPassword()));
+                    String toParse = http.post(toPost, CS.apiLoc + "/joinchan");
+                    JSONObject joinobj = (JSONObject) new JSONParser().parse(toParse);
+                    if (joinobj.containsKey("APIAuth")) {
+                        String AuthKey = joinobj.get("APIAuth").toString();
+                        AuthReturn.clear();
+                        AuthReturn.put("AuthKeyv2", AuthKey);
+                        CS.AuthKey = AuthKey;
+                        CS.GUISaveSettings(Username.toLowerCase(), AuthKey);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Error occured, please try again or contact @MrPocketpac on Twitter");
+                    }
+                } catch (UnsupportedEncodingException | ParseException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException | ClassNotFoundException | SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Scottybot is not set to be in your channel" + newline + "Make sure Scottybot is in your channel before logging in.");
+                return;
+            }
+        } else {
+            String AuthKey = AuthReturn.get("AuthKeyv2").toString();
+            CS.AuthKey = AuthKey;
+            CS.GUISaveSettings(Username.toLowerCase(), AuthKey);
+            this.AuthLogin(AuthKey);
+        }
+
+    }
+
+    public boolean AuthLogin(String AuthKey) {
+        try {
+            String CheckKey = CS.GUISettings.get(Username.toLowerCase()).toString();
+            CS.AuthKey = CheckKey;
+            String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + CS.AuthKey);
+            JSONObject chanObj = new JSONObject();
+            chanObj.putAll((JSONObject) JSONValue.parse(toParse));
+            System.err.println(chanObj.toJSONString());
+            if (chanObj.containsKey("failed")) {
+                if (!secondtry && !CS.ModMode) {
+                    System.out.println("THis fired 1");
+                    LoginScotty();
+                    secondtry = true;
+                } else {
+                    System.out.println("THis fired 2");
+                    String failed = (String) chanObj.get("failed");
+                    JOptionPane.showMessageDialog(null, "Error logging in with AuthKey: " + failed);
+                    return false;
+                }
+            }
+            CS.ChanID = Long.parseLong(chanObj.get("ChanID").toString());
+            System.out.println("THis fired 3");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, "Issue getting info from API, try again or contact @MrPocketpac on twitter.");
+            return false;
+        }
+
     }
 
     /**
@@ -547,12 +583,15 @@ public class Login extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Login.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Login.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Login.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);

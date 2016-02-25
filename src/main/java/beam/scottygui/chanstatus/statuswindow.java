@@ -349,7 +349,7 @@ public class statuswindow extends javax.swing.JFrame {
         JSONObject type = (JSONObject) chaninfo.get("type");
         String game = (String) type.get("name");
         curGame = game;
-        gamelistbox.setModel(CS.setgamelistmodel(null));
+        gamelistbox.setModel(CS.setgamelistmodel(game));
         gamelistbox.setSelectedItem(game);
         this.StreamTitle.setText(title);
 

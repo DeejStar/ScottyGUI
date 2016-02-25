@@ -63,7 +63,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 83;
+    public static Integer CurVer = 85;
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -124,6 +124,8 @@ public class CS {
     public static JSONObject cmdCosts = new JSONObject();
     public static String lastrelay = "";
     public static Long CSPing = 1500L;
+    public static String OACode = null;
+    public static JSONObject OAuthInfo = new JSONObject();
 
     @SuppressWarnings("empty-statement")
     public static String getCheckSum() throws NoSuchAlgorithmException, FileNotFoundException, IOException {

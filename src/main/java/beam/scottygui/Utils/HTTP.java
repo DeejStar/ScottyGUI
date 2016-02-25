@@ -103,14 +103,19 @@ public class HTTP {
                 System.err.println(url);
                 try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
                     HttpClientContext context = HttpClientContext.create();
-                    context.setCookieStore(CS.cookie);
                     List<NameValuePair> urlParameters = new ArrayList();
                     for (Map.Entry<String, String> param : object.entrySet()) {
                         urlParameters.add(new BasicNameValuePair(param.getKey(), param.getValue()));
-
                     }
 
                     HttpPut request = new HttpPut(url);
+                    if (!CS.OAuthInfo.isEmpty()) {
+                        String Token = (String) CS.OAuthInfo.get("access_token");
+                        request.addHeader("Authorization", "Bearer " + Token);
+                        System.out.println("USING OAUTH");
+                    } else {
+                        context.setCookieStore(CS.cookie);
+                    }
                     request.setEntity(new UrlEncodedFormEntity(urlParameters));
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
@@ -168,10 +173,17 @@ public class HTTP {
                     List<NameValuePair> urlParameters = new ArrayList();
                     for (Map.Entry<String, String> param : object.entrySet()) {
                         urlParameters.add(new BasicNameValuePair(param.getKey(), param.getValue()));
-
                     }
 
                     HttpPost request = new HttpPost(url);
+                    if (!CS.OAuthInfo.isEmpty()) {
+                        String Token = (String) CS.OAuthInfo.get("access_token");
+                        request.addHeader("Authorization", "Bearer " + Token);
+                        System.out.println("USING OAUTH");
+                    } else {
+                        context.setCookieStore(CS.cookie);
+                    }
+
                     request.setEntity(new UrlEncodedFormEntity(urlParameters));
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
@@ -202,11 +214,9 @@ public class HTTP {
         while (tried < 5) {
             tried++;
             try {
-                https://beam.pro/api/v1" + apiLoc;
                 try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
                     HttpClientContext context = HttpClientContext.create();
                     context.setCookieStore(CS.cookie);
-                    List<NameValuePair> urlParameters = new ArrayList();
                     HttpGet request = new HttpGet(URL);
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
@@ -218,7 +228,7 @@ public class HTTP {
                         result.append(line);
                     }
                     toSend = result.toString();
-//System.err.println(result.toString());
+                    //System.err.println(result.toString());
                 }
                 break;
             } catch (Exception e) {

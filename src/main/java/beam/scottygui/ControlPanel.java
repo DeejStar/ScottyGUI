@@ -65,6 +65,7 @@ import javax.swing.text.DefaultCaret;
 import javax.websocket.EncodeException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -143,6 +144,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
 
         initComponents();
+        this.SubAndFolUpd();
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         if (CS.ModMode) {
             this.cmdsoundbutton.setVisible(false);
@@ -231,7 +233,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 //                        @Override
 //                        public void run() {
 //                            try {
-//                                RefreshAllSettings();
+//                                SubAndFolUpd();
 //                                PopBadWords();
 //                            } catch (Exception ex) {
 //                                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -436,6 +438,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         PNotes = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0));
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        RegOAuth = new javax.swing.JButton();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -1544,6 +1549,17 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        RegOAuth.setText("Register OAuth");
+        RegOAuth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RegOAuthActionPerformed(evt);
+            }
+        });
+
+        jTextPane1.setEditable(false);
+        jTextPane1.setText("Tie Scottybot to your account, allowing for increased control");
+        jScrollPane10.setViewportView(jTextPane1);
+
         javax.swing.GroupLayout SettingsPanelLayout = new javax.swing.GroupLayout(SettingsPanel);
         SettingsPanel.setLayout(SettingsPanelLayout);
         SettingsPanelLayout.setHorizontalGroup(
@@ -1556,14 +1572,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                         .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addGap(228, 228, 228)
-                                .addComponent(jLabel18))
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, SettingsPanelLayout.createSequentialGroup()
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1578,7 +1588,19 @@ public final class ControlPanel extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                        .addGap(228, 228, 228)
+                                        .addComponent(jLabel18))
+                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                        .addGap(5, 5, 5)
+                                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(RegOAuth, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(79, 79, 79)
                 .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1597,10 +1619,19 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addComponent(jLabel18)
-                                .addGap(4, 4, 4)
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(34, 34, 34))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
+                                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jLabel18))
+                                    .addComponent(RegOAuth))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(PNotes)
                                     .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2467,12 +2498,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (Exception e) {
             //cop out
         }
-        try {
-            RefreshAllSettings();
-            this.PopulateAllSettings();
-        } catch (Exception ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }//GEN-LAST:event_EFollowMsgActionPerformed
 
     private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
@@ -2822,12 +2847,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (Exception e) {
             //cop out
         }
-        try {
-            RefreshAllSettings();
-            this.PopulateAllSettings();
-        } catch (Exception ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }        // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_ESubMessageActionPerformed
 
     private void TwitterAlertMSGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TwitterAlertMSGActionPerformed
@@ -2844,12 +2864,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (Exception e) {
             //cop out
         }
-        try {
-            RefreshAllSettings();
-            this.PopulateAllSettings();
-        } catch (Exception ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }        // TODO add your handling code here:        // TODO add your handling code here:
+        // TODO add your handling code here:        // TODO add your handling code here:
     }//GEN-LAST:event_TwitterAlertMSGActionPerformed
 
     private void AutoTweetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoTweetActionPerformed
@@ -3410,6 +3425,34 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_YouBotActionPerformed
 
+    private void RegOAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegOAuthActionPerformed
+        try {
+            String ClientID = "a07c74f49a9af1e8127efd4b8b71a1e78d955abd5e8689e5";
+            String Scope = "user:details:self user:analytics:self channel:update:self chat:bypass_slowchat chat:connect chat:clear_messages chat:edit_options chat:remove_message";
+
+            String URL = "https://beam.pro/api/v1/oauth/authorize?response_type=code&client_id=" + ClientID + "&redirect_uri=https://scottybot.net&scope=" + URLEncoder.encode(Scope, "UTF-8");
+
+            String response = null;
+            System.out.println(URL);
+            response = http.get(URL);
+            System.out.println(response);
+            JSONObject code = new JSONObject();
+            code.putAll((JSONObject) JSONValue.parse(response));
+            String OAcode = (String) code.get("code");
+            Map<String, String> toPut = new HashMap();
+            toPut.put("authkey", CS.AuthKey);
+            toPut.put("code", OAcode);
+            String blah = http.put(toPut, CS.apiLoc + "/setoauthstreamer");
+            JSONObject obj = new JSONObject();
+            obj.putAll((JSONObject) JSONValue.parse(blah));
+            JOptionPane.showMessageDialog(AlertPaneOpen, obj.get("status"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_RegOAuthActionPerformed
+
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
         try {
@@ -3426,9 +3469,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             for (Long T : Hours) {
                 String Rank = custRanks.get(T.toString()).toString();
                 CRModel.addRow(new Object[]{T, Rank});
+
             }
         } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
@@ -3440,8 +3485,10 @@ public final class ControlPanel extends javax.swing.JFrame {
         JSONObject whitelist = null;
         try {
             whitelist = (JSONObject) new JSONParser().parse(http.GetScotty(CS.apiLoc + "/whitelist?channame=" + ChanID));
+
         } catch (ParseException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         String ToDisplay = "";
         for (Object t : whitelist.keySet()) {
@@ -3471,8 +3518,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                 JSONObject getUsername = null;
                 try {
                     getUsername = (JSONObject) new JSONParser().parse(http.get("https://beam.pro/api/v1/users/" + bid));
+
                 } catch (ParseException | IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ControlPanel.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
                 beamid = (String) getUsername.get("username");
             }
@@ -3669,28 +3718,43 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }
 
-    public void RefreshAllSettings() {
-        PopFilterSettings();
-        PopulateAllSettings();
+    public void SubAndFolUpd() {
+
         JSONObject ChanInfo = new JSONObject();
         String toParse = null;
         try {
-            toParse = http.get("https://beam.pro/api/v1/channels/" + CS.ChanID);
+            if (!CS.ModMode) {
+                toParse = http.get("https://beam.pro/api/v1/channels/" + CS.ChanID + "/details");
+            } else {
+                toParse = http.get("https://beam.pro/api/v1/channels/" + CS.ChanID);
+            }
+
         } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlPanel.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         while (true) {
             try {
                 ChanInfo.putAll((JSONObject) new JSONParser().parse(toParse));
                 break;
+
             } catch (ParseException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlPanel.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
         Long Followers = (Long) ChanInfo.get("numFollowers");
-        Long Subs = (Long) ChanInfo.get("numSubscribers");
         ControlPanel.TotFollowers.setText("Total Followers: " + Followers);
-        ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
+        if (!CS.ModMode) {
+            if (ChanInfo.containsKey("numSubscribers")) {
+                Long Subs = (Long) ChanInfo.get("numSubscribers");
+                ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
+            } else {
+                ControlPanel.TotSubs.setText("Not Parnered");
+            }
+        } else {
+            ControlPanel.TotSubs.setText("Mod Mode");
+        }
 
     }
 
@@ -3768,12 +3832,15 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(ControlPanel.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(ControlPanel.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(ControlPanel.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ControlPanel.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -3846,6 +3913,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextArea QuotePanel;
     private javax.swing.JCheckBox REnabled;
     private javax.swing.JButton RefreshCMDs;
+    private javax.swing.JButton RegOAuth;
     private javax.swing.JButton RemoveBadWord;
     private javax.swing.JButton RepeatList;
     private javax.swing.JToggleButton RepeatOnOff;
@@ -3941,6 +4009,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -3949,6 +4018,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton purgepoints;
     private javax.swing.JTextField relaymsg;
