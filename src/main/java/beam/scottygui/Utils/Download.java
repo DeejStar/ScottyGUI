@@ -7,12 +7,20 @@ package beam.scottygui.Utils;
 
 //import java.io.*;
 //import java.net.*;
+import static beam.scottygui.Stores.CS.extchat;
+import com.google.common.io.Files;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
-// This class downloads a file from a URL.
+import javax.swing.JOptionPane;
 
 public class Download extends Observable implements Runnable {
 
@@ -34,10 +42,41 @@ public class Download extends Observable implements Runnable {
     private int size; // size of download in bytes
     private int downloaded; // number of bytes downloaded
     private int status; // current status of download
+    private int redowncnt = 0;
+    private String checksum;
+
+    public String getCheckSum() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
+        String datafile = getFileName(url);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        FileInputStream fis = new FileInputStream(datafile);
+        byte[] dataBytes = new byte[1024];
+        int nread = 0;
+        while ((nread = fis.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, nread);
+        };
+        byte[] mdbytes = md.digest();
+
+        //convert the byte to hex format
+        StringBuilder sb = new StringBuilder("");
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        System.out.println("Digest(in hex format):: " + sb.toString());
+        return sb.toString();
+    }
+
+    public boolean checksumMatch(String checksum) throws NoSuchAlgorithmException, IOException {
+        String good = getCheckSum();
+        System.out.println("New " + checksum + " : Checked " + good);
+        return checksum.equals(good.trim());
+
+    }
 
 // Constructor for Download.
-    public Download(URL url) {
+    public Download(URL url, String checksum) {
         this.url = url;
+        this.checksum = checksum;
         size = -1;
         downloaded = 0;
         status = DOWNLOADING;
@@ -92,14 +131,17 @@ public class Download extends Observable implements Runnable {
 
 // Start or resume downloading.
     public void download() {
+        //File f = new File(url.getFile());
+        //f.delete();
+        //System.out.println("Old file deleted, continuing");
         Thread thread = new Thread(this);
         thread.start();
     }
 
 // Get file name portion of URL.
     private String getFileName(URL url) {
-        String fileName = url.getFile();
-        return fileName.substring(fileName.lastIndexOf('/') + 1);
+        String filename = url.getFile();
+        return filename.substring(filename.lastIndexOf('/') + 1);
     }
 
 // Download file.
@@ -121,12 +163,14 @@ public class Download extends Observable implements Runnable {
 
             // Make sure response code is in the 200 range.
             if (connection.getResponseCode() / 100 != 2) {
+                System.out.println(connection.getResponseMessage());
                 error();
             }
 
             // Check for valid content length.
             int contentLength = connection.getContentLength();
             if (contentLength < 1) {
+                System.out.println(contentLength + " : " + connection.getResponseMessage());
                 error();
             }
 
@@ -169,8 +213,38 @@ public class Download extends Observable implements Runnable {
             if (status == DOWNLOADING) {
                 status = COMPLETE;
                 stateChanged();
+                if (!this.checksumMatch(checksum) && this.redowncnt < 5) {
+                    System.out.println("BOOT");
+                    this.redowncnt++;
+                    this.download();
+                    return;
+                }
+                File oldf = new File(getFileName(url) + ".old");
+                File newf = new File(getFileName(url));
+                if (!this.checksumMatch(checksum)) {
+                    newf.delete();
+                    Files.copy(oldf, new File(getFileName(url)));
+                    try {
+                        String java = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+                        String os = System.getProperty("os.name");
+                        JOptionPane.showMessageDialog(null, "Failed to update, reverting to old copy");
+                        if (os.equalsIgnoreCase("Linux")) {
+                            System.out.println("Linux Detected");
+                            Runtime.getRuntime().exec(new String[]{"sh", "-c", java + " -jar " + "./ScottyGUI.jar"});
+                        } else {
+                            Runtime.getRuntime().exec(new String[]{"cmd", "/C", java + " -jar " + "./ScottyGUI.jar"});
+                        }
+                        System.exit(0);
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(extchat, "Unable to restart automatically, please do so manually.");
+                    }
+                } else {
+                    oldf.deleteOnExit();
+                }
+
             }
         } catch (Exception e) {
+            e.printStackTrace();
             error();
         } finally {
             // Close file.

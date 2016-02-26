@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -63,7 +62,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 85;
+    public static Integer CurVer = 86;
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -126,8 +125,12 @@ public class CS {
     public static Long CSPing = 1500L;
     public static String OACode = null;
     public static JSONObject OAuthInfo = new JSONObject();
+    public static boolean Updating = false;
 
     @SuppressWarnings("empty-statement")
+
+    static boolean done = false;
+
     public static String getCheckSum() throws NoSuchAlgorithmException, FileNotFoundException, IOException {
         String datafile = "./ScottyGUI.jar";
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -149,18 +152,9 @@ public class CS {
         return sb.toString();
     }
 
-    public static boolean checksumMatch(String checksum) throws NoSuchAlgorithmException, IOException {
-        String good = CS.getCheckSum().trim();
-        System.out.println("New " + checksum + " : Checked " + good);
-        return checksum.equals(good.trim());
-
-    }
-
-    static boolean redownload = false;
-    static boolean done = false;
-
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     public static boolean CheckNewVer() {
+
         try {
             JSONObject VerCheck = null;
             while (true) {
@@ -176,19 +170,26 @@ public class CS {
             String CheckSum = VerCheck.get("checksum").toString();
 
             if (NewVer > CurVer) {
-                int Yes = 22;
-                if (!redownload) {
+                int Yes = 1;
+                if (!CS.Updating) {
                     Yes = JOptionPane.showConfirmDialog(null, "New version of ScottyGUI" + newline + "Would you like to download?");
+                    if (Yes == 0) {
+                        String java = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+                        String os = System.getProperty("os.name");
+                        if (os.equalsIgnoreCase("Linux")) {
+                            System.out.println("Linux Detected");
+                            Runtime.getRuntime().exec(new String[]{"sh", "-c", java + " -jar " + "./ScottyGUI.jar prepupdate"});
+                        } else {
+                            Runtime.getRuntime().exec(new String[]{"cmd", "/C", java + " -jar " + "./ScottyGUI.jar prepupdate"});
+                        }
+                        System.exit(0);
+                    }
                 }
+
                 downprogress dlp = new downprogress();
-                String FileName = "./ScottyGUI.jar";
-                if (Yes == 0 || redownload) {
+                if (Yes == 0 || CS.Updating) {
                     int Attempts = 0;
                     while (Attempts < 5) {
-                        File f = new File(FileName);
-
-                        // tries to delete a non-existing file
-                        f.delete();
                         URL ToDownload = null;
                         try {
                             ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
@@ -197,8 +198,8 @@ public class CS {
                         }
 
                         //Download download = new Download();
-                        final Download download = new Download(ToDownload);
-                        done = false;
+                        final Download download = new Download(ToDownload, CheckSum);
+
                         download.download();
                         dlp.setVisible(true);
                         dlp.setEnabled(true);
@@ -211,39 +212,29 @@ public class CS {
                             }
 
                         }
-                        done = true;
                         dlp.setVisible(false);
-                        while (!done) {
-                            Thread.sleep(100);
-                        }
                         if (download.getStatus() == COMPLETE) {
-                            if (!CS.checksumMatch(CheckSum)) {
-                                //System.err.println("Checksum did not match downloaded = " CheckSum)
-                                //redownload = true;
-                            }
                             break;
-
                         } else {
+                            System.out.println(download.getStatus());
                             Attempts++;
                         }
                     }
                     if (Attempts == 5) {
-                        redownload = false;
                         JOptionPane.showMessageDialog(null, "Unable to download, try again later");
                     } else {
-                        redownload = false;
                         JOptionPane.showMessageDialog(null, "Downloaded, Restarting ScottyGUI!");
 
-                        StringBuilder cmd = new StringBuilder();
-                        cmd.append("\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"");
-                        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                            cmd.append(jvmArg + " ");
-                        }
-                        cmd.append(" -jar ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-
                         try {
-                            //System.out.println(cmd.toString());
-                            Runtime.getRuntime().exec(cmd.toString());
+                            String java = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+
+                            String os = System.getProperty("os.name");
+                            if (os.equalsIgnoreCase("Linux")) {
+                                System.out.println("Linux Detected");
+                                Runtime.getRuntime().exec(new String[]{"sh", "-c", java + " -jar " + "./ScottyGUI.jar"});
+                            } else {
+                                Runtime.getRuntime().exec(new String[]{"cmd", "/C", java + " -jar " + "./ScottyGUI.jar"});
+                            }
                         } catch (IOException e) {
                             JOptionPane.showMessageDialog(extchat, "Unable to restart automatically, please do so manually.");
                         }

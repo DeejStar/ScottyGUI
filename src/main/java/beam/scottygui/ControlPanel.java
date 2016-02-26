@@ -144,10 +144,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
 
         initComponents();
+
         this.SubAndFolUpd();
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         if (CS.ModMode) {
             this.cmdsoundbutton.setVisible(false);
+            this.RegOAuth.setVisible(false);
         }
         ControlPanel.ControlStatus.setText("Connecting");
         DumpCurVer();

@@ -45,7 +45,10 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
-
+//        for (Map.Entry<Object, Object> T : System.getProperties().entrySet()) {
+//            System.out.println(T.getKey() + " : " + T.getValue());
+//        }
+//        System.exit(0);
         System.setProperty("file.encoding", "UTF-8");
         Field charset = null;
         try {
@@ -435,7 +438,7 @@ public class Login extends javax.swing.JFrame {
             }
             return;
         }
-        if (!this.ShowSList.isSelected() && this.StreamerList.getSelectedIndex() != -1) {
+        if (!this.ShowSList.isSelected()) {
             if (CS.GUISettings.containsKey(Username.toLowerCase())) {
                 String authkey = CS.GUIGetSetting(Username.toLowerCase());
                 boolean worked = this.AuthLogin(authkey);
@@ -450,6 +453,7 @@ public class Login extends javax.swing.JFrame {
             String Streamer = this.StreamerList.getSelectedItem().toString();
             UUID CheckKey = UUID.fromString(CS.getStreamerUUID(Streamer));
             CS.AuthKey = CheckKey.toString();
+            System.out.println(Streamer + " : " + CheckKey);
             boolean worked = this.AuthLogin(CS.AuthKey);
             if (!worked) {
                 return;
@@ -534,8 +538,8 @@ public class Login extends javax.swing.JFrame {
 
     public boolean AuthLogin(String AuthKey) {
         try {
-            String CheckKey = CS.GUISettings.get(Username.toLowerCase()).toString();
-            CS.AuthKey = CheckKey;
+
+            CS.AuthKey = AuthKey;
             String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + CS.AuthKey);
             JSONObject chanObj = new JSONObject();
             chanObj.putAll((JSONObject) JSONValue.parse(toParse));

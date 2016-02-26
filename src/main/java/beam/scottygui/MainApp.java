@@ -2,12 +2,17 @@ package beam.scottygui;
 
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.GUILoadSettings;
+import static beam.scottygui.Stores.CS.extchat;
 import beam.scottygui.websocket.WebSocket;
+import com.google.common.io.Files;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -19,6 +24,60 @@ public class MainApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        if (args.length > 0) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String java = "\"" + System.getProperty("java.home") + File.separator + "bin" + File.separator + "java\"";
+            if (args[0].equalsIgnoreCase("prepupdate")) {
+                File oldf = new File("ScottyGUI.jar");
+                try {
+                    Files.copy(oldf, new File("ScottyGUI.jar.old"));
+                    try {
+
+                        String os = System.getProperty("os.name");
+                        if (os.equalsIgnoreCase("Linux")) {
+                            System.out.println("Linux Detected");
+                            Runtime.getRuntime().exec(new String[]{"sh", "-c", java + " -jar " + "./ScottyGUI.jar.old update"});
+                        } else {
+                            Runtime.getRuntime().exec(new String[]{"cmd", "/C", java + " -jar " + "./ScottyGUI.jar.old update"});
+                        }
+                        System.exit(0);
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(extchat, "Unable to restart automatically, please do so manually.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace(System.out);
+                }
+
+            }
+            if (args[0].equalsIgnoreCase("update")) {
+                CS.Updating = true;
+                while (true) {
+                    try {
+                        new File("ScottyGUI.jar").delete();
+                        break;
+                    } catch (Exception e) {
+
+                    }
+                }
+                CS.CheckNewVer();
+                return;
+            }
+        }
+
+        File oldf = new File("./ScottyGUI.jar.old");
+        while (true) {
+            try {
+                oldf.delete();
+                break;
+            } catch (Exception e) {
+
+            }
+        }
+
         PrintStream Errorout = null;
         try {
             Errorout = new PrintStream(new FileOutputStream("ErrorLog.Log", false));

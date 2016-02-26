@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>beam.scottygui.MainApp</mainClass>
     </properties>
-    
+
 
 
     <organization>
@@ -49,7 +49,7 @@
                 <executions>
                     <execution>
                         <id>unpack-dependencies</id>
-                        
+
                         <phase>package</phase>
                         <goals>
                             <goal>exec</goal>
@@ -74,14 +74,14 @@
                     <execution>
                         <id>default-cli</id>
                         <goals>
-                            <goal>exec</goal>                            
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
                             <executable>${java.home}/bin/java</executable>
                             <commandlineArgs>${runfx.args}</commandlineArgs>
                         </configuration>
                     </execution>
-                </executions>  
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -134,8 +134,8 @@
                 </configuration>
             </plugin>
         </plugins>
-        
-        
+
+
     </build>
     <repositories>
         <repository>
@@ -145,8 +145,8 @@
         </repository>
     </repositories>
     <dependencies>
-        
-        
+
+
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
@@ -169,20 +169,24 @@
             <artifactId>cometd-java-client</artifactId>
             <version>3.0.4</version>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout</artifactId>
             <version>3.7.3.1</version>
             <classifier>swing</classifier>
         </dependency>
 
- 
-  <dependency>
-    <groupId>io.socket</groupId>
-    <artifactId>socket.io-client</artifactId>
-    <version>0.7.0</version>
-  </dependency>
 
+        <dependency>
+            <groupId>io.socket</groupId>
+            <artifactId>socket.io-client</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.unix4j</groupId>
+            <artifactId>unix4j-command</artifactId>
+            <version>0.3</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
