@@ -32,19 +32,27 @@ public class ScottySocket {
             public boolean onDisconnect(CloseReason closeReason) {
                 ControlPanel.ControlStatus.setBackground(Color.RED);
                 ControlPanel.ControlStatus.setText("Reconnecting");
-                return false;
+                ControlPanel.llsocket.setBackground(Color.YELLOW);
+                ControlPanel.llsocket.setText("UnKnown");
+                ControlPanel.wssocket.setBackground(Color.YELLOW);
+                ControlPanel.wssocket.setText("UnKnown");
+                return true;
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
                 ControlPanel.ControlStatus.setBackground(Color.RED);
                 ControlPanel.ControlStatus.setText("Reconnecting");
-                return false;
+                ControlPanel.llsocket.setBackground(Color.YELLOW);
+                ControlPanel.llsocket.setText("UnKnown");
+                ControlPanel.wssocket.setBackground(Color.YELLOW);
+                ControlPanel.wssocket.setText("UnKnown");
+                return true;
             }
 
             @Override
             public long getDelay() {
-                return 1;
+                return 5;
             }
         };
 

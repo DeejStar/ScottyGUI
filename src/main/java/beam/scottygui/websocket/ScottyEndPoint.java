@@ -77,6 +77,26 @@ public class ScottyEndPoint extends Endpoint {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    if (msgobj.containsKey("wsstatus")) {
+                        if (msgobj.get("wsstatus").toString().equals("1")) {
+                            ControlPanel.wssocket.setBackground(Color.GREEN);
+                            ControlPanel.wssocket.setText("");
+
+                        } else {
+                            ControlPanel.wssocket.setBackground(Color.RED);
+                            ControlPanel.wssocket.setText("Rejoining");
+                        }
+                    }
+                    if (msgobj.containsKey("llstatus")) {
+                        if (msgobj.get("llstatus").toString().equals("1")) {
+                            ControlPanel.llsocket.setBackground(Color.GREEN);
+                            ControlPanel.llsocket.setText("");
+
+                        } else {
+                            ControlPanel.llsocket.setBackground(Color.RED);
+                            ControlPanel.llsocket.setText("Rejoining");
+                        }
+                    }
                     new Thread("PutTheadName") {
                         @Override
                         public void run() {
