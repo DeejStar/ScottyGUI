@@ -7,6 +7,7 @@ package beam.scottygui.Utils;
 
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.ChanID;
+import static beam.scottygui.Stores.CS.UserID;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,13 +21,11 @@ import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JOptionPane;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -208,6 +207,40 @@ public class HTTP {
         return toSend;
     }
 
+    public String getCUser(String URL, CookieStore cookie) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        String toSend = "";
+
+        while (tried < 5) {
+            tried++;
+            try {
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    HttpClientContext context = HttpClientContext.create();
+                    context.setCookieStore(cookie);
+                    HttpGet request = new HttpGet(URL);
+                    HttpResponse response = client.execute(request, context);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    toSend = result.toString();
+                    //System.err.println(result.toString());
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+        return toSend;
+    }
+
     public String get(String URL) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
         int tried = 0;
         String toSend = "";
@@ -239,6 +272,70 @@ public class HTTP {
 
         }
         return toSend;
+    }
+
+    public CookieStore CUserLogin(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
+
+        String url = "https://beam.pro/api/v1/users/login";
+        JSONObject Error = new JSONObject();
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpClientContext context = HttpClientContext.create();
+        List<NameValuePair> urlParameters = new ArrayList();
+        urlParameters.add(new BasicNameValuePair("username", Username));
+        urlParameters.add(new BasicNameValuePair("password", Password));
+        urlParameters.add(new BasicNameValuePair("code", Code));
+        HttpPost request = new HttpPost(url);
+        request.setEntity(new UrlEncodedFormEntity(urlParameters, "UTF-8"));
+        HttpResponse response = client.execute(request, context);
+        String dataIn = null;
+        CookieStore cookieStore = null;
+        try {
+            cookieStore = context.getCookieStore();
+//}
+//	System.out.println("Response Code : "
+//                + response.getStatusLine().getStatusCode());
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuilder result = new StringBuilder();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            dataIn = result.toString();
+            //System.err.println(dataIn);
+            //System.err.println(response.getStatusLine().getStatusCode() + ":" + response.getStatusLine().getReasonPhrase());
+            if (response.getStatusLine().getStatusCode() != 200) {
+
+                try {
+                    Error.putAll((JSONObject) new JSONParser().parse(dataIn));
+                } catch (Exception blah) {
+                }
+            }
+////System.err.println(dataIn);
+        } finally {
+            client.close();
+        }
+        JSONObject obj = null;
+        JSONObject ChanObj = new JSONObject();
+        try {
+            obj = (JSONObject) parser.parse(dataIn);
+            UserID = Long.parseLong(obj.get("id").toString());
+            ChanObj.putAll((JSONObject) parser.parse(new HTTP().get("https://beam.pro/api/v1/channels/" + Username)));
+
+        } catch (Exception ex) {
+            //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            if (!obj.isEmpty() && obj.containsKey("message")) {
+                String error = (String) obj.get("message");
+                JOptionPane.showMessageDialog(null, "Error: " + error);
+            } else {
+                JOptionPane.showMessageDialog(null, "Login failed.");
+            }
+            return null;
+        }
+
+        return cookieStore;
+
     }
 
     public String Login(String Username, String Password, String Code) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
@@ -288,56 +385,6 @@ public class HTTP {
             return dataIn;
         } else {
             return Error.toString();
-        }
-
-    }
-
-    public void CLogin(String Username, String Password) throws MalformedURLException, UnsupportedEncodingException, ProtocolException, IOException, InterruptedException {
-        //CookieManager customCookieManager = new CookieManager();
-        //customCookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        //CookieStore cookieStore = customCookieManager.getCookieStore();
-
-        String dataIn = "";
-        this.Username = Username;
-        this.Password = Password;
-        int attempt = 0;
-        while (attempt < 6) {
-            try {
-                URL url = new URL("https://beam.pro/api/v1/users/login");
-                Map<String, Object> LoginParams = new LinkedHashMap<>();
-                LoginParams.put("username", Username);
-                LoginParams.put("password", Password);
-                StringBuilder LoginPost = new StringBuilder();
-                for (Map.Entry<String, Object> param : LoginParams.entrySet()) {
-                    if (LoginPost.length() != 0) {
-                        LoginPost.append('&');
-                    }
-                    LoginPost.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-                    LoginPost.append('=');
-                    LoginPost.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-                }
-                byte[] LoginBytes = LoginPost.toString().getBytes("UTF-8");
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Content-Length", String.valueOf(LoginBytes.length));
-                conn.setDoOutput(true);
-                conn.getOutputStream().write(LoginBytes);
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                        conn.getInputStream()))) {
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        dataIn += inputLine;
-                    }
-                }
-                break;
-            } catch (Exception e) {
-                attempt++;
-                Thread.sleep(1000);
-            }
-        }
-        if ("".equalsIgnoreCase(dataIn)) {
-            throw new IOException();
         }
 
     }
@@ -400,6 +447,7 @@ public class HTTP {
                     while ((inputLine = in.readLine()) != null) {
                         dataIn += inputLine;
                     }
+                    System.out.println(dataIn);
                 }
                 break;
             } catch (IOException | OutOfMemoryError ex) {

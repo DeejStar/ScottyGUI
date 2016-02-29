@@ -297,10 +297,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_LoginFieldActionPerformed
 
     private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
-        if (RemMe.isSelected()) {
-            CS.GUISaveSettings("username", this.LoginField.getText());
-            CS.GUISaveSettings("pass", new String(this.PassField.getPassword()));
-        }
+
         Login();        // TODO add your handling code here:
     }//GEN-LAST:event_LoginActionPerformed
 
@@ -394,6 +391,7 @@ public class Login extends javax.swing.JFrame {
     JSONObject ChanObj = new JSONObject();
 
     public void Login() {
+
         ChanObj.clear();
         Username = this.LoginField.getText();
         CS.UserName = Username;
@@ -466,7 +464,10 @@ public class Login extends javax.swing.JFrame {
         if (this.ShowSList.isSelected()) {
             ControlPanel.StreamSet.setVisible(false);
         }
-
+        if (RemMe.isSelected()) {
+            CS.GUISaveSettings("username", this.LoginField.getText());
+            CS.GUISaveSettings("pass", new String(this.PassField.getPassword()));
+        }
         this.dispose();
         ScottySocket sock = new ScottySocket();
         sock.connect();
@@ -540,7 +541,9 @@ public class Login extends javax.swing.JFrame {
         try {
 
             CS.AuthKey = AuthKey;
-            String toParse = http.GetScotty(CS.apiLoc + "/settings?authkey=" + CS.AuthKey);
+            String toParse = http.get(CS.apiLoc + "/settings?authkey=" + CS.AuthKey);
+            System.out.println(CS.apiLoc + "/settings?authkey=" + CS.AuthKey + " : " + toParse);
+
             JSONObject chanObj = new JSONObject();
             chanObj.putAll((JSONObject) JSONValue.parse(toParse));
             System.err.println(chanObj.toJSONString());
@@ -557,9 +560,9 @@ public class Login extends javax.swing.JFrame {
                 }
             }
             CS.ChanID = Long.parseLong(chanObj.get("ChanID").toString());
-            System.out.println("THis fired 3");
             return true;
         } catch (Exception e) {
+
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, "Issue getting info from API, try again or contact @MrPocketpac on twitter.");
             return false;

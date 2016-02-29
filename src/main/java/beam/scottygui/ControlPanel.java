@@ -16,7 +16,6 @@ import static beam.scottygui.Stores.CS.ChatUserList;
 import static beam.scottygui.Stores.CS.GUISaveSettings;
 import static beam.scottygui.Stores.CS.GetSettings;
 import static beam.scottygui.Stores.CS.SendMSG;
-import static beam.scottygui.Stores.CS.Username;
 import static beam.scottygui.Stores.CS.chatArray;
 import static beam.scottygui.Stores.CS.chatObject;
 import static beam.scottygui.Stores.CS.extchat;
@@ -2397,53 +2396,22 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
+        Map<String, String> toPut = new HashMap();
+        toPut.put("authkey", CS.AuthKey);
+        JSONObject obj = new JSONObject();
         try {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
-            JOptionPane.showMessageDialog(rootPane, "Done, now type !rejoin in your channel");
-        } catch (Exception e) {
+            String response = http.put(toPut, CS.apiLoc + "/defaultbotname");
+            obj.putAll((JSONObject) JSONValue.parse(response));
+            JOptionPane.showMessageDialog(AlertPaneOpen, obj.get("status").toString());
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(AlertPaneOpen, "Error talking to API, please try later.");
 
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_ResetScottyNameActionPerformed
 
     private void CUsernamePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CUsernamePasswordActionPerformed
-        String CUsername = null;
-        String CPassword = null;
-        CUsername = JOptionPane.showInputDialog(rootPane, "Enter Username For Your Custom Bot Name");
-        if (CUsername == null) {
-            return;
-        }
-        if (CUsername.toLowerCase().equals(Username.toLowerCase())) {
-            JOptionPane.showMessageDialog(rootPane, "It's not smart to make the bot name your username.");
-            return;
-        }
-        CPassword = JOptionPane.showInputDialog(rootPane, "Enter Password For Your Custom Bot Name");
-        if (CPassword == null) {
-            return;
-        }
-        if (CUsername != null && CPassword != null & !"".equals(CUsername) && !"".equals(CPassword)) {
-            try {
-                http.CLogin(CUsername, CPassword);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(rootPane, "Username and/or Password failed.");
-                return;
-            }
-            try {
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode(CUsername, "UTF-8"));
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode(CPassword, "UTF-8"));
-                JOptionPane.showMessageDialog(rootPane, "Success, now in your channel just type !rejoin");
-            } catch (UnsupportedEncodingException ex) {
-                try {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CUsername&value=" + URLEncoder.encode("NULL", "UTF-8"));
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=CPassword&value=" + URLEncoder.encode("NULL", "UTF-8"));
-                    JOptionPane.showMessageDialog(this, "Had an issue setting name, atempted to put back to default");
-                } catch (UnsupportedEncodingException ex1) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-
-            }
-
-        }
+        new OAuthPut().setVisible(true);
     }//GEN-LAST:event_CUsernamePasswordActionPerformed
 
     private void YodaEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YodaEnabledActionPerformed
