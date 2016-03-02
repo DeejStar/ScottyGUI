@@ -53,7 +53,7 @@ public class cmdListView extends javax.swing.JFrame {
 
         String toParse = null;
         try {
-            toParse = new HTTP().get("https://api.scottybot.net/showcoms?chanid=" + CS.ChanID + "&output=json");
+            toParse = new HTTP().get(CS.apiLoc + "/showcoms?chanid=" + CS.ChanID + "&output=json");
         } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(cmdListView.class.getName()).log(Level.SEVERE, null, ex);
         }
