@@ -3,6 +3,7 @@ package beam.scottygui;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.GUILoadSettings;
 import static beam.scottygui.Stores.CS.extchat;
+import beam.scottygui.websocket.LiveLoad;
 import beam.scottygui.websocket.WebSocket;
 import com.google.common.io.Files;
 import java.io.File;
@@ -19,7 +20,10 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class MainApp {
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application. main() serves only as fallback in case the application can not be launched through deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application.
+     * main() serves only as fallback in case the application can not be
+     * launched through deployment artifacts, e.g., in IDEs with limited FX
+     * support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -114,6 +118,11 @@ public class MainApp {
                                     System.err.println("Lost chat connection, reconnecting.");
                                     new WebSocket().connect(CS.ChanID);
                                 }
+                            }
+                            if (CS.llSocket == null) {
+                                LiveLoad.llSocket(CS.ChanID);
+                            } else if (!CS.llSocket.isOpen()) {
+                                LiveLoad.llSocket(CS.ChanID);
                             }
                         }
                     } catch (Exception e) {

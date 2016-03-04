@@ -129,7 +129,7 @@
                       <Component id="TotSubs" min="-2" pref="240" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="42" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -2592,10 +2592,14 @@
     <Component class="javax.swing.JButton" name="AlertPaneOpen">
       <Properties>
         <Property name="text" type="java.lang.String" value="Alert Pane"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AlertPaneOpenActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="this.AlertPaneOpen.setVisible(false);&#xd;&#xa;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="StreamSet">
       <Properties>

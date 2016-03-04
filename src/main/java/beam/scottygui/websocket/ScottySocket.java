@@ -62,7 +62,7 @@ public class ScottySocket {
         try {
             //new HTTP().GetAuth();
             client.connectToServer(new ScottyEndPoint(), cec, new URI("wss://api.scottybot.net/websocket/control"));
-            //client.connectToServer(new ScottyEndPoint(), cec, new URI("ws://88.150.158.69:8026/websocket/control"));
+            //client.connectToServer(new ScottyEndPoint(), cec, new URI("ws://localhost:8026/websocket/control"));
         } catch (URISyntaxException | DeploymentException | IOException ex) {
             Logger.getLogger(ScottySocket.class.getName()).log(Level.SEVERE, null, ex);
         }
