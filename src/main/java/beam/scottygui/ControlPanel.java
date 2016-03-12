@@ -36,6 +36,7 @@ import beam.scottygui.quotecontrol.addquote;
 import beam.scottygui.quotecontrol.delquote;
 import beam.scottygui.websocket.WebSocket;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
@@ -43,6 +44,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -3389,30 +3392,37 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_YouBotActionPerformed
 
     private void RegOAuthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegOAuthActionPerformed
-        try {
-            String ClientID = "a07c74f49a9af1e8127efd4b8b71a1e78d955abd5e8689e5";
-            String Scope = "user:details:self user:analytics:self channel:update:self chat:bypass_slowchat chat:connect chat:clear_messages chat:edit_options chat:remove_message";
-
-            String URL = "https://beam.pro/api/v1/oauth/authorize?response_type=code&client_id=" + ClientID + "&redirect_uri=https://scottybot.net&scope=" + URLEncoder.encode(Scope, "UTF-8");
-
-            String response = null;
-            System.out.println(URL);
-            response = http.get(URL);
-            System.out.println(response);
-            JSONObject code = new JSONObject();
-            code.putAll((JSONObject) JSONValue.parse(response));
-            String OAcode = (String) code.get("code");
-            Map<String, String> toPut = new HashMap();
-            toPut.put("authkey", CS.AuthKey);
-            toPut.put("code", OAcode);
-            String blah = http.put(toPut, CS.apiLoc + "/setoauthstreamer");
-            JSONObject obj = new JSONObject();
-            obj.putAll((JSONObject) JSONValue.parse(blah));
-            JOptionPane.showMessageDialog(null, obj.get("status"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI("https://beam.pro/oauth/authorize?response_type=code&redirect_uri=" + URLEncoder.encode("https://api.scottybot.net/api/oauthjoin", "UTF-8") + "&scope=" + URLEncoder.encode("user:details:self channel:update:self chat:connect", "UTF-8") + "&client_id=a07c74f49a9af1e8127efd4b8b71a1e78d955abd5e8689e5"));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+//        try {
+//            String ClientID = "a07c74f49a9af1e8127efd4b8b71a1e78d955abd5e8689e5";
+//            String Scope = "user:details:self user:analytics:self channel:update:self chat:bypass_slowchat chat:connect chat:clear_messages chat:edit_options chat:remove_message";
+//
+//            String URL = "https://beam.pro/api/v1/oauth/authorize?response_type=code&client_id=" + ClientID + "&redirect_uri=https://scottybot.net&scope=" + URLEncoder.encode(Scope, "UTF-8");
+//
+//            String response = null;
+//            System.out.println(URL);
+//            response = http.get(URL);
+//            System.out.println(response);
+//            JSONObject code = new JSONObject();
+//            code.putAll((JSONObject) JSONValue.parse(response));
+//            String OAcode = (String) code.get("code");
+//            Map<String, String> toPut = new HashMap();
+//            toPut.put("authkey", CS.AuthKey);
+//            toPut.put("code", OAcode);
+//            String blah = http.put(toPut, CS.apiLoc + "/setoauthstreamer");
+//            JSONObject obj = new JSONObject();
+//            obj.putAll((JSONObject) JSONValue.parse(blah));
+//            JOptionPane.showMessageDialog(null, obj.get("status"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }//GEN-LAST:event_RegOAuthActionPerformed
 
