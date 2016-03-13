@@ -145,6 +145,7 @@ public class ScottyEndPoint extends Endpoint {
                                     model.addRow(new Object[]{uname + ": " + message});
                                     ControlPanel.smchat.changeSelection(model.getRowCount() - 1, 0, false, false);
                                     ControlPanel.smchat.getSelectionModel().clearSelection();
+                                    System.out.println(uname + ": " + message);
                                     return;
 
                                 }

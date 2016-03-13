@@ -62,7 +62,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 90;
+    public static Integer CurVer = 91;
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -368,10 +368,11 @@ public class CS {
         if (lastFollowed.contains(Username)) {
             return;
         }
-        while (lastFollowed.size() > 4) {
+
+        lastFollowed.add(Username);
+        while (lastFollowed.size() > 5) {
             lastFollowed.remove(0);
         }
-        lastFollowed.add(0, Username);
         try {
             PrintWriter out = new PrintWriter("Last_5_Followers.txt");
             String toPrint = "";
@@ -385,7 +386,7 @@ public class CS {
                 }
             }
             //System.err.println(toPrint);
-            out.print(toPrint);
+            out.print(toPrint + " ");
             out.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
