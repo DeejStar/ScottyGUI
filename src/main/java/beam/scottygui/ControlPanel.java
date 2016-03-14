@@ -3529,12 +3529,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     boolean custrankpop = false;
 
     private void PopulateAllSettings() {
-        String PName = GetSettings().get("PointsName").toString();
+        String PName = GetSettings().get("pointsname").toString();
         if (!"!".equals(String.valueOf(PName.charAt(0)))) {
             PName = "!" + PName;
         }
         this.PointsName.setText(PName);
-        if ("1".equals(GetSettings().get("Points"))) {
+        if (1 == (long) (GetSettings().get("points"))) {
             this.PEnabled.setSelected(true);
         } else {
             this.PEnabled.setSelected(false);
@@ -3543,61 +3543,61 @@ public final class ControlPanel extends javax.swing.JFrame {
         this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
         this.PStartPoints.setText(GetSettings().get("startpoints").toString());
         this.PSubPoints.setText(GetSettings().get("subbonus").toString());
-        this.PPM.setText(GetSettings().get("PointsPerMsg").toString());
+        this.PPM.setText(GetSettings().get("pointspermsg").toString());
 
-        if ("1".equals(GetSettings().get("UseBankheist"))) {
+        if (1 == (long) (GetSettings().get("usebankheist"))) {
             this.BHEnabled.setSelected(true);
         } else {
             this.BHEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseRaffle"))) {
+        if (1 == (long) (GetSettings().get("useraffle"))) {
             this.REnabled.setSelected(true);
         } else {
             this.REnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseRoulette"))) {
+        if (1 == (long) (GetSettings().get("useroulette"))) {
             this.RouletteEnable.setSelected(true);
         } else {
             this.RouletteEnable.setSelected(false);
         }
-        if ("1".equals(GetSettings().get("UseQuotes"))) {
+        if (1 == (long) (GetSettings().get("usequotes"))) {
             this.QEnabled.setSelected(true);
         } else {
             this.QEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseFollower"))) {
+        if (1 == (long) (GetSettings().get("usefollower"))) {
             this.FollowEnabled.setSelected(true);
         } else {
             this.FollowEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("OnlyWhenLive"))) {
+        if (1 == (long) (GetSettings().get("onlywhenlive"))) {
             this.OnlyWhenLiveEnabled.setSelected(true);
         } else {
             this.OnlyWhenLiveEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("PurgeCommands"))) {
+        if (1 == (long) (GetSettings().get("purgecommands"))) {
             this.ClearCmdsEnabled.setSelected(true);
         } else {
             this.ClearCmdsEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("subalert"))) {
+        if (1 == (long) (GetSettings().get("subalert"))) {
             this.PSubAlert.setSelected(true);
         } else {
             this.PSubAlert.setSelected(false);
         }
-        if ("1".equals(GetSettings().get("useme"))) {
+        if (1 == (long) (GetSettings().get("useme"))) {
             this.MeOutput.setSelected(true);
         } else {
             this.MeOutput.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("Donated"))) {
+        if (1 == (long) (GetSettings().get("donated"))) {
             //this.JSettingsPane.setEnabledAt(2, true);
 
             Component[] ToEnable = this.DonationPane.getComponents();
@@ -3612,46 +3612,46 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }
 
-        if ("1".equals(GetSettings().get("UseChuck"))) {
+        if (1 == (long) (GetSettings().get("usechuck"))) {
             this.ChuckEnabled.setSelected(true);
         } else {
             this.ChuckEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseClever"))) {
+        if (1 == (long) (GetSettings().get("useclever"))) {
             this.ChatEnabled.setSelected(true);
         } else {
             this.ChatEnabled.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("UseLeet"))) {
+        if (1 == (long) (GetSettings().get("useleet"))) {
             this.LeetSpeek.setSelected(true);
         } else {
             this.LeetSpeek.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("useurl"))) {
+        if (1 == (long) (GetSettings().get("useurl"))) {
             this.LinkTitle.setSelected(true);
         } else {
             this.LinkTitle.setSelected(false);
         }
-        if ("1".equals(GetSettings().get("useAutoTweet"))) {
+        if (1 == (long) (GetSettings().get("useautotweet"))) {
             this.AutoTweet.setSelected(true);
         } else {
             this.AutoTweet.setSelected(false);
         }
 
-        if ("1".equals(GetSettings().get("subalert"))) {
+        if (1 == (long) (GetSettings().get("subalert"))) {
             this.PSubAlert.setSelected(true);
         } else {
             this.PSubAlert.setSelected(false);
         }
-        if ("1".equals(GetSettings().get("joinAnnounce"))) {
+        if (1 == (long) (GetSettings().get("joinannounce"))) {
             this.JoinAnnounce.setSelected(true);
         } else {
             this.JoinAnnounce.setSelected(false);
         }
-        if ("1".equals(GetSettings().get("leaveAnnounce"))) {
+        if (1 == (long) (GetSettings().get("leaveannounce"))) {
             this.LeaveAnnounce.setSelected(true);
         } else {
             this.LeaveAnnounce.setSelected(false);
@@ -3754,7 +3754,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         JSONObject FSettings = GetSettings();
         System.out.println("FSETTINGS " + FSettings);
-        if ("1".equals(FSettings.get("UseFilter").toString())) {
+        if (1 == (long) (FSettings.get("usefilter"))) {
             this.FOnOff.setSelected(true);
             this.FOnOff.setText("All Filtering Enabled");
         } else {
@@ -3762,7 +3762,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.FOnOff.setText(("All Filtering Disabled"));
         }
 
-        if ("1".equals(FSettings.get("UseLinks").toString())) {
+        if (1 == (long) (FSettings.get("uselinks"))) {
             this.LinksOnOff.setSelected(true);
             this.LinksOnOff.setText("Links Enabled");
         } else {
@@ -3770,7 +3770,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.LinksOnOff.setText(("Links Disabled"));
         }
 
-        if ("1".equals(FSettings.get("UseRepeat"))) {
+        if (1 == (long) (FSettings.get("userepeat"))) {
             this.RepeatOnOff.setSelected(true);
             this.RepeatOnOff.setText("Repeat Enabled");
         } else {
@@ -3778,7 +3778,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.RepeatOnOff.setSelected(false);
         }
 
-        if ("1".equals(FSettings.get("UseCapitals"))) {
+        if (1 == (long) (FSettings.get("usecapitals"))) {
             this.CapsOnOff.setSelected(true);
             this.CapsOnOff.setText("Caps Enabled");
         } else {
@@ -3786,7 +3786,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.CapsOnOff.setSelected(false);
         }
 
-        if ("1".equals(FSettings.get("UseSymbols"))) {
+        if (1 == (long) (FSettings.get("usesymbols"))) {
             this.SymbolsOnOff.setSelected(true);
             this.SymbolsOnOff.setText("Symbols Enabled");
         } else {
@@ -3794,9 +3794,9 @@ public final class ControlPanel extends javax.swing.JFrame {
             this.SymbolsOnOff.setSelected(false);
         }
 
-        this.CapPercent.setValue(Integer.parseInt(FSettings.get("CapPercent").toString()));
-        this.SymPercent.setValue(Integer.parseInt(FSettings.get("SymbolCount").toString()));
-        this.TimoutDuration.setValue(Integer.parseInt(FSettings.get("TimeOutLength").toString()));
+        this.CapPercent.setValue(Integer.parseInt(FSettings.get("cappercent").toString()));
+        this.SymPercent.setValue(Integer.parseInt(FSettings.get("symbolcount").toString()));
+        this.TimoutDuration.setValue(Integer.parseInt(FSettings.get("timeoutlength").toString()));
 
         this.TimeoutLabel.setText(String.valueOf(this.TimoutDuration.getValue()) + " Minutes");
         this.CapsPercentDis.setText(String.valueOf(this.CapPercent.getValue()) + " Percent");

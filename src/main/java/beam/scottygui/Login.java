@@ -547,7 +547,7 @@ public class Login extends javax.swing.JFrame {
                     return false;
                 }
             }
-            CS.ChanID = Long.parseLong(chanObj.get("ChanID").toString());
+            CS.ChanID = Long.parseLong(chanObj.get("chanid").toString());
             return true;
         } catch (Exception e) {
 
