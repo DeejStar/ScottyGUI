@@ -72,7 +72,7 @@ public class HTTP {
                 //add request header
                 con.setRequestProperty("User-Agent", "ScottyBot");
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
+                new InputStreamReader(con.getInputStream()));
                 String inputLine;
                 StringBuilder response = new StringBuilder();
 
@@ -118,7 +118,7 @@ public class HTTP {
                     request.setEntity(new UrlEncodedFormEntity(urlParameters));
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
-                            new InputStreamReader(response.getEntity().getContent()));
+                    new InputStreamReader(response.getEntity().getContent()));
 
                     StringBuilder result = new StringBuilder();
                     String line = "";
@@ -186,7 +186,7 @@ public class HTTP {
                     request.setEntity(new UrlEncodedFormEntity(urlParameters));
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
-                            new InputStreamReader(response.getEntity().getContent()));
+                    new InputStreamReader(response.getEntity().getContent()));
 
                     StringBuilder result = new StringBuilder();
                     String line = "";
@@ -220,7 +220,7 @@ public class HTTP {
                     HttpGet request = new HttpGet(URL);
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
-                            new InputStreamReader(response.getEntity().getContent()));
+                    new InputStreamReader(response.getEntity().getContent()));
 
                     StringBuilder result = new StringBuilder();
                     String line = "";
@@ -253,7 +253,7 @@ public class HTTP {
                     HttpGet request = new HttpGet(URL);
                     HttpResponse response = client.execute(request, context);
                     BufferedReader rd = new BufferedReader(
-                            new InputStreamReader(response.getEntity().getContent()));
+                    new InputStreamReader(response.getEntity().getContent()));
 
                     StringBuilder result = new StringBuilder();
                     String line = "";
@@ -295,7 +295,7 @@ public class HTTP {
 //	System.out.println("Response Code : "
 //                + response.getStatusLine().getStatusCode());
             BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
+            new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
             String line = "";
@@ -359,7 +359,7 @@ public class HTTP {
 //	System.out.println("Response Code : "
 //                + response.getStatusLine().getStatusCode());
             BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
+            new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
             String line = "";
@@ -399,7 +399,7 @@ public class HTTP {
             HttpGet request = new HttpGet(url);
             HttpResponse response = client.execute(request, context);
             BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
+            new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
             String line = "";
@@ -422,7 +422,7 @@ public class HTTP {
             Random myRandomizer = new Random();
             String EndPoint = EndPoints.get(myRandomizer.nextInt(EndPoints.size()));
             CS.setEndPoint(EndPoint);
-            //System.out.println(dataIn);
+            System.out.println("GETAUTH >  " + dataIn);
         }
     }
     JSONParser parser = new JSONParser();
@@ -442,7 +442,7 @@ public class HTTP {
                 URLConnection conn = url.openConnection();
                 conn.setRequestProperty("User-Agent", "ScottyBot");
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                        conn.getInputStream()))) {
+                conn.getInputStream()))) {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         dataIn += inputLine;

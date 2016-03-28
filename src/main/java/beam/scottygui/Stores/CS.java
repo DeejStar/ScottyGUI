@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -62,7 +61,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 92;
+    public static Integer CurVer = 93;
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -515,8 +514,6 @@ public class CS {
     }
 
     public static JSONObject GetSettings() {
-        Map<String, Object> settings = new TreeMap(String.CASE_INSENSITIVE_ORDER);
-
         return ChanSettings;
     }
 
