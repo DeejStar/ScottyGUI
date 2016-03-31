@@ -184,7 +184,7 @@ public class statuswindow extends javax.swing.JFrame {
         HTTP http = new HTTP();
         String newtitle = this.StreamTitle.getText();
         if (newtitle != null) {
-            Map<String, String> toSend = new HashMap();
+            Map<String, Object> toSend = new HashMap();
             toSend.put("name", newtitle);
             String newGame = gamelistbox.getSelectedItem().toString();
             Long ID = (Long) CS.GameListJSON.get(newGame);

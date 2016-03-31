@@ -235,7 +235,7 @@ public class AddEditCMD extends javax.swing.JFrame {
         //      } catch (UnsupportedEncodingException ex) {
         //         Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
         //    }
-        Map<String, String> toPut = new HashMap();
+        Map<String, Object> toPut = new HashMap();
         toPut.put("authkey", CS.AuthKey);
         toPut.put("cmd", cmd.getText().trim());
         toPut.put("text", output.getText().trim());
@@ -279,10 +279,10 @@ public class AddEditCMD extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String Variables = "(_user_) -- Is replaced by the person who ran the command!\n"
-                + "(_target_) -- Is replaced by the first word after the command. Ex: !hello pocketpac -- \"Hello pocketpac\"\n"
-                + "(_status_) -- is replaced by the current stream name.\n"
-                + "(_parameter_) -- Accepts all messages after the command. Ex: !hello everyone in the channel -- \"Hello everyone in the channel\"\n"
-                + "(_cmdcount_) -- Pull how many times that command has been ran. Only resets to 0 when a command is removed!";
+        + "(_target_) -- Is replaced by the first word after the command. Ex: !hello pocketpac -- \"Hello pocketpac\"\n"
+        + "(_status_) -- is replaced by the current stream name.\n"
+        + "(_parameter_) -- Accepts all messages after the command. Ex: !hello everyone in the channel -- \"Hello everyone in the channel\"\n"
+        + "(_cmdcount_) -- Pull how many times that command has been ran. Only resets to 0 when a command is removed!";
         JOptionPane.showMessageDialog(rootPane, Variables, "Variable Help", 0, null);
     }//GEN-LAST:event_jButton3ActionPerformed
 

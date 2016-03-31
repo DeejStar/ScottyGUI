@@ -57,4 +57,7 @@ public class LiveLoad {
             //System.err.println("Interuppted");
         }
     }
+
+    private LiveLoad() {
+    }
 }

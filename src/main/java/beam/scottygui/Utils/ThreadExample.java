@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beam.scottygui.Stores;
+package beam.scottygui.Utils;
 
 /**
  *
@@ -20,5 +20,8 @@ public class ThreadExample {
             }
         }.start();
 
+    }
+
+    private ThreadExample() {
     }
 }

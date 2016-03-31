@@ -65,7 +65,7 @@
             <properties>
                 <exec.args>-classpath %classpath ${packageClassName}</exec.args>
                 <exec.executable>java</exec.executable>
-                <Env.JAVA_HOME>C:\Program Files\Java\jdk1.7.0_79</Env.JAVA_HOME>
+                
                 <skipTests>true</skipTests>
             </properties>
         </action>

@@ -8,7 +8,7 @@ package beam.scottygui.ChatHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.ChatCache;
-import static beam.scottygui.Stores.CS.UserName;
+import static beam.scottygui.Stores.CS.Username;
 import static beam.scottygui.Stores.CS.chatArray;
 import static beam.scottygui.Stores.CS.chatObject;
 import static beam.scottygui.Stores.CS.cp;
@@ -172,7 +172,7 @@ public class ChatFormatter {
         String[] SplitMSG = MSG.split(" ");
         boolean WooshMe = false;
         for (String t : SplitMSG) {
-            if (t.toUpperCase().contains("@" + UserName.toUpperCase())) {
+            if (t.toUpperCase().contains("@" + Username.toUpperCase())) {
                 WooshMe = true;
             }
         }
@@ -250,5 +250,8 @@ public class ChatFormatter {
 
         CS.cp.ChatOutput.setCaretPosition(CS.cp.ChatOutput.getDocument().getLength());
         CS.extchat.ExtChatOutput.setCaretPosition(CS.extchat.ExtChatOutput.getDocument().getLength());
+    }
+
+    private ChatFormatter() {
     }
 }

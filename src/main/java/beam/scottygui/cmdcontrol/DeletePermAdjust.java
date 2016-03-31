@@ -319,13 +319,13 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void PostSRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PostSRActionPerformed
-        Map<String, String> toPost = new HashMap();
+        Map<String, Object> toPost = new HashMap();
         toPost.put("authkey", AuthKey);
         toPost.put("cmd", CMDList.getSelectedItem().toString());
         toPost.put("srlevel", String.valueOf(SR.getSelectedIndex()));
         try {
             http.post(toPost, CS.apiLoc + "/commands/changesr");
-        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(rootPane, "Issue talking to API, please try again later.");
         }
     }//GEN-LAST:event_PostSRActionPerformed

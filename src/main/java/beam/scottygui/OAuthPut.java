@@ -280,7 +280,7 @@ public class OAuthPut extends javax.swing.JFrame {
                 JSONObject code = new JSONObject();
                 code.putAll((JSONObject) JSONValue.parse(response));
                 String OAcode = (String) code.get("code");
-                Map<String, String> toPut = new HashMap();
+                Map<String, Object> toPut = new HashMap();
                 toPut.put("authkey", CS.AuthKey);
                 toPut.put("code", OAcode);
                 String blah = http.put(toPut, CS.apiLoc + "/setoauthbotname");

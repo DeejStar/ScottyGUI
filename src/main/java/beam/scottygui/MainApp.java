@@ -1,11 +1,14 @@
 package beam.scottygui;
 
+import static beam.scottygui.APIServ.RestServ.createHttpServer;
+import beam.scottygui.OAuth.OAuthHandler;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.GUILoadSettings;
 import static beam.scottygui.Stores.CS.extchat;
 import beam.scottygui.websocket.LiveLoad;
 import beam.scottygui.websocket.WebSocket;
 import com.google.common.io.Files;
+import com.sun.net.httpserver.HttpServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,15 +22,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 public class MainApp {
 
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
+
         if (args.length > 0) {
             try {
                 Thread.sleep(3000);
@@ -81,7 +77,6 @@ public class MainApp {
 
             }
         }
-
         PrintStream Errorout = null;
         try {
             Errorout = new PrintStream(new FileOutputStream("ErrorLog.Log", false));
@@ -104,7 +99,9 @@ public class MainApp {
                 // not worth my time
             }
         }
+
         GUILoadSettings();
+
         Login login = new Login();
         login.setVisible(true);
         new Thread("PutTheadName") {
@@ -127,15 +124,31 @@ public class MainApp {
                         }
                     } catch (Exception e) {
 
-                    }
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        OAuthHandler.RefreshToken();
                     }
                 }
             }
         }.start();
+        new Thread("Rest API Thread") {
+            @Override
+            public void run() {
+                System.out.println("Starting Crunchify's Embedded Jersey HTTPServer...");
+                try {
+                    HttpServer crunchifyHTTPServer = createHttpServer();
+                    crunchifyHTTPServer.start();
+                    System.out.println("Started Crunchify's Embedded Jersey HTTPServer Successfully !!!");
+                } catch (Exception ex) {
+                    Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }.start();
+
     }
 
 }

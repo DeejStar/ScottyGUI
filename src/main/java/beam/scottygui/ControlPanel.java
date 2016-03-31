@@ -2401,7 +2401,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
-        Map<String, String> toPut = new HashMap();
+        Map<String, Object> toPut = new HashMap();
         toPut.put("authkey", CS.AuthKey);
         JSONObject obj = new JSONObject();
         try {
@@ -2930,7 +2930,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void setEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setEmailActionPerformed
         try {
-            Map<String, String> toSend = new HashMap();
+            Map<String, Object> toSend = new HashMap();
             String email = JOptionPane.showInputDialog("Please provide your email address.");
             toSend.put("authkey", CS.AuthKey);
             toSend.put("email", email);
@@ -2948,7 +2948,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void resendEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resendEmailActionPerformed
         try {
-            Map<String, String> toSend = new HashMap();
+            Map<String, Object> toSend = new HashMap();
             toSend.put("authkey", CS.AuthKey);
             String response = http.post(toSend, CS.apiLoc + "/resendemail");
             JSONObject obj = (JSONObject) parser.parse(response);
@@ -2957,7 +2957,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(StreamSet, obj.get("sent").toString());
             }
-        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_resendEmailActionPerformed
@@ -3252,11 +3252,11 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_ChatSendActionPerformed
 
     private void settingsTabsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_settingsTabsKeyReleased
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_settingsTabsKeyReleased
 
     private void settingsTabsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseClicked
-
+        StoredAuthKey.setText("");
     }//GEN-LAST:event_settingsTabsMouseClicked
 
     private void settingsTabsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseReleased
@@ -3288,7 +3288,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             counted++;
         }
-        Map<String, String> toPut = new HashMap();
+        Map<String, Object> toPut = new HashMap();
         toPut.put("jsonranks", toSave.toJSONString());
         toPut.put("authkey", CS.AuthKey);
         try {

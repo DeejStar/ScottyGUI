@@ -61,7 +61,9 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 93;
+    public static Integer CurVer = 94;
+    public static String ClientIDOauth = "31125c6e0139d0e09f2ae76348c00e9ce559d1bf894fcc06";
+    public static String OAtokenAPI = "https://beam.pro/api/v1/oauth/token";
     public static String apiLoc = "https://api.scottybot.net/api";
     //public static String apiLoc = "http://localhost:8080";
     public static Integer FolCount = 0;
@@ -78,7 +80,7 @@ public class CS {
     public static String Cookie = null;
     public static Endpoint endpoint = new EndPoint();
     public static Long UserID = null;
-    public static String UserName = null;
+    public static String Username = null;
     public static List<String> UniqueChatters = new ArrayList();
     public static Long TopViewers = 0L;
     public static Integer Joined = 0;
@@ -94,8 +96,8 @@ public class CS {
     public static SortedListModel ChatUserList = new SortedListModel();
     public static ComboBoxModel GameList = null;
     public static Integer LastCount = null;
-    public static String Username = "";
-    public static String Password = "";
+    //public static String Username = "";
+    //public static String Password = "";
     public static ExecutorService WorkerThreads = Executors.newFixedThreadPool(50);
     public static CookieStore cookie = null;
     public static String EndPoints = "";
@@ -390,7 +392,6 @@ public class CS {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CS.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         try {
             PrintWriter out = new PrintWriter("Last_Follower.txt");
             out.print(Username);
@@ -436,7 +437,6 @@ public class CS {
 
     public static String GUIGetSetting(String Setting) {
         return GUISettings.get(Setting).toString();
-
     }
 
     public static void GUILoadSettings() {
@@ -444,7 +444,6 @@ public class CS {
         if (!propertiesFile.exists()) {
             WritePropertiesFile.Write();
         }
-
         try {
             prop.load(new FileInputStream("config.properties"));
         } catch (IOException ex) {
@@ -575,5 +574,8 @@ public class CS {
         body.put("arguments", auth);
         body.put("id", "1");
         return body;
+    }
+
+    private CS() {
     }
 }

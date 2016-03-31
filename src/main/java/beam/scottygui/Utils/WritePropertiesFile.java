@@ -29,4 +29,7 @@ public class WritePropertiesFile {
         }
 
     }
+
+    private WritePropertiesFile() {
+    }
 }
