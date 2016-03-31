@@ -49,7 +49,7 @@ public class LiveLoad {
             Connectable.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
             //CentralStore.setReconnectCount(chanid, 0);
-            URI EndPoint = new URI("wss://beam.pro/socket.io/?__sails_io_sdk_version=0.11.0&__sails_io_sdk_platform=node&__sails_io_sdk_language=javascript&EIO=3&transport=websocket");
+            URI EndPoint = new URI("wss://realtime.beam.pro/socket.io/?EIO=3&transport=websocket");
             llEndPoint endpoint = new llEndPoint();
             endpoint.ChanID = ChanID;
             Connectable.asyncConnectToServer(endpoint, cec, EndPoint);
