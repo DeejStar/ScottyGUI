@@ -184,14 +184,13 @@ public class statuswindow extends javax.swing.JFrame {
         HTTP http = new HTTP();
         String newtitle = this.StreamTitle.getText();
         if (newtitle != null) {
-            Map<String, Object> toSend = new HashMap();
+            Map<String, String> toSend = new HashMap();
             toSend.put("name", newtitle);
             String newGame = gamelistbox.getSelectedItem().toString();
             Long ID = (Long) CS.GameListJSON.get(newGame);
             JSONArray IDs = new JSONArray();
             IDs.add(ID);
             toSend.put("typeId", ID.toString());
-            System.err.println(toSend);
             try {
                 http.put(toSend, "https://beam.pro/api/v1/channels/" + CS.ChanID);
                 this.setVisible(false);

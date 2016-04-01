@@ -319,7 +319,7 @@ public final class DeletePermAdjust extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void PostSRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PostSRActionPerformed
-        Map<String, Object> toPost = new HashMap();
+        Map<String, String> toPost = new HashMap();
         toPost.put("authkey", AuthKey);
         toPost.put("cmd", CMDList.getSelectedItem().toString());
         toPost.put("srlevel", String.valueOf(SR.getSelectedIndex()));

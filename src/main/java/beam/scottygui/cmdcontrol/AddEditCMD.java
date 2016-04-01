@@ -235,7 +235,7 @@ public class AddEditCMD extends javax.swing.JFrame {
         //      } catch (UnsupportedEncodingException ex) {
         //         Logger.getLogger(AddEditCMD.class.getName()).log(Level.SEVERE, null, ex);
         //    }
-        Map<String, Object> toPut = new HashMap();
+        Map<String, String> toPut = new HashMap();
         toPut.put("authkey", CS.AuthKey);
         toPut.put("cmd", cmd.getText().trim());
         toPut.put("text", output.getText().trim());

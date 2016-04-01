@@ -132,7 +132,7 @@ public class HTTP {
         }
     }
 
-    public String put(Map<String, Object> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+    public String Beamput(Map<String, Object> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
         int tried = 0;
         String toSend = "";
         while (tried < 5) {
@@ -145,6 +145,44 @@ public class HTTP {
                     request.addHeader("Authorization", "Bearer " + OAuthHandler.GetAToken());
                     HttpEntity ent = new ByteArrayEntity(toPut.toJSONString().getBytes("UTF-8"));
                     request.setEntity(ent);
+                    HttpResponse response = client.execute(request);
+                    BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    //System.err.println(result.toString());
+                    toSend = result.toString();
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+        return toSend;
+    }
+
+    public String put(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException, SQLException {
+        int tried = 0;
+        String toSend = "";
+        while (tried < 5) {
+            tried++;
+            try {
+                System.err.println(url);
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    JSONObject toPut = new JSONObject(object);
+                    HttpPut request = new HttpPut(url);
+                    List<NameValuePair> postpair = new ArrayList();
+                    for (Map.Entry<String, String> T : object.entrySet()) {
+                        postpair.add((new BasicNameValuePair(T.getKey(), T.getValue())));
+                    }
+                    request.setEntity(new UrlEncodedFormEntity(postpair, "UTF-8"));
                     HttpResponse response = client.execute(request);
                     BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));
@@ -256,7 +294,7 @@ public class HTTP {
         return toSend;
     }
 
-    public String post(Map<String, Object> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException {
+    public String BeamPost(Map<String, Object> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException {
         int tried = 0;
         String toSend = "";
         while (tried < 5) {
@@ -270,6 +308,45 @@ public class HTTP {
                     HttpEntity ent = new ByteArrayEntity(toPost.toJSONString().getBytes("UTF-8"));
                     request.setEntity(ent);
                     request.addHeader("Authorization", "Bearer " + OAuthHandler.GetAToken());
+                    HttpResponse response = client.execute(request);
+                    BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+                    StringBuilder result = new StringBuilder();
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        result.append(line);
+                    }
+                    //System.err.println(result.toString());
+                    toSend = result.toString();
+                }
+                break;
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                //this.Login(ChanID);
+                Thread.sleep(1000);
+            }
+
+        }
+        return toSend;
+    }
+
+    public String post(Map<String, String> object, String url) throws IOException, ParseException, InterruptedException, UnsupportedEncodingException, ProtocolException, MalformedURLException, ClassNotFoundException {
+        int tried = 0;
+        String toSend = "";
+        while (tried < 5) {
+            tried++;
+            try {
+
+                System.err.println(url);
+                try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+                    JSONObject toPost = new JSONObject(object);
+                    HttpPost request = new HttpPost(url);
+                    List<NameValuePair> postpair = new ArrayList();
+                    for (Map.Entry<String, String> T : object.entrySet()) {
+                        postpair.add((new BasicNameValuePair(T.getKey(), T.getValue())));
+                    }
+                    request.setEntity(new UrlEncodedFormEntity(postpair, "UTF-8"));
                     HttpResponse response = client.execute(request);
                     BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));

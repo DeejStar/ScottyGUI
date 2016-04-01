@@ -175,7 +175,7 @@ public class OAuthHandler {
         pars.put("refresh_token", Refresh);
         //pars.put("redirect_uri", "https://scottybot.net");
         pars.put("client_id", CS.ClientIDOauth);
-        String tokeninfo = new HTTP().post(pars, CS.OAtokenAPI);
+        String tokeninfo = new HTTP().BeamPost(pars, CS.OAtokenAPI);
         //System.err.println(tokeninfo);
         obj.clear();
         try {

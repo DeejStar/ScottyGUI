@@ -2401,7 +2401,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
-        Map<String, Object> toPut = new HashMap();
+        Map<String, String> toPut = new HashMap();
         toPut.put("authkey", CS.AuthKey);
         JSONObject obj = new JSONObject();
         try {
@@ -2930,7 +2930,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void setEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setEmailActionPerformed
         try {
-            Map<String, Object> toSend = new HashMap();
+            Map<String, String> toSend = new HashMap();
             String email = JOptionPane.showInputDialog("Please provide your email address.");
             toSend.put("authkey", CS.AuthKey);
             toSend.put("email", email);
@@ -2948,7 +2948,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void resendEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resendEmailActionPerformed
         try {
-            Map<String, Object> toSend = new HashMap();
+            Map<String, String> toSend = new HashMap();
             toSend.put("authkey", CS.AuthKey);
             String response = http.post(toSend, CS.apiLoc + "/resendemail");
             JSONObject obj = (JSONObject) parser.parse(response);
@@ -3288,7 +3288,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             counted++;
         }
-        Map<String, Object> toPut = new HashMap();
+        Map<String, String> toPut = new HashMap();
         toPut.put("jsonranks", toSave.toJSONString());
         toPut.put("authkey", CS.AuthKey);
         try {
