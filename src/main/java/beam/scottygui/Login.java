@@ -288,21 +288,27 @@ public class Login extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, "A browser will now open to take you to Beam to approve this connection.");
         if (Desktop.isDesktopSupported()) {
             try {
-                Desktop.getDesktop().browse(new URI("https://beam.pro/oauth/authorize?response_type=code&redirect_uri=" + URLEncoder.encode("http://localhost:9090/oauthjoin", "UTF-8") + "&scope=" + URLEncoder.encode("user:details:self user:update:self channel:details:self channel:follow:self channel:update:self chat:bypass_links chat:bypass_slowchat chat:chat chat:clear_messages chat:connect chat:edit_options chat:giveaway_start chat:remove_message", "UTF-8") + "&client_id=" + CS.ClientIDOauth));
+                Desktop.getDesktop().browse(new URI("https://beam.pro/oauth/authorize?response_type=code&redirect_uri=" + URLEncoder.encode("http://localhost:9090/oauthjoin", "UTF-8") + "&scope=" + URLEncoder.encode("user:details:self channel:details:self channel:follow:self channel:update:self chat:bypass_links chat:bypass_slowchat chat:chat chat:clear_messages chat:connect chat:edit_options chat:giveaway_start chat:remove_message", "UTF-8") + "&client_id=" + CS.ClientIDOauth));
             } catch (IOException | URISyntaxException ex) {
                 Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        while (CS.Username == null) {
-            try {
-                sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        new Thread("PutTheadName") {
+            @Override
+            public void run() {
+                while (CS.Username == null) {
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                setOauth.setText("Welcome " + CS.Username);
+                setOauth.setEnabled(false);
+                gotopanel.setEnabled(true);
             }
-        }
-        setOauth.setText("Welcome " + CS.Username);
-        setOauth.setEnabled(false);
-        this.gotopanel.setEnabled(true);
+        }.start();
+
     }//GEN-LAST:event_setOauthActionPerformed
 
     private void gotopanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotopanelActionPerformed

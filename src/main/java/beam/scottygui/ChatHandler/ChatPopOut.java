@@ -5,16 +5,13 @@
  */
 package beam.scottygui.ChatHandler;
 
-import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.ChatUserList;
 import static beam.scottygui.Stores.CS.SendMSG;
-import static beam.scottygui.Stores.CS.session;
+import beam.scottygui.WhisperPanel;
 import beam.scottygui.chanstatus.statuswindow;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import org.json.simple.JSONObject;
 
@@ -202,11 +199,7 @@ public class ChatPopOut extends javax.swing.JFrame {
 
     private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
         if (evt.getClickCount() == 2) {
-            try {
-                session.getBasicRemote().sendText(CS.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            WhisperPanel.showPanel(Viewers.getSelectedValue().toString());
         }
     }//GEN-LAST:event_ViewersMouseClicked
 
@@ -284,7 +277,7 @@ public class ChatPopOut extends javax.swing.JFrame {
     private javax.swing.JTextField ChatSend;
     public javax.swing.JTextPane ExtChatOutput;
     public static javax.swing.JButton StreamSet;
-    public javax.swing.JList Viewers;
+    public static javax.swing.JList Viewers;
     private javax.swing.JToggleButton YouBot;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;

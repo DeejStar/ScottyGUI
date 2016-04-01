@@ -6,17 +6,19 @@
 package beam.scottygui.websocket;
 
 import beam.scottygui.ChatHandler.ChatFormatter;
+import beam.scottygui.ChatHandler.ChatPopOut;
+import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.BeamAuthKey;
 import static beam.scottygui.Stores.CS.ChanID;
 import static beam.scottygui.Stores.CS.ChatCache;
-import static beam.scottygui.Stores.CS.ChatUserList;
 import static beam.scottygui.Stores.CS.MsgCounter;
 import static beam.scottygui.Stores.CS.UniqueChatters;
 import static beam.scottygui.Stores.CS.chatArray;
 import static beam.scottygui.Stores.CS.chatObject;
 import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.JSONUtil;
+import beam.scottygui.Utils.SortedListModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +59,20 @@ public class EndPoint extends Endpoint {
             break;
         }
 
-        List<String> userList = new ArrayList();
+        SortedListModel InitList = (SortedListModel) ControlPanel.Viewers.getModel();
+        SortedListModel InitList2 = (SortedListModel) ChatPopOut.Viewers.getModel();
+        List<String> LeavingList = new ArrayList();
         try {
-            userList.addAll(new JSONUtil().GetUserList(ChanID));
+            LeavingList.addAll(new JSONUtil().GetUserList(ChanID));
         } catch (InterruptedException ex) {
             Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ChatUserList.clear();
-        ChatUserList.addAll(userList.toArray());
-
+        InitList.clear();
+        InitList.addAll(LeavingList.toArray());
+        InitList2.clear();
+        InitList2.addAll(LeavingList.toArray());
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
             public void onMessage(String message) {
@@ -91,34 +96,48 @@ public class EndPoint extends Endpoint {
                         JSONObject ChatMessage = (JSONObject) msg.get("data");
                         cp.SessionMsgCount.setText(MsgCounter.toString() + " messages this session.");
                         String userid = ChatMessage.get("user_id").toString();
-                        String username = ChatMessage.get("user_name").toString();
-
-                        if (!ChatUserList.contains(username)) {
-                            ChatUserList.add(username);
-
-                        }
                         if (!UniqueChatters.contains(userid)) {
                             UniqueChatters.add(userid);
                             cp.UChatters.setText(UniqueChatters.size() + " Unique Chatters This Session.");
                         }
-
                         ChatFormatter.FormatChat(ChatMessage);
                         break;
                     case "USERJOIN":
                         data = (JSONObject) msg.get("data");
-                        username = data.get("username").toString();
-                        //System.out.println(username + " joined the channel.");
-                        if (!ChatUserList.contains(username)) {
-                            ChatUserList.add(username);
+                        String JoiningName = data.get("username").toString();
+                        System.out.println(JoiningName + " joined the channel.");
+                        SortedListModel Joining = (SortedListModel) ControlPanel.Viewers.getModel();
+                        SortedListModel Joining2 = (SortedListModel) ChatPopOut.Viewers.getModel();
+                        List<String> userList = new ArrayList();
+                        try {
+                            userList.addAll(new JSONUtil().GetUserList(ChanID));
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        break;
+                        Joining.clear();
+                        Joining.addAll(userList.toArray());
+                        Joining2.clear();
+                        Joining2.addAll(userList.toArray());
                     case "USERLEAVE":
                         data = (JSONObject) msg.get("data");
-                        username = data.get("username").toString();
-                        //System.out.println(username + " left the channel.");
-                        if (ChatUserList.contains(username)) {
-                            ChatUserList.removeElement(username);
+                        String LeavingName = data.get("username").toString();
+                        System.out.println(LeavingName + " left the channel.");
+                        SortedListModel Leaving = (SortedListModel) ControlPanel.Viewers.getModel();
+                        SortedListModel Leaving2 = (SortedListModel) ChatPopOut.Viewers.getModel();
+                        List<String> LeavingList = new ArrayList();
+                        try {
+                            LeavingList.addAll(new JSONUtil().GetUserList(ChanID));
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
+                            Logger.getLogger(EndPoint.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        Leaving.clear();
+                        Leaving.addAll(LeavingList.toArray());
+                        Leaving2.clear();
+                        Leaving2.addAll(LeavingList.toArray());
                         break;
                     case "DELETEMESSAGE":
                         data = (JSONObject) msg.get("data");

@@ -61,7 +61,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 95;
+    public static Integer CurVer = 97;
     public static String ClientIDOauth = "31125c6e0139d0e09f2ae76348c00e9ce559d1bf894fcc06";
     public static String OAtokenAPI = "https://beam.pro/api/v1/oauth/token";
     public static String apiLoc = "https://api.scottybot.net/api";
@@ -522,17 +522,28 @@ public class CS {
         //System.out.println(ChanSettings.toString());
     }
 
+    public static String fuseArray(String[] array, int start) {
+        String fused = "";
+        for (int c = start; c < array.length; c++) {
+            fused += array[c] + " ";
+        }
+        return fused.trim();
+    }
+
     public static String SendMSG(String message) {
-        if (message.startsWith("/whisper".toLowerCase())) {
+        if (message.toLowerCase().startsWith("/whisper") || message.toLowerCase().startsWith("/w")) {
             String[] split = message.split(" ");
             String User = split[1].replace("@", "");
-            message = message.replace("/whisper " + User + " ", "").trim();
-            Iterator Users = ChatUserList.iterator();
+            message = fuseArray(split, 2);
+            Iterator Users = ((SortedListModel) ControlPanel.Viewers.getModel()).iterator();
             boolean Match = false;
             while (Users.hasNext()) {
                 String toCheck = Users.next().toString();
+                System.out.println("Checking " + toCheck);
                 if (toCheck.equalsIgnoreCase(User)) {
                     Match = true;
+                    User = toCheck;
+                    System.out.println("Found " + User);
                     break;
                 }
             }
@@ -547,7 +558,6 @@ public class CS {
                 obj.put("id", "2");
                 return obj.toString();
             } else {
-
                 JOptionPane.showMessageDialog(extchat, "Unable to find user, check spelling.");
                 return "";
             }

@@ -13,6 +13,7 @@ import static beam.scottygui.Stores.CS.chatArray;
 import static beam.scottygui.Stores.CS.chatObject;
 import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.HTTP;
+import beam.scottygui.WhisperPanel;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -169,6 +170,7 @@ public class ChatFormatter {
         String html1 = "<html> <body bgcolor=\"black\">";
         String html2 = "</html>";
         String newline = "<br>";
+
         String[] SplitMSG = MSG.split(" ");
         boolean WooshMe = false;
         for (String t : SplitMSG) {
@@ -177,14 +179,15 @@ public class ChatFormatter {
             }
         }
         String chatPrep = "";
-        if (WooshMe) {
+        if (WooshMe || Whisper) {
             if (cp.WooshMeEnabled.isSelected()) {
+                System.out.println("WOOSHED");
                 new Thread("Sound Alert!") {
                     @Override
                     public void run() {
                         try {
-                            try (InputStream fis = getClass().getResourceAsStream("assets/Woosh.mp3")) {
-                                Player playMP3 = playMP3 = new Player(fis);
+                            try (InputStream fis = getClass().getResourceAsStream("/assets/Woosh.mp3")) {
+                                Player playMP3 = new Player(fis);
                                 playMP3.play();
                                 playMP3.close();
                             }
@@ -247,9 +250,27 @@ public class ChatFormatter {
         ////System.err.println(ChatCache);
         CS.cp.ChatOutput.setText(html1 + ChatCache + html2);
         CS.extchat.ExtChatOutput.setText(html1 + ChatCache + html2);
-
         CS.cp.ChatOutput.setCaretPosition(CS.cp.ChatOutput.getDocument().getLength());
         CS.extchat.ExtChatOutput.setCaretPosition(CS.extchat.ExtChatOutput.getDocument().getLength());
+        if (Whisper) {
+            String WMSG = "";
+            for (Object t : msgdata) {
+                JSONObject obj = (JSONObject) t;
+                //System.out.println(obj.toString());
+                String type = obj.get("type").toString();
+                if ("TEXT".equals(type.toUpperCase())) {
+                    WMSG = WMSG + " " + StringEscapeUtils.escapeHtml(obj.get("data").toString());
+                } else {
+                    String URLLink = obj.get("text").toString();
+                    WMSG = WMSG + " " + URLLink;
+                }
+            }
+            String WUser = msg.get("user_name").toString();
+            WhisperPanel WP = WhisperPanel.getPanel(WUser);
+
+            WP.AddMessage(WUser, WMSG);
+            System.out.println("Whisper from " + WUser + " : " + WMSG.trim());
+        }
     }
 
     private ChatFormatter() {

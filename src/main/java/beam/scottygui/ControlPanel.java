@@ -21,7 +21,6 @@ import static beam.scottygui.Stores.CS.chatObject;
 import static beam.scottygui.Stores.CS.extchat;
 import static beam.scottygui.Stores.CS.llSocket;
 import static beam.scottygui.Stores.CS.newline;
-import static beam.scottygui.Stores.CS.session;
 import beam.scottygui.TwitterInfo.TwitterAuthInfo;
 import beam.scottygui.Utils.FontChooser;
 import beam.scottygui.Utils.HTTP;
@@ -1004,11 +1003,11 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
         settingsTabs.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                settingsTabsMouseReleased(evt);
-            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 settingsTabsMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                settingsTabsMouseReleased(evt);
             }
         });
         settingsTabs.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1931,7 +1930,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
         jScrollPane6.setViewportView(Viewers);
 
-        jLabel14.setText("Double click to purge");
+        jLabel14.setText("Double click Whisper");
 
         YouBot.setText("You");
         YouBot.setToolTipText("Switch between chatting as you or the bot.");
@@ -1955,8 +1954,10 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(YouBot)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
@@ -1966,10 +1967,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addComponent(jScrollPane6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)
-                    .addComponent(YouBot))
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ChatSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(YouBot))
+                    .addComponent(jLabel14))
                 .addGap(0, 446, Short.MAX_VALUE))
         );
 
@@ -1979,7 +1981,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 5, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3223,11 +3225,7 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     private void ViewersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ViewersMouseClicked
         if (evt.getClickCount() == 2) {
-            try {
-                session.getBasicRemote().sendText(CS.SendMSG("+p " + this.Viewers.getSelectedValue().toString()).trim());
-            } catch (IOException ex) {
-                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            WhisperPanel.showPanel(Viewers.getSelectedValue().toString());
         }
     }//GEN-LAST:event_ViewersMouseClicked
 
@@ -3929,7 +3927,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton TwitterAlertMSG;
     public javax.swing.JLabel UChatters;
     private javax.swing.JButton UndoRankChanges;
-    public javax.swing.JList Viewers;
+    public static javax.swing.JList Viewers;
     public javax.swing.JCheckBox WooshMeEnabled;
     private javax.swing.JCheckBox YodaEnabled;
     private javax.swing.JToggleButton YouBot;
