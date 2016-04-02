@@ -14,6 +14,7 @@ import static beam.scottygui.Stores.CS.ChanID;
 import static beam.scottygui.Stores.CS.ChatCache;
 import static beam.scottygui.Stores.CS.ChatUserList;
 import static beam.scottygui.Stores.CS.GUISaveSettings;
+import static beam.scottygui.Stores.CS.GUISettings;
 import static beam.scottygui.Stores.CS.GetSettings;
 import static beam.scottygui.Stores.CS.SendMSG;
 import static beam.scottygui.Stores.CS.chatArray;
@@ -2697,7 +2698,19 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_SetFollowAlertMsgActionPerformed
 
     private void FollowerMSGFontActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowerMSGFontActionPerformed
-        Font font = FontChooser.showDialog(this, "Font Chooser", new Font("Dialog", 0, 12));
+        String FontName = "Arial";
+        if (GUISettings.containsKey("FFontName")) {
+            FontName = GUISettings.get("FFontName").toString();
+        }
+        int FontSize = 64;
+        if (GUISettings.containsKey("FFontSize")) {
+            FontSize = Integer.parseInt(GUISettings.get("FFontSize").toString());
+        }
+        int FontStyle = 0;
+        if (GUISettings.containsKey("FFontStyle")) {
+            FontStyle = Integer.parseInt(GUISettings.get("FFontStyle").toString());
+        }
+        Font font = FontChooser.showDialog(this, "Font Chooser", new Font(FontName, FontStyle, FontSize));
         GUISaveSettings("FFontSize", String.valueOf(font.getSize()));
         GUISaveSettings("FFontName", font.getName());
         GUISaveSettings("FFontStyle", String.valueOf(font.getStyle()));
