@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -184,15 +183,13 @@ public class statuswindow extends javax.swing.JFrame {
         HTTP http = new HTTP();
         String newtitle = this.StreamTitle.getText();
         if (newtitle != null) {
-            Map<String, String> toSend = new HashMap();
+            Map<String, Object> toSend = new HashMap();
             toSend.put("name", newtitle);
             String newGame = gamelistbox.getSelectedItem().toString();
             Long ID = (Long) CS.GameListJSON.get(newGame);
-            JSONArray IDs = new JSONArray();
-            IDs.add(ID);
-            toSend.put("typeId", ID.toString());
+            toSend.put("typeId", ID);
             try {
-                http.put(toSend, "https://beam.pro/api/v1/channels/" + CS.ChanID);
+                http.Beamput(toSend, "https://beam.pro/api/v1/channels/" + CS.ChanID);
                 this.setVisible(false);
                 this.dispose();
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {

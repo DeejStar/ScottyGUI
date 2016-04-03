@@ -5,9 +5,20 @@
  */
 package beam.scottygui.APIServ;
 
+import beam.scottygui.Alerts.AlertFrame;
+import beam.scottygui.Stores.CS;
+import static beam.scottygui.Stores.CS.GUISettings;
+import static beam.scottygui.Stores.CS.playMP3;
 import java.awt.Color;
+import java.io.FileInputStream;
+import static java.lang.Thread.sleep;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import static java.lang.Thread.sleep;
 
 /**
  *
@@ -17,7 +28,39 @@ public class FSHandler {
 
     static List<String> followed = new CopyOnWriteArrayList();
 
-    public static boolean QueuedFollowers() {
+    public static void FolSndStart() {
+        new Thread("Sound Alert!") {
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(GUISettings.get("FollowSound").toString());
+                } catch (Exception ex) {
+                    //Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                try {
+                    if (GUISettings.containsKey("FollowSound")) {
+                        playMP3 = new Player(fis);
+                    } else {
+                        playMP3 = new Player(this.getClass().getResourceAsStream("/assets/gir_follow.mp3"));
+                    }
+                    playMP3.play();
+                } catch (JavaLayerException ex) {
+                    Logger.getLogger(AlertFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }.start();
+    }
+
+    public synchronized static boolean QueuedFollowers() {
+        try {
+            while (!CS.playMP3.isComplete()) {
+                sleep(100);
+            }
+        } catch (Exception e) {
+
+        }
         return !followed.isEmpty();
     }
 

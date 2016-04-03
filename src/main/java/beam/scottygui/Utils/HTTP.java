@@ -138,7 +138,7 @@ public class HTTP {
         while (tried < 5) {
             tried++;
             try {
-                System.err.println(url);
+                System.out.println(url + " : " + object);
                 try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
                     JSONObject toPut = new JSONObject(object);
                     HttpPut request = new HttpPut(url);

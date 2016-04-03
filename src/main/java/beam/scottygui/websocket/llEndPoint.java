@@ -5,6 +5,7 @@
  */
 package beam.scottygui.websocket;
 
+import beam.scottygui.APIServ.FSHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
@@ -159,6 +160,7 @@ public class llEndPoint extends Endpoint {
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
                         CS.FolCount++;
+                        FSHandler.addFollower(followerName);
                         ControlPanel.FolCounter.setText(CS.FolCount + " followers this session.");
                     } else if (!followCache.contains(followerID)) {
                         followCache.add(followerID);

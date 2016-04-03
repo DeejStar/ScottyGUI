@@ -5,6 +5,7 @@
  */
 package beam.scottygui;
 
+import beam.scottygui.APIServ.FSHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.Stores.CS;
@@ -383,7 +384,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         RemoveBadWord = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        settingsTabs = new javax.swing.JTabbedPane();
+        AlertSettings = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         PSettings = new javax.swing.JPanel();
         PEnabled = new javax.swing.JCheckBox();
@@ -406,14 +407,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         PPM = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         SettingsPanel = new javax.swing.JPanel();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        FollowSoundSet = new javax.swing.JButton();
-        FollowIMGSet = new javax.swing.JButton();
-        jLabel15 = new javax.swing.JLabel();
-        SetFollowAlertMsg = new javax.swing.JButton();
-        FollowerMSGFont = new javax.swing.JButton();
-        SetFontColor = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         WooshMeEnabled = new javax.swing.JCheckBox();
@@ -462,6 +455,17 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jPanel19 = new javax.swing.JPanel();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        FollowSoundSet = new javax.swing.JButton();
+        FollowIMGSet = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        SetFollowAlertMsg = new javax.swing.JButton();
+        FollowerMSGFont = new javax.swing.JButton();
+        SetFontColor = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        FolAlrtTest = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -997,23 +1001,23 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         YouTube.addTab("Filtering", jPanel3);
 
-        settingsTabs.setToolTipText("");
-        settingsTabs.addFocusListener(new java.awt.event.FocusAdapter() {
+        AlertSettings.setToolTipText("");
+        AlertSettings.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                settingsTabsFocusGained(evt);
+                AlertSettingsFocusGained(evt);
             }
         });
-        settingsTabs.addMouseListener(new java.awt.event.MouseAdapter() {
+        AlertSettings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                settingsTabsMouseClicked(evt);
+                AlertSettingsMouseClicked(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                settingsTabsMouseReleased(evt);
+                AlertSettingsMouseReleased(evt);
             }
         });
-        settingsTabs.addKeyListener(new java.awt.event.KeyAdapter() {
+        AlertSettings.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                settingsTabsKeyReleased(evt);
+                AlertSettingsKeyReleased(evt);
             }
         });
 
@@ -1207,100 +1211,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        settingsTabs.addTab("Points", jPanel5);
-
-        jLayeredPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        FollowSoundSet.setText("Set Follower Sound");
-        FollowSoundSet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FollowSoundSetActionPerformed(evt);
-            }
-        });
-
-        FollowIMGSet.setText("Set Follower Image");
-        FollowIMGSet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FollowIMGSetActionPerformed(evt);
-            }
-        });
-
-        jLabel15.setText("Alert Pane Settings");
-
-        SetFollowAlertMsg.setText("Set Follower Message");
-        SetFollowAlertMsg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SetFollowAlertMsgActionPerformed(evt);
-            }
-        });
-
-        FollowerMSGFont.setText("Set Follower Font");
-        FollowerMSGFont.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FollowerMSGFontActionPerformed(evt);
-            }
-        });
-
-        SetFontColor.setText("Set Font Color");
-        SetFontColor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SetFontColorActionPerformed(evt);
-            }
-        });
-
-        jButton8.setText("Reset Alerts");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
-
-        jLayeredPane1.setLayer(FollowSoundSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(FollowIMGSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel15, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(SetFollowAlertMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(FollowerMSGFont, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(SetFontColor, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jButton8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
-        jLayeredPane1.setLayout(jLayeredPane1Layout);
-        jLayeredPane1Layout.setHorizontalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel15)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(FollowSoundSet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(FollowIMGSet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(SetFollowAlertMsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                            .addComponent(FollowerMSGFont, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(SetFontColor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        jLayeredPane1Layout.setVerticalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(jLabel15)
-                .addGap(5, 5, 5)
-                .addComponent(FollowSoundSet)
-                .addGap(5, 5, 5)
-                .addComponent(FollowIMGSet)
-                .addGap(5, 5, 5)
-                .addComponent(SetFollowAlertMsg)
-                .addGap(4, 4, 4)
-                .addComponent(FollowerMSGFont)
-                .addGap(4, 4, 4)
-                .addComponent(SetFontColor)
-                .addGap(4, 4, 4)
-                .addComponent(jButton8))
-        );
+        AlertSettings.addTab("Points", jPanel5);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -1575,8 +1486,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(232, 232, 232)
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, SettingsPanelLayout.createSequentialGroup()
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1622,40 +1532,37 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(34, 34, 34))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
-                                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(jLabel18))
-                                    .addComponent(RegOAuth))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(PNotes)
-                                    .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(CUsernamePassword)))
-                                .addGap(8, 8, 8)
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton5)
-                                    .addComponent(ShowStoredKey)
-                                    .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(GenNewStoredKey)
-                                        .addComponent(ResetScottyName))))))
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel18))
+                            .addComponent(RegOAuth))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PNotes)
+                            .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(CUsernamePassword)))
+                        .addGap(8, 8, 8)
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton5)
+                            .addComponent(ShowStoredKey)
+                            .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(GenNewStoredKey)
+                                .addComponent(ResetScottyName))))
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                         .addGap(209, 209, 209)
                         .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        settingsTabs.addTab("Settings", SettingsPanel);
+        AlertSettings.addTab("Settings", SettingsPanel);
 
         YodaEnabled.setText("Yoda Enabled");
         YodaEnabled.setToolTipText("Enable Scottybot to speak like Yoda, you will!");
@@ -1763,7 +1670,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addComponent(DonationPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        settingsTabs.addTab("Donator Stuff", DonatorPanel);
+        AlertSettings.addTab("Donator Stuff", DonatorPanel);
 
         CustRankTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1874,17 +1781,154 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        settingsTabs.addTab("Custom Ranks", jPanel18);
+        AlertSettings.addTab("Custom Ranks", jPanel18);
+
+        jLayeredPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        FollowSoundSet.setText("Set Follower Sound");
+        FollowSoundSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowSoundSetActionPerformed(evt);
+            }
+        });
+
+        FollowIMGSet.setText("Set Follower Image");
+        FollowIMGSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowIMGSetActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Follower Alert settings");
+
+        SetFollowAlertMsg.setText("Set Follower Message");
+        SetFollowAlertMsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SetFollowAlertMsgActionPerformed(evt);
+            }
+        });
+
+        FollowerMSGFont.setText("Set Follower Font");
+        FollowerMSGFont.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowerMSGFontActionPerformed(evt);
+            }
+        });
+
+        SetFontColor.setText("Set Font Color");
+        SetFontColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SetFontColorActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Reset Alerts");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        FolAlrtTest.setText("Test Follower Alert");
+        FolAlrtTest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FolAlrtTestActionPerformed(evt);
+            }
+        });
+
+        jButton12.setText("Click for Instructions");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
+        jLayeredPane1.setLayer(FollowSoundSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(FollowIMGSet, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel15, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(SetFollowAlertMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(FollowerMSGFont, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(SetFontColor, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jButton8, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(FolAlrtTest, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jButton12, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FollowSoundSet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FollowIMGSet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SetFollowAlertMsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                            .addComponent(FollowerMSGFont, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SetFontColor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(FolAlrtTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jLabel15)
+                .addGap(5, 5, 5)
+                .addComponent(FollowSoundSet)
+                .addGap(5, 5, 5)
+                .addComponent(FollowIMGSet)
+                .addGap(5, 5, 5)
+                .addComponent(SetFollowAlertMsg)
+                .addGap(4, 4, 4)
+                .addComponent(FollowerMSGFont)
+                .addGap(4, 4, 4)
+                .addComponent(SetFontColor)
+                .addGap(4, 4, 4)
+                .addComponent(jButton8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(FolAlrtTest)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton12)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
+        jPanel19.setLayout(jPanel19Layout);
+        jPanel19Layout.setHorizontalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel19Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(773, Short.MAX_VALUE))
+        );
+        jPanel19Layout.setVerticalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel19Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(232, Short.MAX_VALUE))
+        );
+
+        AlertSettings.addTab("Alert Settings", jPanel19);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(settingsTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 1047, Short.MAX_VALUE)
+            .addComponent(AlertSettings)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(settingsTabs)
+            .addComponent(AlertSettings)
         );
 
         YouTube.addTab("Settings", jPanel4);
@@ -3262,17 +3306,17 @@ public final class ControlPanel extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ChatSendActionPerformed
 
-    private void settingsTabsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_settingsTabsKeyReleased
+    private void AlertSettingsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AlertSettingsKeyReleased
 
-    }//GEN-LAST:event_settingsTabsKeyReleased
+    }//GEN-LAST:event_AlertSettingsKeyReleased
 
-    private void settingsTabsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseClicked
+    private void AlertSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertSettingsMouseClicked
         StoredAuthKey.setText("");
-    }//GEN-LAST:event_settingsTabsMouseClicked
+    }//GEN-LAST:event_AlertSettingsMouseClicked
 
-    private void settingsTabsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTabsMouseReleased
+    private void AlertSettingsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertSettingsMouseReleased
 
-    }//GEN-LAST:event_settingsTabsMouseReleased
+    }//GEN-LAST:event_AlertSettingsMouseReleased
 
     private void UndoRankChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoRankChangesActionPerformed
         this.PopCustRanks();
@@ -3386,9 +3430,9 @@ public final class ControlPanel extends javax.swing.JFrame {
 
     }//GEN-LAST:event_CustRankTableFocusLost
 
-    private void settingsTabsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_settingsTabsFocusGained
+    private void AlertSettingsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AlertSettingsFocusGained
 
-    }//GEN-LAST:event_settingsTabsFocusGained
+    }//GEN-LAST:event_AlertSettingsFocusGained
     boolean sendasbot = false;
     private void YouBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YouBotActionPerformed
         if (YouBot.isSelected()) {
@@ -3453,6 +3497,21 @@ public final class ControlPanel extends javax.swing.JFrame {
             af.setVisible(true);
         }
     }//GEN-LAST:event_AlertPaneOpenActionPerformed
+
+    private void FolAlrtTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FolAlrtTestActionPerformed
+        FSHandler.addFollower(CS.Username);
+    }//GEN-LAST:event_FolAlrtTestActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            try {
+                JOptionPane.showMessageDialog(null, "Opening a browser to the CLR instructions.");
+                Desktop.getDesktop().browse(new URI("https://scottybot.net/forums/viewtopic.php?f=4&t=20"));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton12ActionPerformed
 
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
@@ -3859,6 +3918,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AddBadWord;
     private javax.swing.JButton AlertPaneOpen;
+    private javax.swing.JTabbedPane AlertSettings;
     private javax.swing.JCheckBox AutoTweet;
     private javax.swing.JCheckBox BHEnabled;
     private javax.swing.JList BadWordList;
@@ -3882,6 +3942,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton ESubMessage;
     private javax.swing.JButton EditPoints;
     private javax.swing.JToggleButton FOnOff;
+    private javax.swing.JButton FolAlrtTest;
     public static javax.swing.JLabel FolCounter;
     private javax.swing.JCheckBox FollowEnabled;
     private javax.swing.JButton FollowIMGSet;
@@ -3958,6 +4019,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -3999,6 +4061,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -4025,7 +4088,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextField relaymsg;
     private javax.swing.JButton resendEmail;
     private javax.swing.JButton setEmail;
-    private javax.swing.JTabbedPane settingsTabs;
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
     public static javax.swing.JTable smchat;

@@ -61,7 +61,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 97;
+    public static Integer CurVer = 98;
     public static String ClientIDOauth = "31125c6e0139d0e09f2ae76348c00e9ce559d1bf894fcc06";
     public static String OAtokenAPI = "https://beam.pro/api/v1/oauth/token";
     public static String apiLoc = "https://api.scottybot.net/api";
@@ -341,6 +341,8 @@ public class CS {
 
         try {
             JSONArray toLoop = (JSONArray) new JSONParser().parse(toParse);
+            GamesPreSorted.clear();
+            GameListJSON.clear();
             for (Object t : toLoop) {
                 JSONObject Game = (JSONObject) t;
                 Long ID = (Long) Game.get("id");

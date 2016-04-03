@@ -27,6 +27,6 @@ public class RestServ {
     }
 
     private static URI getCrunchifyURI() throws URISyntaxException {
-        return new URI("http://localhost:9090/").normalize();
+        return new URI("http://0.0.0.0:9090/").normalize();
     }
 }

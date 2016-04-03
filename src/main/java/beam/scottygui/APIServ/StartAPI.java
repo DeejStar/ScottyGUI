@@ -62,72 +62,73 @@ public class StartAPI {
     @Path("/followalert")
     @Produces(MediaType.TEXT_HTML)
     public String FolAlert(@Context UriInfo info) {
-        //if (FSHandler.QueuedFollowers()) {
-        try {
+        String HostName = info.getBaseUri().getHost();
+        System.out.println(HostName);
+        if (FSHandler.QueuedFollowers()) {
             try {
-                while (!CS.playMP3.isComplete()) {
-                    sleep(150);
+                try {
+                    while (!CS.playMP3.isComplete()) {
+                        sleep(150);
+                    }
+                } catch (Exception ignore) {
+
                 }
-            } catch (Exception ignore) {
-
-            }
-            InputStream HTMLFile = this.getClass().getResourceAsStream("/assets/followalert.html");
-            String HTML = IOUtils.toString(HTMLFile, "UTF-8");
-            String FontName = "Arial";
-            if (GUISettings.containsKey("FFontName")) {
-                FontName = GUISettings.get("FFontName").toString();
-            }
-            int FontSize = 64;
-            if (GUISettings.containsKey("FFontSize")) {
-                FontSize = Integer.parseInt(GUISettings.get("FFontSize").toString());
-            }
-            //System.out.println(FontName + ":" + FontSize);
-            Color toWeb = Color.RED;
-            if (GUISettings.containsKey("FFontColor")) {
-                String FontColor = "";
-
-                FontColor = GUISettings.get("FFontColor").toString();
-                toWeb = Color.decode(FontColor);
-            }
-            String Follower = "null"; //FSHandler.getNextFollower();
-            String FollowMessage = "(_follower_) has followed!";
-            if (GUISettings.containsKey("FollowerMSG")) {
-                FollowMessage = GUISettings.get("FollowerMSG").toString().replace("(_follower_)", Follower);
-            }
-            int FontStyle = 0;
-            String FStyle = "";
-            if (GUISettings.containsKey("FFontStyle")) {
-                FontStyle = Integer.parseInt(GUISettings.get("FFontStyle").toString());
-                switch (FontStyle) {
-                    case Font.BOLD:
-                        FStyle = "Bold";
-                        break;
-                    case Font.ITALIC:
-                        FStyle = "Italic";
-                        break;
-                    default:
-                        FStyle = "Plain";
-                        break;
+                InputStream HTMLFile = this.getClass().getResourceAsStream("/assets/followalert.html");
+                String HTML = IOUtils.toString(HTMLFile, "UTF-8");
+                String FontName = "Arial";
+                if (GUISettings.containsKey("FFontName")) {
+                    FontName = GUISettings.get("FFontName").toString();
                 }
-            } else {
-                FStyle = "Plain";
-            }
-            String NColor = FSHandler.toHexString(toWeb);
-            String msg = FollowMessage;
-            HTML = HTML.replace("(FSTYLE)", FStyle);
-            HTML = HTML.replace("(FSIZE)", "" + FontSize);
-            HTML = HTML.replace("(FNAME)", FontName);
-            HTML = HTML.replace("(FCOLOR)", NColor);
-            HTML = HTML.replace("{FOL_MSG}", msg);
-            System.out.println(HTML);
-            return HTML;
-        } catch (IOException ex) {
-            Logger.getLogger(StartAPI.class.getName()).log(Level.SEVERE, null, ex);
-            return "<meta http-equiv=\"refresh\" content=\"1; url=http://localhost:9090/followalert\" />";
+                int FontSize = 64;
+                if (GUISettings.containsKey("FFontSize")) {
+                    FontSize = Integer.parseInt(GUISettings.get("FFontSize").toString());
+                }
+                //System.out.println(FontName + ":" + FontSize);
+                Color toWeb = Color.RED;
+                if (GUISettings.containsKey("FFontColor")) {
+                    String FontColor = "";
 
+                    FontColor = GUISettings.get("FFontColor").toString();
+                    toWeb = Color.decode(FontColor);
+                }
+                String Follower = FSHandler.getNextFollower(); //FSHandler.getNextFollower();
+                String FollowMessage = GUISettings.getOrDefault("FollowerMSG", "(_follower_) has followed!").toString();
+                FollowMessage = FollowMessage.replace("(_follower_)", Follower);
+                int FontStyle = 0;
+                String FStyle = "";
+                if (GUISettings.containsKey("FFontStyle")) {
+                    FontStyle = Integer.parseInt(GUISettings.get("FFontStyle").toString());
+                    switch (FontStyle) {
+                        case Font.BOLD:
+                            FStyle = "Bold";
+                            break;
+                        case Font.ITALIC:
+                            FStyle = "Italic";
+                            break;
+                        default:
+                            FStyle = "Plain";
+                            break;
+                    }
+                } else {
+                    FStyle = "Plain";
+                }
+                String NColor = FSHandler.toHexString(toWeb);
+                String msg = FollowMessage;
+                HTML = HTML.replace("(FSTYLE)", FStyle);
+                HTML = HTML.replace("(FSIZE)", "" + FontSize);
+                HTML = HTML.replace("(FNAME)", FontName);
+                HTML = HTML.replace("(FCOLOR)", NColor);
+                HTML = HTML.replace("{FOL_MSG}", msg);
+                HTML = HTML.replace("{HOSTNAME}", HostName);
+                FSHandler.FolSndStart();
+                return HTML;
+            } catch (IOException ex) {
+                Logger.getLogger(StartAPI.class.getName()).log(Level.SEVERE, null, ex);
+                return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/followalert\" />";
+
+            }
+        } else {
+            return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/followalert\" />";
         }
-//        } else {
-//            return "<meta http-equiv=\"refresh\" content=\"1; url=http://localhost:9090/followalert\" />";
-//        }
     }
 }
