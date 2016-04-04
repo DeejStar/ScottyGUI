@@ -5,7 +5,8 @@
  */
 package beam.scottygui;
 
-import beam.scottygui.APIServ.FSHandler;
+import beam.scottygui.APIServ.FHandler;
+import beam.scottygui.APIServ.SHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.Stores.CS;
@@ -466,6 +467,16 @@ public final class ControlPanel extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         FolAlrtTest = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
+        jLayeredPane2 = new javax.swing.JLayeredPane();
+        subsound = new javax.swing.JButton();
+        subimg = new javax.swing.JButton();
+        jLabel19 = new javax.swing.JLabel();
+        submsg = new javax.swing.JButton();
+        subfont = new javax.swing.JButton();
+        subfontcolor = new javax.swing.JButton();
+        jButton13 = new javax.swing.JButton();
+        subtest = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -1901,6 +1912,124 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
+        jLayeredPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        subsound.setText("Set Sub Sound");
+        subsound.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subsoundActionPerformed(evt);
+            }
+        });
+
+        subimg.setText("Set Sub Image");
+        subimg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subimgActionPerformed(evt);
+            }
+        });
+
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("Subscriber Alert settings");
+
+        submsg.setText("Set Sub Message");
+        submsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submsgActionPerformed(evt);
+            }
+        });
+
+        subfont.setText("Set Sub Font");
+        subfont.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subfontActionPerformed(evt);
+            }
+        });
+
+        subfontcolor.setText("Set Sub Color");
+        subfontcolor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subfontcolorActionPerformed(evt);
+            }
+        });
+
+        jButton13.setText("Reset Alerts");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+
+        subtest.setText("Test Sub Alert");
+        subtest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subtestActionPerformed(evt);
+            }
+        });
+
+        jButton14.setText("Click for Instructions");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+
+        jLayeredPane2.setLayer(subsound, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(subimg, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel19, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(submsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(subfont, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(subfontcolor, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jButton13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(subtest, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jButton14, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
+        jLayeredPane2.setLayout(jLayeredPane2Layout);
+        jLayeredPane2Layout.setHorizontalGroup(
+            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(subsound, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(subimg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(submsg, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                            .addComponent(subfont, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(subfontcolor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(subtest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jLayeredPane2Layout.setVerticalGroup(
+            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane2Layout.createSequentialGroup()
+                .addComponent(jLabel19)
+                .addGap(5, 5, 5)
+                .addComponent(subsound)
+                .addGap(5, 5, 5)
+                .addComponent(subimg)
+                .addGap(5, 5, 5)
+                .addComponent(submsg)
+                .addGap(4, 4, 4)
+                .addComponent(subfont)
+                .addGap(4, 4, 4)
+                .addComponent(subfontcolor)
+                .addGap(4, 4, 4)
+                .addComponent(jButton13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(subtest)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton14)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
         jPanel19Layout.setHorizontalGroup(
@@ -1908,13 +2037,17 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(773, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(540, Short.MAX_VALUE))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(232, Short.MAX_VALUE))
         );
 
@@ -2857,20 +2990,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_MeOutputActionPerformed
 
     private void ESubMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ESubMessageActionPerformed
-        String OldSubMSG = GetSettings().get("submsg").toString();
-        String NewSubMSG = JOptionPane.showInputDialog(rootPane, "Set your SubAlert message. Use \"(_user_)\" as a placeholder for the SubScriber.", OldSubMSG);
-        try {
-            if (!NewSubMSG.equals(OldSubMSG)) {
-                try {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subMSG&value=" + URLEncoder.encode(NewSubMSG, "UTF-8"));
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } catch (Exception e) {
-            //cop out
-        }
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_ESubMessageActionPerformed
 
     private void TwitterAlertMSGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TwitterAlertMSGActionPerformed
@@ -3499,7 +3619,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_AlertPaneOpenActionPerformed
 
     private void FolAlrtTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FolAlrtTestActionPerformed
-        FSHandler.addFollower(CS.Username);
+        FHandler.addFollower(CS.Username);
     }//GEN-LAST:event_FolAlrtTestActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
@@ -3512,6 +3632,87 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void subsoundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subsoundActionPerformed
+        FileNameExtensionFilter SoundFilter = new FileNameExtensionFilter("MP3 Files", "mp3");
+        JFileChooser Open = new JFileChooser();
+        String FileLoc = null;
+        Open.setAcceptAllFileFilterUsed(false);
+        Open.addChoosableFileFilter(SoundFilter);
+        if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            FileLoc = Open.getSelectedFile().getAbsolutePath();
+            CS.GUISaveSettings("SubSound", FileLoc);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_subsoundActionPerformed
+
+    private void subimgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subimgActionPerformed
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image Files", "jpg", "gif", "png", "bmp");
+        JFileChooser Open = new JFileChooser();
+        String FileLoc = null;
+        Open.setAcceptAllFileFilterUsed(false);
+        Open.addChoosableFileFilter(imageFilter);
+        if (Open.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            FileLoc = Open.getSelectedFile().getAbsolutePath();
+            CS.GUISaveSettings("SubIMG", FileLoc);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_subimgActionPerformed
+
+    private void submsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submsgActionPerformed
+        String msg = null;
+        msg = JOptionPane.showInputDialog("Set Follower Message, use (_sub_) where the subscriber will be.");
+        if (msg != null) {
+            GUISaveSettings("SubMSG", msg);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_submsgActionPerformed
+
+    private void subfontActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subfontActionPerformed
+        String FontName = "Arial";
+        if (GUISettings.containsKey("SFontName")) {
+            FontName = GUISettings.get("SFontName").toString();
+        }
+        int FontSize = 64;
+        if (GUISettings.containsKey("SFontSize")) {
+            FontSize = Integer.parseInt(GUISettings.get("SFontSize").toString());
+        }
+        int FontStyle = 0;
+        if (GUISettings.containsKey("SFontStyle")) {
+            FontStyle = Integer.parseInt(GUISettings.get("SFontStyle").toString());
+        }
+        Font font = FontChooser.showDialog(this, "Font Chooser", new Font(FontName, FontStyle, FontSize));
+        GUISaveSettings("SFontSize", String.valueOf(font.getSize()));
+        GUISaveSettings("SFontName", font.getName());
+        GUISaveSettings("SFontStyle", String.valueOf(font.getStyle()));        // TODO add your handling code here:
+    }//GEN-LAST:event_subfontActionPerformed
+
+    private void subfontcolorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subfontcolorActionPerformed
+        int RGB = JColorChooser.showDialog(this, "Pick Follower Color", null).getRGB();
+        GUISaveSettings("SFontColor", String.valueOf(RGB));        // TODO add your handling code here:
+    }//GEN-LAST:event_subfontcolorActionPerformed
+
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        CS.GUISaveSettings("SubMSG", null);
+        CS.GUISaveSettings("SFontName", null);
+        CS.GUISaveSettings("SFontSize", null);
+        CS.GUISaveSettings("SFontStyle", null);
+        CS.GUISaveSettings("SFontColor", null);
+        CS.GUISaveSettings("SubIMG", null);
+        CS.GUISaveSettings("SubSound", null);        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void subtestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subtestActionPerformed
+        SHandler.addFollower(CS.Username);        // TODO add your handling code here:
+    }//GEN-LAST:event_subtestActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            try {
+                JOptionPane.showMessageDialog(null, "Opening a browser to the CLR instructions.");
+                Desktop.getDesktop().browse(new URI("https://scottybot.net/forums/viewtopic.php?f=4&t=20"));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton14ActionPerformed
 
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
@@ -4020,6 +4221,8 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -4041,6 +4244,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
@@ -4051,6 +4255,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -4091,6 +4296,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     public javax.swing.JCheckBox showPChat;
     private javax.swing.JTextPane showWhitelist;
     public static javax.swing.JTable smchat;
+    private javax.swing.JButton subfont;
+    private javax.swing.JButton subfontcolor;
+    private javax.swing.JButton subimg;
+    private javax.swing.JButton submsg;
+    private javax.swing.JButton subsound;
+    private javax.swing.JButton subtest;
     public static javax.swing.JTextField wssocket;
     // End of variables declaration//GEN-END:variables
 }

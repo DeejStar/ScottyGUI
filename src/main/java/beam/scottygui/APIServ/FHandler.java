@@ -19,12 +19,14 @@ import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
 
 /**
  *
  * @author tjhasty
  */
-public class FSHandler {
+public class FHandler {
 
     static List<String> followed = new CopyOnWriteArrayList();
 

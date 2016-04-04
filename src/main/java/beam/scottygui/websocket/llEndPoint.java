@@ -5,7 +5,8 @@
  */
 package beam.scottygui.websocket;
 
-import beam.scottygui.APIServ.FSHandler;
+import beam.scottygui.APIServ.FHandler;
+import beam.scottygui.APIServ.SHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
@@ -116,8 +117,13 @@ public class llEndPoint extends Endpoint {
                             }
                             Long Subs = (Long) ChanInfo.get("numSubscribers");
                             ControlPanel.TotSubs.setText("Total Subscribers: " + Subs);
+
                         }
                     }.start();
+                    JSONObject subInfo = new JSONObject();
+                    subInfo.putAll((JSONObject) objData.get("user"));
+                    String subName = subInfo.get("username").toString();
+                    SHandler.addFollower(subName);
                 }
 
                 if (Followed.equalsIgnoreCase(Slug)) {
@@ -160,7 +166,7 @@ public class llEndPoint extends Endpoint {
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
                         CS.FolCount++;
-                        FSHandler.addFollower(followerName);
+                        FHandler.addFollower(followerName);
                         ControlPanel.FolCounter.setText(CS.FolCount + " followers this session.");
                     } else if (!followCache.contains(followerID)) {
                         followCache.add(followerID);

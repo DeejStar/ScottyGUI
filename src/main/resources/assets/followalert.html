@@ -8,36 +8,44 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="refresh" content="3; url=http://{HOSTNAME}:9090/followalert" />
-        <style>
-            html {
-                background: url("http://{HOSTNAME}:9090/followimg") no-repeat center center fixed;
-                -webkit-background-size: contain;
-                -moz-background-size: contain;
-                -o-background-size: contain;
-                background-size: contain;
-                width: 100%;
+        <meta http-equiv="refresh" content="3; url={REDIRECT}" />
+        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 
-                display: block;
-                position: absolute;
-                top: 50%;
-                font-size:  (FSIZE)px;
-                text-align: center;
-                font-family: (FNAME);
-                font-style: (FSTYLE);
-                color: (FCOLOR);
+        <style>
+            body{
+                overflow: hidden;
+            }
+            html {
+
+
+
+
             }
         </style>
 
     </head>
     <body>
-        <div>
-            <center>
-
+        <div class="w3-display-container w3-animate-zoom">
+            <img src="{IMGURL}" alt="Unable to find picture!" class="Img">
+            <div class="w3-display-middle text">
                 {FOL_MSG}
-
-            </center>
+            </div>
         </div>
+        <style>
+            .text{
+                font-size:  (FSIZE)px;
+                font-family: (FNAME);
+                font-style: (FSTYLE);
+                color: (FCOLOR);
+            }
+            .Img{
+                display: block;
+                margin: 0 auto;
+                vertical-align: central;
+                max-width: 95vh;
+                max-height: 95vh;
+            }
+        </style>
 
 
 
