@@ -13,7 +13,6 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.GET;
@@ -28,7 +27,7 @@ import org.apache.commons.io.IOUtils;
 
 @XmlRootElement
 @Path("/")
-public class StartAPI {
+public class APIHandler {
 
     @GET
     @Path("/oauthjoin")
@@ -81,8 +80,8 @@ public class StartAPI {
         if (SHandler.QueuedFollowers()) {
             try {
                 try {
-                    while (!CS.playMP3.isComplete()) {
-                        sleep(150);
+                    if (!CS.playMP3.isComplete()) {
+                        return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/subalert\" />";
                     }
                 } catch (Exception ignore) {
 
@@ -139,7 +138,7 @@ public class StartAPI {
                 SHandler.SubSndStart();
                 return HTML;
             } catch (IOException ex) {
-                Logger.getLogger(StartAPI.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(APIHandler.class.getName()).log(Level.SEVERE, null, ex);
                 return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/subalert\" />";
 
             }
@@ -157,8 +156,8 @@ public class StartAPI {
         if (FHandler.QueuedFollowers()) {
             try {
                 try {
-                    while (!CS.playMP3.isComplete()) {
-                        sleep(150);
+                    if (!CS.playMP3.isComplete()) {
+                        return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/followalert\" />";
                     }
                 } catch (Exception ignore) {
 
@@ -216,7 +215,7 @@ public class StartAPI {
                 FHandler.FolSndStart();
                 return HTML;
             } catch (IOException ex) {
-                Logger.getLogger(StartAPI.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(APIHandler.class.getName()).log(Level.SEVERE, null, ex);
                 return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/followalert\" />";
 
             }

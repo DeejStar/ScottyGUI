@@ -51,13 +51,9 @@ public class Login extends javax.swing.JFrame {
         Field charset = null;
         try {
             charset = Charset.class.getDeclaredField("defaultCharset");
-        } catch (NoSuchFieldException | SecurityException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        charset.setAccessible(true);
-        try {
+            charset.setAccessible(true);
             charset.set(null, null);
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         CheckNewVer();
@@ -104,6 +100,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Log in to Scottybot");
 
         streamlabel.setText("Streamers (For Mods Of A Channel)");
@@ -334,6 +331,28 @@ public class Login extends javax.swing.JFrame {
             try {
                 String Verified = HTTP.OAuthVerifyScotty(OAuthHandler.GetAToken());
                 JSONObject chaninfo = (JSONObject) JSONValue.parse(Verified);
+                if (chaninfo.containsKey("failed")) {
+                    String reason = (String) chaninfo.get("failed");
+                    if (reason.toLowerCase().contains("not in your channel".toLowerCase())) {
+                        if (Desktop.isDesktopSupported()) {
+                            int confirm = JOptionPane.showConfirmDialog(rootPane, "Scottybot is not in your channel, would you like to have him join?");
+                            if (confirm == 0) {
+                                JOptionPane.showMessageDialog(rootPane, "Opening browser to Scottys Page!");
+                                try {
+                                    Desktop.getDesktop().browse(new URI("https://scottybot.net"));
+                                } catch (IOException | URISyntaxException ex) {
+                                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Please go to https://scottybot.net to add him to your channel!");
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Unable to login: " + reason);
+                    }
+                    return;
+                }
                 CS.ChanID = (Long) chaninfo.get("ChanID");
                 CS.AuthKey = (String) chaninfo.get("AuthKeyv2");
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException ex) {

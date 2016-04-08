@@ -11,15 +11,12 @@ import static beam.scottygui.Stores.CS.GUISettings;
 import static beam.scottygui.Stores.CS.playMP3;
 import java.awt.Color;
 import java.io.FileInputStream;
-import static java.lang.Thread.sleep;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import static java.lang.Thread.sleep;
-import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
 
 /**

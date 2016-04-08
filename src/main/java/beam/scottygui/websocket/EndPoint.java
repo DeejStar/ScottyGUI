@@ -7,6 +7,7 @@ package beam.scottygui.websocket;
 
 import beam.scottygui.ChatHandler.ChatFormatter;
 import beam.scottygui.ChatHandler.ChatPopOut;
+import beam.scottygui.ChatHandler.JLHandler;
 import beam.scottygui.ControlPanel;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.BeamAuthKey;
@@ -120,6 +121,8 @@ public class EndPoint extends Endpoint {
                         Joining.addAll(userList.toArray());
                         Joining2.clear();
                         Joining2.addAll(userList.toArray());
+                        JLHandler.JoinBeep();
+                        break;
                     case "USERLEAVE":
                         data = (JSONObject) msg.get("data");
                         String LeavingName = data.get("username").toString();
@@ -138,6 +141,7 @@ public class EndPoint extends Endpoint {
                         Leaving.addAll(LeavingList.toArray());
                         Leaving2.clear();
                         Leaving2.addAll(LeavingList.toArray());
+                        JLHandler.LeaveBeep();
                         break;
                     case "DELETEMESSAGE":
                         data = (JSONObject) msg.get("data");

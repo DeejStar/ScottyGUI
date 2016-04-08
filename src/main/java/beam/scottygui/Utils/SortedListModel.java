@@ -35,30 +35,30 @@ public class SortedListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int index) {
+    public synchronized Object getElementAt(int index) {
         // Return the appropriate element
         return model.toArray()[index];
     }
 
     // Other methods
-    public void add(Object element) {
+    public synchronized void add(Object element) {
         if (model.add(element)) {
             fireContentsChanged(this, 0, getSize());
         }
     }
 
-    public void addAll(Object elements[]) {
+    public synchronized void addAll(Object elements[]) {
         Collection c = Arrays.asList(elements);
         model.addAll(c);
         fireContentsChanged(this, 0, getSize());
     }
 
-    public void clear() {
+    public synchronized void clear() {
         model.clear();
         fireContentsChanged(this, 0, getSize());
     }
 
-    public boolean contains(Object element) {
+    public synchronized boolean contains(Object element) {
         return model.contains(element);
     }
 

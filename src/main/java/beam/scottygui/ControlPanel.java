@@ -9,6 +9,7 @@ import beam.scottygui.APIServ.FHandler;
 import beam.scottygui.APIServ.SHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
+import beam.scottygui.RecFolPopout.RecFolWindow;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.AuthKey;
 import static beam.scottygui.Stores.CS.BadWordsList;
@@ -148,7 +149,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     public ControlPanel() {
 
         initComponents();
-
+        this.QuotesPanel.setAutoCreateRowSorter(true);
         this.SubAndFolUpd();
         this.setTitle("ScottyGUI Ver. " + this.CurVer);
         if (CS.ModMode) {
@@ -276,24 +277,20 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     public void PopQuoteList() throws ParseException {
-        JSONObject QList = (JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/quotes?authkey=" + AuthKey));
-        String output = "";
-        int NumOfQuotes = 0;
-        for (Object t : QList.keySet()) {
-            if (!"failed".equals(t.toString())) {
-                NumOfQuotes++;
+        try {
+            JSONArray QList = (JSONArray) parser.parse(http.get(CS.apiLoc + "/showquotes?output=json&chanid=" + CS.ChanID));
+            DefaultTableModel QM = (DefaultTableModel) this.QuotesPanel.getModel();
+            QM.setRowCount(0);
+            for (Object T : QList) {
+                JSONObject obj = (JSONObject) T;
+                String ID = obj.get("id").toString();
+                String Quote = obj.get("quote").toString();
+                QM.addRow(new Object[]{ID, Quote});
             }
-            if ("".equals(output)) {
-
-                output = "ID: " + t.toString() + " - " + QList.get(t);
-            } else {
-
-                output = output + newline + newline + "ID: " + t.toString() + " - " + QList.get(t);
-            }
-
+            this.NumOfQuotes.setText(QList.size() + " quotes.");
+        } catch (IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.QuotePanel.setText(output);
-        this.NumOfQuotes.setText(String.valueOf(NumOfQuotes + " quotes."));
     }
 
     public void PopCmdText() throws ParseException {
@@ -323,7 +320,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
             out = out + newline + newline + obj.get("cmd") + " - Level: " + restrictlevel + " - " + obj.get("text") + " - Count: " + obj.get("cmdcount");
         }
-
         this.CmdInfo.setText(out);
     }
 
@@ -356,13 +352,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         cmdsoundbutton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        QuotePanel = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
         QEnabled = new javax.swing.JCheckBox();
         NumOfQuotes = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         addquotebutton = new javax.swing.JButton();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        QuotesPanel = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
         LinksOnOff = new javax.swing.JToggleButton();
@@ -412,20 +408,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         WooshMeEnabled = new javax.swing.JCheckBox();
         showPChat = new javax.swing.JCheckBox();
-        jPanel10 = new javax.swing.JPanel();
-        FollowEnabled = new javax.swing.JCheckBox();
-        EFollowMsg = new javax.swing.JButton();
-        OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
-        ClearCmdsEnabled = new javax.swing.JCheckBox();
-        PSubAlert = new javax.swing.JCheckBox();
-        MeOutput = new javax.swing.JCheckBox();
-        ESubMessage = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        TwitterAlertMSG = new javax.swing.JButton();
-        AutoTweet = new javax.swing.JCheckBox();
-        JoinAnnounce = new javax.swing.JCheckBox();
-        LeaveAnnounce = new javax.swing.JCheckBox();
-        LinkTitle = new javax.swing.JCheckBox();
         CUsernamePassword = new javax.swing.JButton();
         ResetScottyName = new javax.swing.JButton();
         StoredAuthKey = new javax.swing.JTextField();
@@ -439,6 +421,21 @@ public final class ControlPanel extends javax.swing.JFrame {
         RegOAuth = new javax.swing.JButton();
         jScrollPane10 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
+        JoinAnnounce = new javax.swing.JCheckBox();
+        LeaveAnnounce = new javax.swing.JCheckBox();
+        ESubMessage = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        TwitterAlertMSG = new javax.swing.JButton();
+        AutoTweet = new javax.swing.JCheckBox();
+        EFollowMsg = new javax.swing.JButton();
+        ClearCmdsEnabled = new javax.swing.JCheckBox();
+        PSubAlert = new javax.swing.JCheckBox();
+        MeOutput = new javax.swing.JCheckBox();
+        FollowEnabled = new javax.swing.JCheckBox();
+        LinkTitle = new javax.swing.JCheckBox();
+        OnlyWhenLiveEnabled = new javax.swing.JCheckBox();
+        LeaveBeep = new javax.swing.JCheckBox();
+        JoinBeep = new javax.swing.JCheckBox();
         DonatorPanel = new javax.swing.JPanel();
         DonationPane = new javax.swing.JPanel();
         YodaEnabled = new javax.swing.JCheckBox();
@@ -520,6 +517,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         ControlStatus = new javax.swing.JTextField();
         wssocket = new javax.swing.JTextField();
         llsocket = new javax.swing.JTextField();
+        FolThisSes = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
 
@@ -649,7 +647,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(cmdsoundbutton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(RepeatList, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 133, Short.MAX_VALUE)))
+                        .addGap(0, 246, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel16Layout.setVerticalGroup(
@@ -679,13 +677,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
 
         YouTube.addTab("Commands", jPanel1);
-
-        QuotePanel.setEditable(false);
-        QuotePanel.setColumns(20);
-        QuotePanel.setLineWrap(true);
-        QuotePanel.setRows(5);
-        QuotePanel.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(QuotePanel);
 
         jButton4.setText("Refresh");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -717,25 +708,59 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        QuotesPanel.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Quote ID", "Quote"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        QuotesPanel.getTableHeader().setResizingAllowed(false);
+        QuotesPanel.getTableHeader().setReorderingAllowed(false);
+        jScrollPane11.setViewportView(QuotesPanel);
+        if (QuotesPanel.getColumnModel().getColumnCount() > 0) {
+            QuotesPanel.getColumnModel().getColumn(0).setMinWidth(100);
+            QuotesPanel.getColumnModel().getColumn(0).setPreferredWidth(100);
+            QuotesPanel.getColumnModel().getColumn(0).setMaxWidth(100);
+            QuotesPanel.getColumnModel().getColumn(1).setResizable(false);
+        }
+
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addComponent(addquotebutton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(QEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addContainerGap(423, Short.MAX_VALUE))))
+                .addComponent(addquotebutton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(NumOfQuotes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(QEnabled)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
+                .addContainerGap(498, Short.MAX_VALUE))
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane11)
+                .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -747,8 +772,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(NumOfQuotes)
                     .addComponent(QEnabled)
                     .addComponent(jButton4))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -761,7 +787,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         YouTube.addTab("Quotes", jPanel2);
@@ -1121,9 +1149,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGap(180, 180, 180)
                         .addComponent(PEnabled))
                     .addGroup(PSettingsLayout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(PSettingsLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(BHEnabled)
                         .addGap(5, 5, 5)
@@ -1133,11 +1158,13 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addGroup(PSettingsLayout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PRenBut))
+                        .addGap(25, 25, 25)
+                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PSettingsLayout.createSequentialGroup()
-                                .addComponent(EditPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                                     .addComponent(PWhenLive))
                                 .addGap(28, 28, 28)
                                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1152,36 +1179,34 @@ public final class ControlPanel extends javax.swing.JFrame {
                                     .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(PSubPoints)))
                             .addGroup(PSettingsLayout.createSequentialGroup()
-                                .addComponent(PRenBut)
-                                .addGap(25, 25, 25)
-                                .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(PointsName, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(PPM))
                 .addGap(53, 53, 53))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PSettingsLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(320, 320, 320))
         );
         PSettingsLayout.setVerticalGroup(
             PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PSettingsLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(PEnabled)
-                .addGap(25, 25, 25)
+                .addGap(4, 4, 4)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(jLabel8)
-                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PSettingsLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(PSettingsLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(PSettingsLayout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(PRenBut)))
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PRenBut)
+                    .addComponent(PointsName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addGroup(PSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1204,7 +1229,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(BHEnabled)
                     .addComponent(RouletteEnable)
                     .addComponent(REnabled))
-                .addContainerGap(247, Short.MAX_VALUE))
+                .addContainerGap(257, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -1268,167 +1293,6 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(showPChat))))
         );
 
-        FollowEnabled.setText("Follower Alert Enabled");
-        FollowEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FollowEnabledActionPerformed(evt);
-            }
-        });
-
-        EFollowMsg.setText("Edit Chat Follower Message");
-        EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EFollowMsgActionPerformed(evt);
-            }
-        });
-
-        OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
-        OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
-        OnlyWhenLiveEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OnlyWhenLiveEnabledActionPerformed(evt);
-            }
-        });
-
-        ClearCmdsEnabled.setText("Clear Commands Enabled");
-        ClearCmdsEnabled.setToolTipText("When enabled, will clear all commands by Non-mods once ran. It will still act on those commands.");
-        ClearCmdsEnabled.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ClearCmdsEnabledActionPerformed(evt);
-            }
-        });
-
-        PSubAlert.setText("Enable Subscriber Alert");
-        PSubAlert.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PSubAlertActionPerformed(evt);
-            }
-        });
-
-        MeOutput.setText("Set /me Bot Output");
-        MeOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MeOutputActionPerformed(evt);
-            }
-        });
-
-        ESubMessage.setText("Edit New Subscriber Message");
-        ESubMessage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ESubMessageActionPerformed(evt);
-            }
-        });
-
-        jButton7.setText("Set Twitter Auth Info");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
-        TwitterAlertMSG.setText("Edit Auto Tweet Message");
-        TwitterAlertMSG.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TwitterAlertMSGActionPerformed(evt);
-            }
-        });
-
-        AutoTweet.setText("Enable Auto Tweet");
-        AutoTweet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AutoTweetActionPerformed(evt);
-            }
-        });
-
-        JoinAnnounce.setText("Enable User Join Announce");
-        JoinAnnounce.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JoinAnnounceActionPerformed(evt);
-            }
-        });
-
-        LeaveAnnounce.setText("Enable User Leave Announce");
-        LeaveAnnounce.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LeaveAnnounceActionPerformed(evt);
-            }
-        });
-
-        LinkTitle.setText("Enable Link Title Showing");
-        LinkTitle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LinkTitleActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ESubMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                            .addComponent(EFollowMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AutoTweet)
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TwitterAlertMSG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(216, 216, 216)
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(JoinAnnounce)
-                                    .addComponent(LeaveAnnounce)))))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LinkTitle)
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addComponent(FollowEnabled, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(OnlyWhenLiveEnabled)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ClearCmdsEnabled)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(MeOutput)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PSubAlert)))))
-                .addContainerGap(59, Short.MAX_VALUE))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(OnlyWhenLiveEnabled)
-                    .addComponent(ClearCmdsEnabled)
-                    .addComponent(MeOutput)
-                    .addComponent(PSubAlert)
-                    .addComponent(FollowEnabled))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(LinkTitle)
-                .addGap(67, 67, 67)
-                .addComponent(AutoTweet)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(EFollowMsg)
-                            .addComponent(jButton7))
-                        .addGap(8, 8, 8)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ESubMessage)
-                            .addComponent(TwitterAlertMSG)))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(JoinAnnounce)
-                        .addGap(5, 5, 5)
-                        .addComponent(LeaveAnnounce))))
-        );
-
         CUsernamePassword.setText("Set Custom Bot Username/Password");
         CUsernamePassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1460,6 +1324,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setText("Stored Auth Key (Usable and static)");
 
         jButton5.setText("Check Updates");
@@ -1477,6 +1342,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
 
         RegOAuth.setText("Register OAuth");
+        RegOAuth.setEnabled(false);
         RegOAuth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RegOAuthActionPerformed(evt);
@@ -1484,8 +1350,116 @@ public final class ControlPanel extends javax.swing.JFrame {
         });
 
         jTextPane1.setEditable(false);
-        jTextPane1.setText("Tie Scottybot to your account, allowing for increased control");
+        jTextPane1.setText("Give Scotty full control in your channel with streamer level permissions");
+        jTextPane1.setEnabled(false);
         jScrollPane10.setViewportView(jTextPane1);
+
+        JoinAnnounce.setText("User Join Whisper");
+        JoinAnnounce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JoinAnnounceActionPerformed(evt);
+            }
+        });
+
+        LeaveAnnounce.setText(" User Leave Whisper");
+        LeaveAnnounce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeaveAnnounceActionPerformed(evt);
+            }
+        });
+
+        ESubMessage.setText("Edit New Subscriber Message");
+        ESubMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ESubMessageActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Set Twitter Auth Info");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        TwitterAlertMSG.setText("Edit Auto Tweet Message");
+        TwitterAlertMSG.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TwitterAlertMSGActionPerformed(evt);
+            }
+        });
+
+        AutoTweet.setText("Enable Auto Tweet");
+        AutoTweet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AutoTweetActionPerformed(evt);
+            }
+        });
+
+        EFollowMsg.setText("Edit Chat Follower Message");
+        EFollowMsg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EFollowMsgActionPerformed(evt);
+            }
+        });
+
+        ClearCmdsEnabled.setText("Clear Commands Enabled");
+        ClearCmdsEnabled.setToolTipText("When enabled, will clear all commands by Non-mods once ran. It will still act on those commands.");
+        ClearCmdsEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClearCmdsEnabledActionPerformed(evt);
+            }
+        });
+
+        PSubAlert.setText("Enable Subscriber Alert");
+        PSubAlert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PSubAlertActionPerformed(evt);
+            }
+        });
+
+        MeOutput.setText("Set /me Bot Output");
+        MeOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MeOutputActionPerformed(evt);
+            }
+        });
+
+        FollowEnabled.setText("Follower Alert Enabled");
+        FollowEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FollowEnabledActionPerformed(evt);
+            }
+        });
+
+        LinkTitle.setText("Enable Link Title Showing");
+        LinkTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LinkTitleActionPerformed(evt);
+            }
+        });
+
+        OnlyWhenLiveEnabled.setText("OnlyWhenLive Enabled");
+        OnlyWhenLiveEnabled.setToolTipText("This will prevent most commands from running when you are not online.");
+        OnlyWhenLiveEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OnlyWhenLiveEnabledActionPerformed(evt);
+            }
+        });
+
+        LeaveBeep.setText("User Leave Beep");
+        LeaveBeep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeaveBeepActionPerformed(evt);
+            }
+        });
+
+        JoinBeep.setText("User Join Beep");
+        JoinBeep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JoinBeepActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout SettingsPanelLayout = new javax.swing.GroupLayout(SettingsPanel);
         SettingsPanel.setLayout(SettingsPanelLayout);
@@ -1494,83 +1468,131 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(SettingsPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addContainerGap(998, Short.MAX_VALUE))
+            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(232, 232, 232)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, SettingsPanelLayout.createSequentialGroup()
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SettingsPanelLayout.createSequentialGroup()
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(28, 28, 28)
                                         .addComponent(ShowStoredKey)
                                         .addGap(8, 8, 8)
-                                        .addComponent(GenNewStoredKey))
+                                        .addComponent(GenNewStoredKey)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(ResetScottyName, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(SettingsPanelLayout.createSequentialGroup()
                                         .addComponent(PNotes)
                                         .addGap(22, 22, 22)
-                                        .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(CUsernamePassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ResetScottyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(228, 228, 228)
-                                        .addComponent(jLabel18))
-                                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                        .addGap(5, 5, 5)
-                                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(ESubMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(EFollowMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                            .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(RegOAuth))
+                                            .addGap(104, 104, 104))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RegOAuth, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(79, 79, 79)
-                .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(LeaveAnnounce)
+                                    .addComponent(JoinAnnounce)
+                                    .addComponent(LeaveBeep)
+                                    .addComponent(JoinBeep)))
+                            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(SettingsPanelLayout.createSequentialGroup()
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LinkTitle)
+                            .addComponent(AutoTweet, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TwitterAlertMSG)
+                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(OnlyWhenLiveEnabled)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ClearCmdsEnabled)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(MeOutput)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PSubAlert)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(FollowEnabled)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         SettingsPanelLayout.setVerticalGroup(
             SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SettingsPanelLayout.createSequentialGroup()
                 .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(480, 480, 480)
-                        .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33)
+                        .addComponent(LinkTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(AutoTweet)
+                        .addGap(0, 0, 0)
+                        .addComponent(jButton7)
+                        .addGap(8, 8, 8)
+                        .addComponent(TwitterAlertMSG)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
+                        .addGap(10, 10, 10)
+                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(OnlyWhenLiveEnabled)
+                            .addComponent(ClearCmdsEnabled)
+                            .addComponent(MeOutput)
+                            .addComponent(PSubAlert)
+                            .addComponent(FollowEnabled))
+                        .addGap(106, 106, 106)
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(34, 34, 34))
+                                .addGap(55, 235, Short.MAX_VALUE)
+                                .addComponent(JoinBeep))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(EFollowMsg)
+                                .addGap(8, 8, 8)
+                                .addComponent(ESubMessage)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(SettingsPanelLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel18))
-                            .addComponent(RegOAuth))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(RegOAuth)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PNotes)
-                            .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(CUsernamePassword)))
-                        .addGap(8, 8, 8)
-                        .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5)
-                            .addComponent(ShowStoredKey)
-                            .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(GenNewStoredKey)
-                                .addComponent(ResetScottyName))))
-                    .addGroup(SettingsPanelLayout.createSequentialGroup()
-                        .addGap(209, 209, 209)
-                        .addComponent(filler4, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(PNotes)
+                                    .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(StoredAuthKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(CUsernamePassword)))
+                                .addGap(8, 8, 8)
+                                .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton5)
+                                    .addComponent(ShowStoredKey)
+                                    .addGroup(SettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(GenNewStoredKey)
+                                        .addComponent(ResetScottyName))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SettingsPanelLayout.createSequentialGroup()
+                                .addComponent(LeaveBeep)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(JoinAnnounce)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(LeaveAnnounce)))))
+                .addGap(18, 18, 18)
+                .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         AlertSettings.addTab("Settings", SettingsPanel);
@@ -1710,9 +1732,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane9.setViewportView(CustRankTable);
         CustRankTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (CustRankTable.getColumnModel().getColumnCount() > 0) {
-            CustRankTable.getColumnModel().getColumn(0).setMinWidth(150);
-            CustRankTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-            CustRankTable.getColumnModel().getColumn(0).setMaxWidth(150);
+            CustRankTable.getColumnModel().getColumn(0).setMinWidth(100);
+            CustRankTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+            CustRankTable.getColumnModel().getColumn(0).setMaxWidth(100);
         }
 
         CustRankSave.setText("Save");
@@ -2039,7 +2061,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(540, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2048,7 +2070,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         AlertSettings.addTab("Alert Settings", jPanel19);
@@ -2277,7 +2299,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(delpoints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(giveall, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(purgepoints))
-                .addContainerGap(595, Short.MAX_VALUE))
+                .addContainerGap(604, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2338,7 +2360,7 @@ public final class ControlPanel extends javax.swing.JFrame {
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 1023, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 995, Short.MAX_VALUE)
                     .addComponent(relaymsg))
                 .addContainerGap())
         );
@@ -2346,10 +2368,10 @@ public final class ControlPanel extends javax.swing.JFrame {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(relaymsg, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(relaymsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         YouTube.addTab("Streamer/Mod Chat", jPanel17);
@@ -2403,7 +2425,7 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
                             .addGap(30, 30, 30)
                             .addComponent(jButton9))))
-                .addContainerGap(522, Short.MAX_VALUE))
+                .addContainerGap(527, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2463,6 +2485,13 @@ public final class ControlPanel extends javax.swing.JFrame {
         llsocket.setToolTipText("If Scottybot can see alerts");
         llsocket.setEnabled(false);
 
+        FolThisSes.setText("Followers This Session");
+        FolThisSes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FolThisSesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2474,10 +2503,12 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CurViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TopViewers, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TotFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
+                            .addComponent(TopViewers)
+                            .addComponent(CurViewers)
+                            .addComponent(TotFollowers))
+                        .addGap(98, 98, 98)
+                        .addComponent(FolThisSes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(StreamSet)
                             .addGroup(layout.createSequentialGroup()
@@ -2497,8 +2528,8 @@ public final class ControlPanel extends javax.swing.JFrame {
                         .addGap(1010, 1010, 1010)
                         .addComponent(filler3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(TotSubs, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addComponent(TotSubs)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -2515,7 +2546,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(StreamSet)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(StreamSet)
+                                .addComponent(FolThisSes))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -2563,22 +2596,11 @@ public final class ControlPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_YouTubeMouseClicked
 
     public void PopGuiSettings() {
-        if (!CS.GUISettings.containsKey("WooshME")) {
-            CS.GUISaveSettings("WooshME", "false");
-        }
-        if ("true".equals(CS.GUIGetSetting("WooshME"))) {
-            this.WooshMeEnabled.setSelected(true);
-        } else {
-            this.WooshMeEnabled.setSelected(false);
-        }
-        if (!CS.GUISettings.containsKey("showpurged")) {
-            CS.GUISaveSettings("showpurged", "false");
-        }
-        if ("false".equalsIgnoreCase(CS.GUIGetSetting("showpurged"))) {
-            this.showPChat.setSelected(false);
-        } else {
-            this.showPChat.setSelected(true);
-        }
+
+        this.WooshMeEnabled.setSelected("true".equalsIgnoreCase((String) CS.GUISettings.getOrDefault("WooshME", "false")));
+        this.showPChat.setSelected("false".equalsIgnoreCase((String) CS.GUISettings.getOrDefault("showpurged", "false")));
+        this.JoinBeep.setSelected("true".equalsIgnoreCase((String) CS.GUISettings.getOrDefault("joinbeep", "false")));
+        this.LeaveBeep.setSelected("true".equalsIgnoreCase((String) CS.GUISettings.getOrDefault("leavebeep", "false")));
     }
     private void ResetScottyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetScottyNameActionPerformed
         Map<String, String> toPut = new HashMap();
@@ -2622,54 +2644,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseChuck&value=0");
         }
     }//GEN-LAST:event_ChuckEnabledActionPerformed
-
-    private void PSubAlertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PSubAlertActionPerformed
-        if (this.PSubAlert.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 1);
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 0);
-        }
-    }//GEN-LAST:event_PSubAlertActionPerformed
-
-    private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
-        if (this.ClearCmdsEnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=0");
-        }
-    }//GEN-LAST:event_ClearCmdsEnabledActionPerformed
-
-    private void OnlyWhenLiveEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OnlyWhenLiveEnabledActionPerformed
-        if (this.OnlyWhenLiveEnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=0");
-        }
-    }//GEN-LAST:event_OnlyWhenLiveEnabledActionPerformed
-
-    private void EFollowMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EFollowMsgActionPerformed
-        String OldFollowMSG = GetSettings().get("followmsg").toString();
-        String NewFollowMSG = JOptionPane.showInputDialog(rootPane, "Set your follower message. use (_follower_) as a placeholder for the follower.", OldFollowMSG);
-        try {
-            if (!NewFollowMSG.equals(OldFollowMSG)) {
-                try {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=FollowMSG&value=" + URLEncoder.encode(NewFollowMSG, "UTF-8"));
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } catch (Exception e) {
-            //cop out
-        }
-    }//GEN-LAST:event_EFollowMsgActionPerformed
-
-    private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
-        if (this.FollowEnabled.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
-        }
-    }//GEN-LAST:event_FollowEnabledActionPerformed
 
     private void addbadwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbadwordActionPerformed
 
@@ -2917,11 +2891,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         pnoteswindow.setVisible(true);
     }//GEN-LAST:event_PNotesActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        TwitterAuthInfo tai = new TwitterAuthInfo();
-        tai.setVisible(true);
-    }//GEN-LAST:event_jButton7ActionPerformed
-
     private void ShowStoredKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowStoredKeyActionPerformed
         JSONObject key = new JSONObject();
         String ToParse = new HTTP().GetScotty(CS.apiLoc + "/storedauth?authkey=" + AuthKey);
@@ -2981,91 +2950,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showPChatActionPerformed
 
-    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
-        if (this.MeOutput.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
-        }
-    }//GEN-LAST:event_MeOutputActionPerformed
-
-    private void ESubMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ESubMessageActionPerformed
-
-    }//GEN-LAST:event_ESubMessageActionPerformed
-
-    private void TwitterAlertMSGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TwitterAlertMSGActionPerformed
-        String OldSubMSG = GetSettings().get("autotweetmsg").toString();
-        String NewSubMSG = JOptionPane.showInputDialog(rootPane, "Set your Auto-Tweet message. Use \"(_status_)\" as a placeholder for the stream title.", OldSubMSG);
-        try {
-            if (!NewSubMSG.equals(OldSubMSG)) {
-                try {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=AutoTweetMsg&value=" + URLEncoder.encode(NewSubMSG, "UTF-8"));
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } catch (Exception e) {
-            //cop out
-        }
-        // TODO add your handling code here:        // TODO add your handling code here:
-    }//GEN-LAST:event_TwitterAlertMSGActionPerformed
-
-    private void AutoTweetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoTweetActionPerformed
-        try {
-            String toSend = CS.apiLoc + "/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
-            //System.err.println(toSend);
-            String CKey = null;
-            String CSecret = null;
-            String AToken = null;
-            String ATokenSecret = null;
-            String toParse = new HTTP().GetScotty(toSend);
-            JSONObject toCheck = new JSONObject();
-            toCheck.putAll((JSONObject) new JSONParser().parse(toParse));
-            try {
-                CKey = (String) toCheck.get("CKey");
-                CSecret = (String) toCheck.get("CSecret");
-                AToken = (String) toCheck.get("AToken");
-                ATokenSecret = (String) toCheck.get("ATokenSecret");
-            } catch (Exception throwaway) {
-
-            }
-            if (!CKey.isEmpty() && !CSecret.isEmpty() && !AToken.isEmpty() && !ATokenSecret.isEmpty()) {
-                if (this.AutoTweet.isSelected()) {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=1");
-                } else {
-                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
-                }
-            } else {
-                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
-                JOptionPane.showMessageDialog(rootPane, "Please set Twitter Auth Settings before enabling this.");
-                this.AutoTweet.setSelected(false);
-            }
-        } catch (Exception e) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
-            JOptionPane.showMessageDialog(rootPane, "Errored talking to API, try again in a few minutes.");
-            this.AutoTweet.setSelected(false);
-            return;
-        }
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_AutoTweetActionPerformed
-
-    private void JoinAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JoinAnnounceActionPerformed
-        if (this.JoinAnnounce.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=0");
-        }
-    }//GEN-LAST:event_JoinAnnounceActionPerformed
-
-    private void LeaveAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveAnnounceActionPerformed
-        if (this.LeaveAnnounce.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=0");
-        }// TODO add your handling code here:
-    }//GEN-LAST:event_LeaveAnnounceActionPerformed
-
     private void LeetSpeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeetSpeekActionPerformed
         if (this.LeetSpeek.isSelected()) {
             http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseLeet&value=1");
@@ -3073,14 +2957,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseLeet&value=0");
         }        // TODO add your handling code here:
     }//GEN-LAST:event_LeetSpeekActionPerformed
-
-    private void LinkTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinkTitleActionPerformed
-        if (this.LinkTitle.isSelected()) {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useurl&value=1");
-        } else {
-            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useurl&value=0");
-        }
-    }//GEN-LAST:event_LinkTitleActionPerformed
     statuswindow sw = new statuswindow();
     private void StreamSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StreamSetActionPerformed
         sw.setcurgame();
@@ -3714,6 +3590,173 @@ public final class ControlPanel extends javax.swing.JFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton14ActionPerformed
 
+    private void LinkTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LinkTitleActionPerformed
+        if (this.LinkTitle.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useurl&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useurl&value=0");
+        }
+    }//GEN-LAST:event_LinkTitleActionPerformed
+
+    private void LeaveAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveAnnounceActionPerformed
+        if (this.LeaveAnnounce.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=leaveAnnounce&value=0");
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_LeaveAnnounceActionPerformed
+
+    private void JoinAnnounceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JoinAnnounceActionPerformed
+        if (this.JoinAnnounce.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=joinAnnounce&value=0");
+        }
+    }//GEN-LAST:event_JoinAnnounceActionPerformed
+
+    private void AutoTweetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoTweetActionPerformed
+        try {
+            String toSend = CS.apiLoc + "/twitterauth?authkey=" + URLEncoder.encode(AuthKey, "UTF-8");
+            //System.err.println(toSend);
+            String CKey = null;
+            String CSecret = null;
+            String AToken = null;
+            String ATokenSecret = null;
+            String toParse = new HTTP().GetScotty(toSend);
+            JSONObject toCheck = new JSONObject();
+            toCheck.putAll((JSONObject) new JSONParser().parse(toParse));
+            try {
+                CKey = (String) toCheck.get("CKey");
+                CSecret = (String) toCheck.get("CSecret");
+                AToken = (String) toCheck.get("AToken");
+                ATokenSecret = (String) toCheck.get("ATokenSecret");
+            } catch (Exception throwaway) {
+
+            }
+            if (!CKey.isEmpty() && !CSecret.isEmpty() && !AToken.isEmpty() && !ATokenSecret.isEmpty()) {
+                if (this.AutoTweet.isSelected()) {
+                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=1");
+                } else {
+                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
+                }
+            } else {
+                http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
+                JOptionPane.showMessageDialog(rootPane, "Please set Twitter Auth Settings before enabling this.");
+                this.AutoTweet.setSelected(false);
+            }
+        } catch (Exception e) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=useAutoTweet&value=0");
+            JOptionPane.showMessageDialog(rootPane, "Errored talking to API, try again in a few minutes.");
+            this.AutoTweet.setSelected(false);
+            return;
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AutoTweetActionPerformed
+
+    private void TwitterAlertMSGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TwitterAlertMSGActionPerformed
+        String OldSubMSG = GetSettings().get("autotweetmsg").toString();
+        String NewSubMSG = JOptionPane.showInputDialog(rootPane, "Set your Auto-Tweet message. Use \"(_status_)\" as a placeholder for the stream title.", OldSubMSG);
+        try {
+            if (!NewSubMSG.equals(OldSubMSG)) {
+                try {
+                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=AutoTweetMsg&value=" + URLEncoder.encode(NewSubMSG, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (Exception e) {
+            //cop out
+        }
+        // TODO add your handling code here:        // TODO add your handling code here:
+    }//GEN-LAST:event_TwitterAlertMSGActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        TwitterAuthInfo tai = new TwitterAuthInfo();
+        tai.setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void ESubMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ESubMessageActionPerformed
+
+    }//GEN-LAST:event_ESubMessageActionPerformed
+
+    private void MeOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MeOutputActionPerformed
+        if (this.MeOutput.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseME&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseME&value=0");
+        }
+    }//GEN-LAST:event_MeOutputActionPerformed
+
+    private void PSubAlertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PSubAlertActionPerformed
+        if (this.PSubAlert.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 1);
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=subalert&value=" + 0);
+        }
+    }//GEN-LAST:event_PSubAlertActionPerformed
+
+    private void ClearCmdsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearCmdsEnabledActionPerformed
+        if (this.ClearCmdsEnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=PurgeCommands&value=0");
+        }
+    }//GEN-LAST:event_ClearCmdsEnabledActionPerformed
+
+    private void OnlyWhenLiveEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OnlyWhenLiveEnabledActionPerformed
+        if (this.OnlyWhenLiveEnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=OnlyWhenLive&value=0");
+        }
+    }//GEN-LAST:event_OnlyWhenLiveEnabledActionPerformed
+
+    private void EFollowMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EFollowMsgActionPerformed
+        String OldFollowMSG = GetSettings().get("followmsg").toString();
+        String NewFollowMSG = JOptionPane.showInputDialog(rootPane, "Set your follower message. use (_follower_) as a placeholder for the follower.", OldFollowMSG);
+        try {
+            if (!NewFollowMSG.equals(OldFollowMSG)) {
+                try {
+                    http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=FollowMSG&value=" + URLEncoder.encode(NewFollowMSG, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (Exception e) {
+            //cop out
+        }
+    }//GEN-LAST:event_EFollowMsgActionPerformed
+
+    private void FollowEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FollowEnabledActionPerformed
+        if (this.FollowEnabled.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=UseFollower&value=0");
+        }
+    }//GEN-LAST:event_FollowEnabledActionPerformed
+
+    private void JoinBeepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JoinBeepActionPerformed
+        if (JoinBeep.isSelected()) {
+            CS.GUISaveSettings("joinbeep", "true");
+        } else {
+            CS.GUISaveSettings("joinbeep", "false");
+        }
+    }//GEN-LAST:event_JoinBeepActionPerformed
+
+    private void LeaveBeepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveBeepActionPerformed
+        if (LeaveBeep.isSelected()) {
+            CS.GUISaveSettings("leavebeep", "true");
+        } else {
+            CS.GUISaveSettings("leavebeep", "false");
+        }
+    }//GEN-LAST:event_LeaveBeepActionPerformed
+    RecFolWindow RFW = new RecFolWindow();
+    private void FolThisSesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FolThisSesActionPerformed
+        RecFolWindow.RecFolTable.setAutoCreateRowSorter(true);
+        RFW.setVisible(true);
+    }//GEN-LAST:event_FolThisSesActionPerformed
+
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
         try {
@@ -4145,6 +4188,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JToggleButton FOnOff;
     private javax.swing.JButton FolAlrtTest;
     public static javax.swing.JLabel FolCounter;
+    private javax.swing.JButton FolThisSes;
     private javax.swing.JCheckBox FollowEnabled;
     private javax.swing.JButton FollowIMGSet;
     private javax.swing.JButton FollowSoundSet;
@@ -4152,7 +4196,9 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton GenNewStoredKey;
     private javax.swing.JButton GivePoints;
     private javax.swing.JCheckBox JoinAnnounce;
+    private javax.swing.JCheckBox JoinBeep;
     private javax.swing.JCheckBox LeaveAnnounce;
+    private javax.swing.JCheckBox LeaveBeep;
     private javax.swing.JCheckBox LeetSpeek;
     private javax.swing.JCheckBox LinkTitle;
     private javax.swing.JToggleButton LinksOnOff;
@@ -4173,7 +4219,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextField PointsName;
     public static javax.swing.JTable PointsTable;
     private javax.swing.JCheckBox QEnabled;
-    private javax.swing.JTextArea QuotePanel;
+    private javax.swing.JTable QuotesPanel;
     private javax.swing.JCheckBox REnabled;
     private javax.swing.JButton RefreshCMDs;
     private javax.swing.JButton RegOAuth;
@@ -4257,7 +4303,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -4278,7 +4323,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;

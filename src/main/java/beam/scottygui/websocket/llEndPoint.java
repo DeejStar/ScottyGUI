@@ -9,16 +9,19 @@ import beam.scottygui.APIServ.FHandler;
 import beam.scottygui.APIServ.SHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ControlPanel;
+import beam.scottygui.RecFolPopout.RecFolWindow;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.cp;
 import beam.scottygui.Utils.HTTP;
 import beam.scottygui.Utils.JSONUtil;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
@@ -162,6 +165,9 @@ public class llEndPoint extends Endpoint {
 
                     if (Followed && !followCache.contains(followerID)) {
                         //System.err.println(ChanID + ":Follow detected from " + followerName);
+                        DefaultTableModel RFModel = (DefaultTableModel) RecFolWindow.RecFolTable.getModel();
+                        String timestamp = DateFormat.getInstance().format(System.currentTimeMillis());
+                        RFModel.addRow(new Object[]{followerName, timestamp});
                         CS.addFollowerToArray(followerName);
                         followCache.add(followerID);
                         NewFollowers.add(followerName);
