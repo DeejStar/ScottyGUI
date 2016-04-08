@@ -84,7 +84,6 @@ public class APIHandler {
                         return "<meta http-equiv=\"refresh\" content=\"1; url=http://" + HostName + ":9090/subalert\" />";
                     }
                 } catch (Exception ignore) {
-
                 }
                 InputStream HTMLFile = this.getClass().getResourceAsStream("/assets/followalert.html");
                 String HTML = IOUtils.toString(HTMLFile, "UTF-8");
