@@ -61,7 +61,7 @@ import org.json.simple.parser.ParseException;
  */
 public class CS {
 
-    public static Integer CurVer = 101;
+    public static Integer CurVer = 103;
     public static String ClientIDOauth = "31125c6e0139d0e09f2ae76348c00e9ce559d1bf894fcc06";
     public static String OAtokenAPI = "https://beam.pro/api/v1/oauth/token";
     public static String apiLoc = "https://api.scottybot.net/api";
@@ -160,7 +160,7 @@ public class CS {
             JSONObject VerCheck = null;
             while (true) {
                 try {
-                    VerCheck = (JSONObject) parser.parse(http.GetScotty("http://scottybot.x10host.com/files/CurVer.json"));
+                    VerCheck = (JSONObject) parser.parse(http.GetScotty("https://files.scottybot.net/scottygui/curver.json"));
                     break;
                 } catch (ParseException ex) {
                     Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -193,7 +193,7 @@ public class CS {
                     while (Attempts < 5) {
                         URL ToDownload = null;
                         try {
-                            ToDownload = new URL("http://scottybot.x10host.com/files/ScottyGUI.jar");
+                            ToDownload = new URL("https://files.scottybot.net/scottygui/ScottyGUI.jar");
                         } catch (MalformedURLException ex) {
                             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }

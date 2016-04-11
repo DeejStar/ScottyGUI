@@ -10,6 +10,8 @@ import beam.scottygui.APIServ.SHandler;
 import beam.scottygui.Alerts.AlertFrame;
 import beam.scottygui.ChatHandler.ChatPopOut;
 import beam.scottygui.RecFolPopout.RecFolWindow;
+import beam.scottygui.Renderers.MyCellRenderer;
+import beam.scottygui.Renderers.TableColumnAdjuster;
 import beam.scottygui.Stores.CS;
 import static beam.scottygui.Stores.CS.AuthKey;
 import static beam.scottygui.Stores.CS.BadWordsList;
@@ -53,6 +55,7 @@ import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,10 +65,12 @@ import java.util.logging.Logger;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.DefaultCaret;
 import javax.websocket.EncodeException;
 import org.json.simple.JSONArray;
@@ -280,6 +285,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         try {
             JSONArray QList = (JSONArray) parser.parse(http.get(CS.apiLoc + "/showquotes?output=json&chanid=" + CS.ChanID));
             DefaultTableModel QM = (DefaultTableModel) this.QuotesPanel.getModel();
+            MyCellRenderer wrapper = new MyCellRenderer();
+            TableColumnModel Columns = QuotesPanel.getColumnModel();
+            Columns.getColumn(1).setCellRenderer(wrapper);
             QM.setRowCount(0);
             for (Object T : QList) {
                 JSONObject obj = (JSONObject) T;
@@ -287,6 +295,11 @@ public final class ControlPanel extends javax.swing.JFrame {
                 String Quote = obj.get("quote").toString();
                 QM.addRow(new Object[]{ID, Quote});
             }
+            QuotesPanel.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+            TableColumnAdjuster autoAdjust = new TableColumnAdjuster(QuotesPanel);
+            autoAdjust.setColumnDataIncluded(true);
+            autoAdjust.setColumnHeaderIncluded(true);
+            autoAdjust.adjustColumn(0);
             this.NumOfQuotes.setText(QList.size() + " quotes.");
         } catch (IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,6 +307,12 @@ public final class ControlPanel extends javax.swing.JFrame {
     }
 
     public void PopCmdText() throws ParseException {
+        DefaultTableModel cmdmodel = (DefaultTableModel) this.CMDTable.getModel();
+        MyCellRenderer wrapper = new MyCellRenderer();
+        TableColumnModel Columns = CMDTable.getColumnModel();
+        Columns.getColumn(1).setCellRenderer(wrapper);
+        CMDTable.setAutoCreateRowSorter(true);
+        cmdmodel.setRowCount(0);
         JSONObject CmdOutput = new JSONObject();
         CmdOutput.putAll((JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/commands?authkey=" + AuthKey)));
         JSONArray T = new JSONArray();
@@ -318,9 +337,20 @@ public final class ControlPanel extends javax.swing.JFrame {
                     restrictlevel = "Admin";
                     break;
             }
-            out = out + newline + newline + obj.get("cmd") + " - Level: " + restrictlevel + " - " + obj.get("text") + " - Count: " + obj.get("cmdcount");
+            Object[] toAdd = new Object[]{obj.get("cmd"), obj.get("text"), restrictlevel, Long.parseLong(obj.get("cmdcount").toString())};
+            System.out.print("ADDING " + Arrays.toString(toAdd));
+            try {
+                cmdmodel.addRow(toAdd);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            CMDTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            TableColumnAdjuster autoAdjust = new TableColumnAdjuster(CMDTable);
+            autoAdjust.setColumnDataIncluded(true);
+            autoAdjust.adjustColumns();
+
         }
-        this.CmdInfo.setText(out);
+
     }
 
     /**
@@ -342,14 +372,14 @@ public final class ControlPanel extends javax.swing.JFrame {
         YouTube = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        CmdInfo = new javax.swing.JTextArea();
         RepeatList = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         RefreshCMDs = new javax.swing.JButton();
         comCost = new javax.swing.JButton();
         cmdsoundbutton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        CMDTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
@@ -578,13 +608,6 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
-        CmdInfo.setEditable(false);
-        CmdInfo.setColumns(20);
-        CmdInfo.setLineWrap(true);
-        CmdInfo.setRows(5);
-        CmdInfo.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(CmdInfo);
-
         RepeatList.setText("Repeat List");
         RepeatList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -627,27 +650,56 @@ public final class ControlPanel extends javax.swing.JFrame {
             }
         });
 
+        CMDTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Command", "Output", "Restriction", "Count"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        CMDTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(CMDTable);
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(RefreshCMDs)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comCost, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmdsoundbutton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(RepeatList, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 246, Short.MAX_VALUE)))
+                .addComponent(RefreshCMDs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comCost, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdsoundbutton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(RepeatList, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(256, Short.MAX_VALUE))
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
                 .addContainerGap())
         );
         jPanel16Layout.setVerticalGroup(
@@ -661,8 +713,9 @@ public final class ControlPanel extends javax.swing.JFrame {
                     .addComponent(comCost)
                     .addComponent(cmdsoundbutton)
                     .addComponent(RepeatList))
-                .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -673,7 +726,9 @@ public final class ControlPanel extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         YouTube.addTab("Commands", jPanel1);
@@ -734,12 +789,6 @@ public final class ControlPanel extends javax.swing.JFrame {
         QuotesPanel.getTableHeader().setResizingAllowed(false);
         QuotesPanel.getTableHeader().setReorderingAllowed(false);
         jScrollPane11.setViewportView(QuotesPanel);
-        if (QuotesPanel.getColumnModel().getColumnCount() > 0) {
-            QuotesPanel.getColumnModel().getColumn(0).setMinWidth(100);
-            QuotesPanel.getColumnModel().getColumn(0).setPreferredWidth(100);
-            QuotesPanel.getColumnModel().getColumn(0).setMaxWidth(100);
-            QuotesPanel.getColumnModel().getColumn(1).setResizable(false);
-        }
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -4166,6 +4215,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JCheckBox AutoTweet;
     private javax.swing.JCheckBox BHEnabled;
     private javax.swing.JList BadWordList;
+    private javax.swing.JTable CMDTable;
     private javax.swing.JButton CUsernamePassword;
     private javax.swing.JSlider CapPercent;
     private javax.swing.JToggleButton CapsOnOff;
@@ -4175,7 +4225,6 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JTextField ChatSend;
     private javax.swing.JCheckBox ChuckEnabled;
     private javax.swing.JCheckBox ClearCmdsEnabled;
-    private javax.swing.JTextArea CmdInfo;
     public static javax.swing.JTextField ControlStatus;
     public javax.swing.JLabel CurViewers;
     private javax.swing.JButton CustRankSave;
@@ -4321,9 +4370,9 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
