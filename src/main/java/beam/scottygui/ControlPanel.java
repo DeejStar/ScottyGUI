@@ -54,9 +54,11 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,7 +174,11 @@ public final class ControlPanel extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+            PopSubList();
+        } catch (Exception e) {
 
+        }
         try {
             PopQuoteList();
         } catch (ParseException ex) {
@@ -219,6 +225,15 @@ public final class ControlPanel extends javax.swing.JFrame {
                                         Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex1);
                                     }
                                 }
+                            }
+                        }
+                    }.start();
+                    new Thread("PopSubList") {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                PopSubList();
+                                break;
                             }
                         }
                     }.start();
@@ -302,6 +317,35 @@ public final class ControlPanel extends javax.swing.JFrame {
             autoAdjust.adjustColumn(0);
             this.NumOfQuotes.setText(QList.size() + " quotes.");
         } catch (IOException | InterruptedException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void PopSubList() {
+        try {
+            DefaultTableModel SLTModel = (DefaultTableModel) this.SubListTable.getModel();
+            SLTModel.setRowCount(0);
+            JSONObject obj = new JSONObject();
+            String toParse = new HTTP().get(CS.apiLoc + "/sublist?channame=" + CS.ChanID);
+            obj.putAll((JSONObject) JSONValue.parse(toParse));
+            for (Object T : obj.keySet()) {
+                JSONObject UI = (JSONObject) obj.get(T);
+                String BN = (String) UI.get("beamname");
+                String MC = (String) UI.get("mcname");
+                String DateToParse = (String) UI.getOrDefault("UserFriendlyDate", "Never");
+                Object[] toAdd = null;
+                try {
+                    Date Date = DateFormat.getInstance().parse(DateToParse);
+                    toAdd = new Object[]{BN, MC, Date};
+                } catch (java.text.ParseException ex) {
+                    toAdd = new Object[]{BN, MC, DateToParse};
+                }
+
+                SLTModel.addRow(toAdd);
+                new TableColumnAdjuster(this.SubListTable).adjustColumns();
+            }
+
+        } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ControlPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -517,6 +561,14 @@ public final class ControlPanel extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         showWhitelist = new javax.swing.JTextPane();
         jLabel16 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        SubListTable = new javax.swing.JTable();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        SubListRefresh = new javax.swing.JButton();
+        SubListEn = new javax.swing.JCheckBox();
+        SublistCost = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         PointsTable = new javax.swing.JTable();
@@ -2271,6 +2323,98 @@ public final class ControlPanel extends javax.swing.JFrame {
 
         YouTube.addTab("Whitelist", jPanel11);
 
+        SubListTable.setAutoCreateRowSorter(true);
+        SubListTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "UserName", "MCName", "Expires On"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        SubListTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane1.setViewportView(SubListTable);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("For now this is only to view the list, I will flush this out at a later date to be able to add and remove people from this list via the GUI, for now you can control it all from chat, please check out the SubList category on the commands page of Scottybot.net on how to do so.");
+        jTextArea1.setWrapStyleWord(true);
+        jScrollPane12.setViewportView(jTextArea1);
+
+        SubListRefresh.setText("Refresh");
+        SubListRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubListRefreshActionPerformed(evt);
+            }
+        });
+
+        SubListEn.setText("Enable Sublist");
+        SubListEn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubListEnActionPerformed(evt);
+            }
+        });
+
+        SublistCost.setText("Set Cost");
+        SublistCost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SublistCostActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane12)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(SubListRefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(SubListEn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SublistCost)
+                        .addGap(0, 365, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(SubListRefresh)
+                            .addComponent(SubListEn)
+                            .addComponent(SublistCost))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        YouTube.addTab("Sublist", jPanel10);
+
         PointsTable.setAutoCreateRowSorter(true);
         PointsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -3806,6 +3950,34 @@ public final class ControlPanel extends javax.swing.JFrame {
         RFW.setVisible(true);
     }//GEN-LAST:event_FolThisSesActionPerformed
 
+    private void SubListRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubListRefreshActionPerformed
+        this.PopSubList();
+    }//GEN-LAST:event_SubListRefreshActionPerformed
+
+    private void SubListEnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubListEnActionPerformed
+        if (this.SubListEn.isSelected()) {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=usesublistme&value=1");
+        } else {
+            http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=usesublistme&value=0");
+        }
+    }//GEN-LAST:event_SubListEnActionPerformed
+
+    private void SublistCostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SublistCostActionPerformed
+        String prepCost = JOptionPane.showInputDialog("Set the cost for a Subscriber to sublist themselves. Put 0 to disable.");
+        Long Cost = null;
+        try {
+            Cost = Long.parseLong(prepCost);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Cost was not a number, try again.");
+            return;
+        }
+        if (Cost < 0) {
+            JOptionPane.showMessageDialog(null, "Costs can not be negative.");
+            return;
+        }
+        http.GetScotty(CS.apiLoc + "/settings/change?authkey=" + AuthKey + "&setting=sublistcost&value=" + Cost);
+    }//GEN-LAST:event_SublistCostActionPerformed
+
     private void PopCustRanks() {
         JSONObject custRanks = new JSONObject();
         try {
@@ -3900,6 +4072,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         } else {
             this.PEnabled.setSelected(false);
         }
+        this.SubListEn.setSelected((Long) GetSettings().get("usesublistme") == 1);
         this.PWhenLive.setText(GetSettings().get("notidlepoints").toString());
         this.PWhenIdle.setText(GetSettings().get("idlepoints").toString());
         this.PStartPoints.setText(GetSettings().get("startpoints").toString());
@@ -4285,6 +4458,10 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JButton ShowStoredKey;
     private javax.swing.JTextField StoredAuthKey;
     public static javax.swing.JButton StreamSet;
+    private javax.swing.JCheckBox SubListEn;
+    private javax.swing.JButton SubListRefresh;
+    private javax.swing.JTable SubListTable;
+    private javax.swing.JButton SublistCost;
     public static javax.swing.JLabel SubsThisSession;
     private javax.swing.JSlider SymPercent;
     private javax.swing.JLabel SymPercentDis;
@@ -4352,6 +4529,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -4370,8 +4548,10 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -4380,6 +4560,7 @@ public final class ControlPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JToggleButton jToggleButton1;
     public static javax.swing.JTextField llsocket;
