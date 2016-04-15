@@ -330,6 +330,7 @@ public class Login extends javax.swing.JFrame {
         } else {
             try {
                 String Verified = HTTP.OAuthVerifyScotty(OAuthHandler.GetAToken());
+                System.out.println("VERIFIED " + Verified);
                 JSONObject chaninfo = (JSONObject) JSONValue.parse(Verified);
                 if (chaninfo.containsKey("failed")) {
                     String reason = (String) chaninfo.get("failed");
@@ -353,6 +354,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     return;
                 }
+
                 CS.ChanID = (Long) chaninfo.get("ChanID");
                 CS.AuthKey = (String) chaninfo.get("AuthKeyv2");
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException ex) {

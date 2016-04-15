@@ -34,7 +34,7 @@ public class CMDCost extends javax.swing.JFrame {
         int cnt = 0;
         while (cnt < 5) {
             try {
-                toParse = new HTTP().get("https://api.scottybot.net/showcoms?chanid=" + CS.ChanID + "&output=json");
+                toParse = new HTTP().get(CS.apiLoc + "/showcoms?chanid=" + CS.ChanID + "&output=json");
                 break;
             } catch (IOException | ParseException | InterruptedException | ClassNotFoundException | SQLException ex) {
                 cnt++;

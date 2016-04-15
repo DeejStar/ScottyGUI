@@ -358,6 +358,7 @@ public final class ControlPanel extends javax.swing.JFrame {
         CMDTable.setAutoCreateRowSorter(true);
         cmdmodel.setRowCount(0);
         JSONObject CmdOutput = new JSONObject();
+        System.out.println("COMMANDS " + CS.apiLoc + "/commands?authkey=" + AuthKey);
         CmdOutput.putAll((JSONObject) parser.parse(http.GetScotty(CS.apiLoc + "/commands?authkey=" + AuthKey)));
         JSONArray T = new JSONArray();
         System.out.println(CmdOutput.toString());

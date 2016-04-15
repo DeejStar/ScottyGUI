@@ -270,7 +270,7 @@ public class HTTP {
             tried++;
             try {
                 try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-                    HttpPost request = new HttpPost("https://api.scottybot.net/api/oauthverify?token=" + URLEncoder.encode(Token, "UTF-8"));
+                    HttpPost request = new HttpPost(CS.apiLoc + "/oauthverify?token=" + URLEncoder.encode(Token, "UTF-8"));
                     HttpResponse response = client.execute(request);
                     BufferedReader rd = new BufferedReader(
                     new InputStreamReader(response.getEntity().getContent()));
